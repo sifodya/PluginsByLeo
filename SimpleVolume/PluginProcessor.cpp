@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+using namespace juce;
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -12,6 +13,15 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                      #endif
                        )
 {
+    addParameter(gain = new juce::AudioParameterFloat ("gain",
+            "Gain",
+            juce::NormalisableRange<float> (0.0f, 1.0f),
+            0.5f));
+    previousGain = 1;
+    AudioProcessorValueTreeState (AudioProcessor& processorToConnectTo,
+    UndoManager* nullptr,
+    const juce::Identifier& valueTreeType,
+    ParameterLayout parameterLayout);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -87,8 +97,9 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    // initialisation that you need.
     juce::ignoreUnused (sampleRate, samplesPerBlock);
+    previousGain = *gain;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -147,9 +158,16 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
+        auto currentGain = gain->get();
+        if (juce::approximatelyEqual (currentGain, previousGain))
+        {
+            buffer.applyGain (currentGain);
+        }
+        else
+        {
+            buffer.applyGainRamp (0, buffer.getNumSamples(), previousGain, currentGain);
+            previousGain = currentGain;
+        }
     }
 }
 
@@ -167,21 +185,21 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused (destData);
+    std::unique_ptr<juce::XmlElement> xml (new juce::XmlElement ("ParamTutorial"));
+    xml->setAttribute ("gain", (double) *gain);
+    copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName ("ParamTutorial"))
+            *gain = (float) xmlState->getDoubleAttribute ("gain", 1.0);
 }
 
 //==============================================================================
-// This creates new instances of the plugin..
+// This creates new instances of the plugin.
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
