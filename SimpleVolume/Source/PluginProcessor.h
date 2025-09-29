@@ -43,7 +43,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    juce::AudioParameterFloat* gain;
+    std::atomic<float>* gainParameter = nullptr;
     float previousGain; //[1]
     juce::AudioProcessorValueTreeState parameters;
     //==============================================================================
