@@ -6,7 +6,7 @@
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
 public:
-    explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor&,  juce::AudioProcessorValueTreeState&);
+    explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p);
     ~AudioPluginAudioProcessorEditor() override;
 
     //==============================================================================
@@ -17,12 +17,12 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
-    juce::AudioProcessorValueTreeState& parameters;
-    juce::Label gainLabel;
+    //juce::AudioProcessorValueTreeState& parameters;
+    juce::Label gainLabel {"GainLabel", "Gain"};
     juce::Slider gainSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
-    juce::ToggleButton learnButton;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> learnAttachment;
+    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
+    juce::TextButton learnButton;
+    juce::AudioProcessorValueTreeState::ButtonAttachment learnAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

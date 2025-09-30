@@ -1,6 +1,5 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-using namespace juce;
 using namespace std;
 
 //==============================================================================
@@ -13,20 +12,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-    parameters (*this, nullptr, Identifier ("APVTSTutorial"),
-{
-    make_unique<AudioParameterFloat>("gain",
-        "Gain",
-        0.0f,
-        1.0f,
-        0.5f),
-    make_unique<AudioParameterBool>("learnButton",
-        "Learn Button",
-        false)
-                })
+    parameters (*this, nullptr, "Parameters", createParameters())
 {
     previousGain = 1;
-    gainParameter = parameters.getRawParameterValue("gain");
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -104,7 +92,8 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need.
     juce::ignoreUnused (sampleRate, samplesPerBlock);
-    previousGain = *gainParameter;
+    gainParameter = parameters.getRawParameterValue("gain");
+    previousGain = gainParameter->load();
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -163,7 +152,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        float currentGain = *gainParameter;
+        float currentGain = gainParameter->load();
         if (juce::approximatelyEqual (currentGain, previousGain))
         {
             buffer.applyGain (currentGain);
@@ -184,23 +173,23 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    return new AudioPluginAudioProcessorEditor (*this, parameters);
+    return new AudioPluginAudioProcessorEditor (*this);
 }
 
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     auto state = parameters.copyState();
-    unique_ptr<XmlElement> xml (state.createXml());
+    unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName (parameters.state.getType()))
-            parameters.replaceState (ValueTree::fromXml (*xmlState));
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================
@@ -208,4 +197,18 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameters()
+{
+    return{
+    make_unique<juce::AudioParameterFloat>("gain",
+        "Gain",
+        0.0f,
+        1.0f,
+        0.5f),
+    make_unique<juce::AudioParameterBool>("learnButton",
+        "Learn Button",
+        false)
+        };
 }

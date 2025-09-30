@@ -45,7 +45,7 @@ juce_add_plugin(${PROJECT_NAME}
         COPY_PLUGIN_AFTER_BUILD TRUE
         PLUGIN_MANUFACTURER_CODE Leop
         PLUGIN_CODE Sivo
-        FORMATS VST3
+        FORMATS VST3 Standalone
         PRODUCT_NAME "Simple Volume"
         #---
         VERSION "00.01.00"
