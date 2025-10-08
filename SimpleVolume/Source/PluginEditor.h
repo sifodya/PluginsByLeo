@@ -1,7 +1,8 @@
 #pragma once
 
 #include "PluginProcessor.h"
-
+#include "LeoBackground.cpp"
+#include "Simple_Slider.h"
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
@@ -19,10 +20,12 @@ private:
     AudioPluginAudioProcessor& processorRef;
     //juce::AudioProcessorValueTreeState& parameters;
     juce::Label gainLabel {"GainLabel", "Gain"};
-    juce::Slider gainSlider;
+    Simple_Slider gainSlider;
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
     juce::TextButton learnButton;
     juce::AudioProcessorValueTreeState::ButtonAttachment learnAttachment;
+    LeoBackground fullPluginTemplate;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

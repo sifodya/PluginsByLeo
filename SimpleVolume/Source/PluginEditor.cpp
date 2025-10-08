@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <iostream>
 
 
 //==============================================================================
@@ -14,8 +15,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // editor's size to whatever you need it to be.
     gainLabel.setJustificationType(juce::Justification::centred);
 
-    gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
+    //gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    //gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
 
     learnButton.setButtonText("Learn Gain");
     learnButton.setToggleState(true, juce::NotificationType::dontSendNotification);
@@ -30,10 +31,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         learnButton.setButtonText(isLearning ? "Learning..." : "Learn Gain");
     };
 
+
+    addAndMakeVisible(fullPluginTemplate);
     addAndMakeVisible(gainLabel);
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButton);
-    setSize (400, 400);
+    setSize (fullPluginTemplate.image.getWidth(), fullPluginTemplate.image.getHeight());
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -43,13 +46,13 @@ AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (juce::Colours::burlywood);
+    //g.fillAll(juce::Colours::orange);
 }
 
 void AudioPluginAudioProcessorEditor::resized()
 {
     gainLabel.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 120, 100, 20);
-    gainSlider.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 100, 100, 200);
+    gainSlider.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 100, gainSlider.simpleSliderLNF.backgroundImage.getWidth(), gainSlider.simpleSliderLNF.backgroundImage.getHeight());
     learnButton.setBounds(getWidth() / 2 - 50, getHeight() / 2 + 120, 100, 20);
+    fullPluginTemplate.setBounds(0, 0, fullPluginTemplate.image.getWidth(), fullPluginTemplate.image.getHeight());
 }
