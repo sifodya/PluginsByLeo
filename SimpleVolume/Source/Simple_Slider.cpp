@@ -6,17 +6,15 @@
 
 Simple_Slider::Simple_Slider()
 {
-    simpleSlider.setSliderStyle(simpleSliderStyle);
-    simpleSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-    simpleSlider.setRange(0.0, 1.0, 0.01);
-    simpleSlider.setValue(0.5);
+    //setSliderStyle(simpleSliderStyle);
+   // setTextBoxStyle(TextBoxBelow, false, 60, 20);
 
-    simpleSlider.setLookAndFeel(&simpleSliderLNF);
+   setLookAndFeel(&simpleSliderLNF);
 }
 
 Simple_Slider::~Simple_Slider()
 {
- simpleSlider.setLookAndFeel(nullptr);
+ setLookAndFeel(nullptr);
 }
 
 void Simple_Slider::paint(juce::Graphics& g)
@@ -29,5 +27,5 @@ void Simple_Slider::paint(juce::Graphics& g)
 
 void Simple_Slider::resized()
 {
-    //simpleSliderLabel.set
+    //simpleSlider.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 100, 100, 200);
 }

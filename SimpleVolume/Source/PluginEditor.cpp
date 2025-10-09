@@ -1,6 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include <iostream>
+
 
 
 //==============================================================================
@@ -11,17 +11,18 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
       learnAttachment (processorRef.getParameters(), "learnButton", learnButton)
 {
     juce::ignoreUnused (processorRef);
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
+
     gainLabel.setJustificationType(juce::Justification::centred);
 
-    //gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    //gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
+    gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
+    gainSlider.setLookAndFeel(&simpleSliderLNF);
+    gainSlider.toFront(false);
+
 
     learnButton.setButtonText("Learn Gain");
     learnButton.setToggleState(true, juce::NotificationType::dontSendNotification);
     learnButton.setClickingTogglesState(true);
-
     learnButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::green);
     learnButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::red);
     learnButton.onClick = [this]()
@@ -31,17 +32,18 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         learnButton.setButtonText(isLearning ? "Learning..." : "Learn Gain");
     };
 
-
-    addAndMakeVisible(fullPluginTemplate);
-    addAndMakeVisible(gainLabel);
-    addAndMakeVisible(gainSlider);
-    addAndMakeVisible(learnButton);
     setSize (fullPluginTemplate.image.getWidth(), fullPluginTemplate.image.getHeight());
+    addAndMakeVisible(fullPluginTemplate);
+    addAndMakeVisible(gainSlider);
+    addAndMakeVisible(gainLabel);
+    addAndMakeVisible(learnButton);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
+    gainSlider.setLookAndFeel(nullptr);
 }
+
 
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
@@ -51,8 +53,11 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
+    fullPluginTemplate.setBounds(0,
+        0,
+        700,
+        1500);
     gainLabel.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 120, 100, 20);
-    gainSlider.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 100, gainSlider.simpleSliderLNF.backgroundImage.getWidth(), gainSlider.simpleSliderLNF.backgroundImage.getHeight());
+    gainSlider.setBounds(0, 0, 100, 200);
     learnButton.setBounds(getWidth() / 2 - 50, getHeight() / 2 + 120, 100, 20);
-    fullPluginTemplate.setBounds(0, 0, fullPluginTemplate.image.getWidth(), fullPluginTemplate.image.getHeight());
 }

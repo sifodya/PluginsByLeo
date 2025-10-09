@@ -2,7 +2,8 @@
 
 #include "PluginProcessor.h"
 #include "LeoBackground.cpp"
-#include "Simple_Slider.h"
+#include "SimpleSliderLookAndFeel.cpp"
+//#include "Simple_Slider.h"
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
@@ -15,12 +16,11 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+    SimpleSliderLookAndFeel simpleSliderLNF;
     AudioPluginAudioProcessor& processorRef;
     //juce::AudioProcessorValueTreeState& parameters;
     juce::Label gainLabel {"GainLabel", "Gain"};
-    Simple_Slider gainSlider;
+    juce::Slider gainSlider;
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
     juce::TextButton learnButton;
     juce::AudioProcessorValueTreeState::ButtonAttachment learnAttachment;

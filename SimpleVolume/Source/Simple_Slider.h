@@ -19,12 +19,10 @@ public:
     void resized() override;
     SimpleSliderLookAndFeel simpleSliderLNF;
 private:
-
-    Slider simpleSlider;
     SliderStyle simpleSliderStyle = LinearVertical;
 
-    juce::Label simpleSliderLabel;
-    //juce::Justification simpleSliderLabelJustification = juce::Justification::centred;
+    //juce::Label simpleSliderLabel;
+    juce::Justification simpleSliderLabelJustification = juce::Justification::centred;
 };
 
 
