@@ -31,10 +31,11 @@ set(SourceFiles
     Source/PluginProcessor.cpp
     Source/PluginEditor.h
     Source/PluginProcessor.h
-    Source/Simple_Slider.cpp
-    Source/Simple_Slider.h
         Source/LeoBackground.cpp
         Source/SimpleSliderLookAndFeel.cpp
+        Source/LeoPluginTitle.cpp
+        Source/SimpleImageButton.cpp
+        Source/SimpleHyperlinkButton.cpp
 )
 
 #Plugin Details

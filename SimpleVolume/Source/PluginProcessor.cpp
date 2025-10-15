@@ -204,9 +204,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     return{
     make_unique<juce::AudioParameterFloat>("gain",
         "Gain",
-        0.0f,
-        1.0f,
-        0.5f),
+        -36.0f,
+        12.0f,
+        0.0f),
     make_unique<juce::AudioParameterBool>("learnButton",
         "Learn Button",
         false)

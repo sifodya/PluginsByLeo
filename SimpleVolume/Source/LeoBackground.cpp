@@ -2,39 +2,51 @@
 // Created by cedri on 05/10/2025.
 //
 #include <juce_gui_basics/juce_gui_basics.h>
-
+///<summary>
+///This class is used to create a background image for the plugin. It is called in PluginEditor.
+///Further it references the bounds of the plugin parent window and is therefore responsible for
+///the entire resize calculations.
+///</summary>
 class LeoBackground : public juce::Component
 
 {
 public:
     LeoBackground()
     {
+        ///<summary>
+        ///This function is used to load the background image from the resources folder.
+        ///In addition it checks if the file exists and loads it into the image container.
+        ///Then it sets the bounds of the background image to the size of the image.
+        ///</summary>
         pngFile = juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("PluginsByLeo/SimpleVolume/resources/full.png");
         if (pngFile.existsAsFile())
-        {
             image = juce::ImageFileFormat::loadFrom(pngFile);
-        }
     backgroundBounds.setSize(image.getWidth(), image.getHeight());
-
     }
-
+///<summary>
+///This function is used by the PluginEditor to pass on the values of the resized parent window.
+///This is done in order to resize the background image to the size of the parent window.
+///</summary>
+///<param name="size"></param>
+    void LeoBackground::resizeFromEditor(juce::Rectangle<int> size)
+    {
+        backgroundBounds.setSize(size.getWidth(), size.getHeight());
+    }
+///<summary>
+///This function is used to paint the background image to the bounds of this component
+///</summary>
+///<param name="g"></param>
     void LeoBackground::paint(juce::Graphics& g) override
     {
         if (image.isValid())
-        {
             g.drawImage(image, backgroundBounds);
-        }
         else
-        {
             g.fillAll(juce::Colours::pink);
-        }
     }
-    void LeoBackground::resized() override
-    {
-    }
-    juce::Image image;
+    //========================================================================================
+    juce::Image image; //image container for png | is public to be accessed by PluginEditor to get the size
 private:
-    juce::File pngFile;
-    std::unique_ptr<juce::Drawable> pngDrawable;
-    juce::Rectangle<float> backgroundBounds;
+    //========================================================================================
+    juce::File pngFile; //Holds the pngFile
+    juce::Rectangle<float> backgroundBounds; //Holds the bounds of the background image
 };
