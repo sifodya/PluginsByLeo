@@ -18,7 +18,7 @@ public:
         ///In addition it checks if the file exists and loads it into the image container.
         ///Then it sets the bounds of the background image to the size of the image.
         ///</summary>
-        pngFile = juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("PluginsByLeo/SimpleVolume/resources/full.png");
+        pngFile = juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("PluginsByLeo/SimpleVolume/resources/bg.png");
         if (pngFile.existsAsFile())
             image = juce::ImageFileFormat::loadFrom(pngFile);
     backgroundBounds.setSize(image.getWidth(), image.getHeight());

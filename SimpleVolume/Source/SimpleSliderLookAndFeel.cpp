@@ -48,35 +48,20 @@ public:
 
     juce::Font getLabelFont(juce::Label& label) override
     {
-        return juce::Font(fontTypeface).withHeight(16.0f);
+        return juce::Font(fontTypeface).withHeight(75.0f); //eigentlich 65
     }
 
     juce::Label* SimpleSliderLookAndFeel::createSliderTextBox(juce::Slider& slider) override
     {
         juce::Label* label = LookAndFeel_V4::createSliderTextBox(slider);
-        label->setColour(juce::Label::textColourId, juce::Colours::black);
+        label->setColour(juce::Label::textColourId, juce::Colour(33, 33, 29));
         label->setJustificationType(juce::Justification::centred);
+        label->setColour(juce::Label::backgroundColourId, juce::Colours::transparentBlack);
+        label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::black);
+        label->setColour(juce::Label::backgroundWhenEditingColourId, juce::Colours::transparentBlack);
+        label->setColour(juce::Label::outlineWhenEditingColourId, juce::Colours::transparentBlack);
 
         return label;
-    }
-
-    void drawLabel(juce::Graphics& g, juce::Label& label) override
-    {
-        // Transparent background and outline
-        g.fillAll(juce::Colours::transparentBlack);
-
-        if (label.isBeingEdited())
-        {
-            g.setColour(juce::Colours::transparentBlack); // No outline
-        }
-        else
-        {
-            g.setColour(juce::Colours::transparentBlack); // Also no outline when not editing
-        }
-
-        //g.drawRect(label.getLocalBounds(), 0); // No border width
-
-        g.drawFittedText(label.getText(), label.getLocalBounds(), juce::Justification::centred, 1);
     }
 
     void drawLinearSliderBackground(juce::Graphics& g,
@@ -93,7 +78,7 @@ public:
         if (!backgroundImage.isNull())
         {
             g.drawImage(backgroundImage,
-                x, y, width, height,
+                x+118, y, width, height,
                 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
         }
         else
@@ -123,7 +108,7 @@ public:
             drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(thumbImage,
-                drawX,
+                drawX+59,
                 drawY,
                 thumbWidth,
                 thumbHeight,
@@ -138,6 +123,14 @@ public:
             g.fillEllipse(x, y, width, height);
         }
     }
+    juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
+{
+    juce::Slider::SliderLayout layout;
+        layout.sliderBounds = juce::Rectangle<int>(0, 0, 119, 544);
+        layout.textBoxBounds = juce::Rectangle<int>(0, 600, 250, 100);
+
+    return layout;
+}
     ~SimpleSliderLookAndFeel() override = default;
 private:
     juce::File fontFile;
