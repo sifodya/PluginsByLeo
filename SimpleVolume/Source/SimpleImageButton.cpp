@@ -35,6 +35,8 @@ public:
             downImage,
             1.0f,
             juce::Colour());
+        setToggleable(true);
+        setClickingTogglesState(true);
     }
 private:
     juce::Image normalImage;
