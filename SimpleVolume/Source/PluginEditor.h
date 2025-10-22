@@ -19,16 +19,19 @@ public:
     void initializeSlider();
     void initializeButton();
     void makeContentVisible();
+    //=============================================================================
+    const juce::ImageButton& getLearnButton() {return learnButtonImage;}
+    void setLearnButtonValue(bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
+    SimpleImageButton learnButtonImage;
+
 
 private:
     SimpleSliderLookAndFeel simpleSliderLNF;
     AudioPluginAudioProcessor& processorRef;
     juce::Slider gainSlider;
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
-    //juce::AudioProcessorValueTreeState::ButtonAttachment learnAttachment;
     LeoBackground fullPluginTemplate;
     LeoPluginTitle pluginTitle;
-    SimpleImageButton learnButtonImage;
     SimpleHyperlinkButton linkButton;
 
     int pluginWidth, pluginHeight, pluginBottom;

@@ -54,15 +54,16 @@ void AudioPluginAudioProcessorEditor::resized()
     auto pluginArea = getLocalBounds();
     fullPluginTemplate.resizeFromEditor(pluginArea);
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    std::cout << "Width: " << getWidth() << " Height: " << getHeight() << std::endl;
     scalarWidth = getWidth()/368.0f;
     scalarHeight = getHeight()/1281.0f;
-    std::cout<<"Scalar Width: "<<scalarWidth<<" Scalar Height: "<<scalarHeight<<std::endl;
-    pluginTitle.setBounds(getWidth() / 2 - pluginTitle.titleImage.getWidth() / 2, getHeight() / 12.81, pluginTitle.titleImage.getWidth()*scalarWidth, pluginTitle.titleImage.getHeight()*scalarHeight);
+    simpleSliderLNF.editorScalarWidth = scalarWidth;
+    simpleSliderLNF.editorScalarHeight = scalarHeight;
+    gainSlider.sendLookAndFeelChange();
+    pluginTitle.setBounds(44 * scalarWidth, 100 * scalarHeight, 280 * scalarWidth, 158 * scalarHeight);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
-    gainSlider.setBounds(getWidth() / 2 - (simpleSliderLNF.backgroundImage.getWidth()/2) - 82, 470, 750, 700);
-    learnButtonImage.setBounds(getWidth() / 2 - learnButtonImage.getWidth() / 2 - 23, 365, 104, 41);
-    linkButton.setBounds(getWidth() / 2 - linkButton.getWidth()/2, getBottom() - 80, 300, 40);
+    gainSlider.setBounds(42 * scalarWidth, 470 * scalarHeight, 750 * scalarWidth , 700 * scalarHeight);
+    learnButtonImage.setBounds(109 * scalarWidth, 365 * scalarHeight, 104 * scalarWidth, 41 * scalarHeight);
+    linkButton.setBounds(34 * scalarWidth, 1201 * scalarHeight, 300 * scalarWidth, 40 * scalarHeight);
 }
 
 void AudioPluginAudioProcessorEditor::initializeSlider()
