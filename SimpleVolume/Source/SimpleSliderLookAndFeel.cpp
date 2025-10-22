@@ -55,7 +55,7 @@ public:
 
     juce::Font getLabelFont(juce::Label& label) override
     {
-        return juce::Font(fontTypeface).withHeight(75.0f); //eigentlich 65
+        return juce::Font(fontTypeface).withHeight(75.0f * editorScalarHeight); //eigentlich 65
     }
 
     juce::Label* SimpleSliderLookAndFeel::createSliderTextBox(juce::Slider& slider) override
@@ -85,7 +85,7 @@ public:
         if (!backgroundImage.isNull())
         {
             g.drawImage(backgroundImage,
-                x+118, y, width, height,
+                (x+118)*editorScalarWidth, y*editorScalarHeight, width, height,
                 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
         }
         else
@@ -107,6 +107,7 @@ public:
     {
         if (!thumbImage.isNull())
         {
+            std::cout<<"Thumb width: "<<width<<" Thumb height: "<<height<<std::endl;
             const int thumbHeight = thumbImage.getHeight();
             const int thumbWidth = thumbImage.getWidth();
             float drawX, drawY = 0.0f;
@@ -115,8 +116,8 @@ public:
             drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(thumbImage,
-                drawX+59,
-                drawY,
+                (drawX+59)*editorScalarWidth,
+                drawY*editorScalarHeight,
                 thumbWidth,
                 thumbHeight,
                 0,
@@ -133,11 +134,13 @@ public:
     juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
 {
     juce::Slider::SliderLayout layout;
-        layout.sliderBounds = juce::Rectangle<int>(0, 0, 119, 544);
-        layout.textBoxBounds = juce::Rectangle<int>(0, 600, 250, 100);
+        layout.sliderBounds = juce::Rectangle<int>(0*editorScalarWidth, 0*editorScalarHeight, 119*editorScalarWidth, 544*editorScalarHeight);
+        layout.textBoxBounds = juce::Rectangle<int>(0*editorScalarWidth, 600*editorScalarHeight, 250*editorScalarWidth, 100*editorScalarHeight);
 
     return layout;
 }
+
+    float editorScalarWidth, editorScalarHeight;
     ~SimpleSliderLookAndFeel() override = default;
 private:
     juce::File fontFile;
