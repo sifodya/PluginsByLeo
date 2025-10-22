@@ -44,6 +44,13 @@ public:
         drawLinearSliderThumb(g,x,y,width,height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         drawLinearSliderBackground(g,x,y,height,width,sliderPos,minSliderPos,maxSliderPos,style,slider);
         createSliderTextBox(slider);
+        drawLinearSliderOutline(g, x, y, width, height, style, slider);
+        std::cout<<" Width: "<<width<<" Height: "<<height<<" slider Pos "<<sliderPos<<std::endl;
+    }
+    void drawLinearSliderOutline(juce::Graphics& g, int x, int y, int width, int height, juce::Slider::SliderStyle, juce::Slider&) override
+    {
+        g.setColour(juce::Colours::violet);
+        g.drawRect(x, y, width, height);
     }
 
     juce::Font getLabelFont(juce::Label& label) override
