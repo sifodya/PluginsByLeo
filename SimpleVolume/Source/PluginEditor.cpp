@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include <iostream>
-
+using namespace std;
 
 
 //==============================================================================
@@ -16,13 +16,15 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     learnButtonImage.onClick = [this]()
     {
+        processorRef.setLearnButtonState(learnButtonImage.getToggleState());
     };
 
     setResizable(true, true);
-    setResizeLimits(200, 500, 2000, 5000);
+    setResizeLimits(200, 500, 1000, 2500);
 
     initializeSlider();
-
+    gainSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::orange);
+    gainSlider.setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colours::red);
     makeContentVisible();
     pluginWidth = getWidth();
     pluginHeight = getHeight();
@@ -44,6 +46,7 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
         linkButton.setColour(juce::HyperlinkButton::textColourId, juce::Colours::blueviolet);
     else
         linkButton.setColour(juce::HyperlinkButton::textColourId, juce::Colours::black);
+
 }
 
 void AudioPluginAudioProcessorEditor::resized()
