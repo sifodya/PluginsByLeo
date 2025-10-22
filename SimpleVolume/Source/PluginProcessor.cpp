@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <cmath>
 using namespace std;
 
 //==============================================================================
@@ -14,7 +15,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        ),
     parameters (*this, nullptr, "Parameters", createParameters())
 {
-    previousGain = 1;
+    previousGain = 0;
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -93,7 +94,9 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // initialisation that you need.
     juce::ignoreUnused (sampleRate, samplesPerBlock);
     gainParameter = parameters.getRawParameterValue("gain");
-    previousGain = gainParameter->load();
+
+    float gainAmplitude = gainParameter->load();
+    previousGain = pow(10.0f, gainAmplitude/20.0f);
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -135,32 +138,103 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        float currentGain = gainParameter->load();
-        if (juce::approximatelyEqual (currentGain, previousGain))
+        float gainAmplitude = gainParameter->load();
+        float currentGain = pow(10.0f, gainAmplitude/20.0f);
+
+        if (!learnButtonState)
         {
-            buffer.applyGain (currentGain);
+            learnState=IDLE;
+            measuredBlocks = 1;
+            measuredBlocksRe = 1;
         }
-        else
+
+        switch (learnState)
         {
-            buffer.applyGainRamp (0, buffer.getNumSamples(), previousGain, currentGain);
-            previousGain = currentGain;
+            case IDLE:
+                {
+                    if(learnButtonState)
+                        learnState = LEARNING;
+                    if (juce::approximatelyEqual (currentGain, previousGain))
+                    {
+                        buffer.applyGain (channel, 0, buffer.getNumSamples(), currentGain);
+                    }
+                    else
+                    {
+                        buffer.applyGainRamp (channel, 0, buffer.getNumSamples(), previousGain, currentGain);
+                        previousGain = currentGain;
+                    }
+                    break;
+                }
+        case MEASURING:
+            {
+                float rmsSum = std::accumulate(rmsValues.begin(), rmsValues.end(), 0.0f);
+                float rmsAverage = rmsSum/rmsValues.size();
+                    sort(rmsValues.begin(), rmsValues.end());
+                    if (rmsValues.size() % 2 != 0)
+                        rmsMedian = rmsValues[rmsValues.size()/2];
+                    else
+                        rmsMedian = (rmsValues[(rmsValues.size()-1)/2] + rmsValues[rmsValues.size()/2])/2;
+                    if (abs(rmsAverage-rmsMedian)<learnThreshold)
+                    {
+                        float valueToSet = 0;
+                        if (rmsMedian != 0)
+                         valueToSet = targetLoudness - 20.0f * log10(rmsMedian);
+                        else
+                            valueToSet = targetLoudness;
+                        parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
+                        learnState = END;
+                        break;
+                    }
+                learnState = RELEARNING;
+                break;
+            }
+            case LEARNING:
+            {
+                if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
+                {
+                    float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                    cout<<"RMS: "<<rms<<" Measured: "<<measuredBlocks<<" Target: "<<targetMeasurements*getSampleRate()/buffer.getNumSamples()<<endl;
+                    rmsValues.push_back(rms);
+                    measuredBlocks++;
+                }
+                    else
+                    {
+                        learnState = MEASURING;
+                    }
+                break;
+            }
+            case END:
+            {
+                auto* editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor());
+                if (editor)
+                {
+                    editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);
+                    learnButtonState = false;
+                    measuredBlocks = 1;
+                    learnState = IDLE;
+                }
+                break;
+            }
+            case RELEARNING:
+            {
+                    if (measuredBlocksRe <= (targetMeasurements*getSampleRate()/buffer.getNumSamples())/5)
+                    {
+                        float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                        rmsValues.push_back(rms);
+                        measuredBlocksRe++;
+                    }
+                    else
+                    {
+                        learnState = MEASURING;
+                        measuredBlocksRe = 1;
+                    }
+                break;
+            }
         }
     }
 }
@@ -168,7 +242,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 //==============================================================================
 bool AudioPluginAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()

@@ -43,12 +43,24 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::AudioProcessorValueTreeState& getParameters() {return parameters;}
+void setLearnButtonState(bool state) {learnButtonState = state;}
 
 private:
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     juce::AudioProcessorValueTreeState parameters;
+    bool learnButtonState = false;
+
+    std::vector <float> rmsValues;
+    int targetMeasurements = 5; //in seconds
+    int measuredBlocks = 1;
+    int measuredBlocksRe = 1;
+    float targetLoudness = -12.0f;
+    enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
+    enum LearnState learnState = IDLE;
+    float learnThreshold = 0.5f;
+    float rmsMedian = 0.0f;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
