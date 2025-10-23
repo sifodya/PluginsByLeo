@@ -18,7 +18,7 @@ public:
     void resized() override;
     void initializeSlider();
     void initializeButton();
-    void makeContentVisible();
+    void makeContentVisible(int height, int width);
     //=============================================================================
     const juce::ImageButton& getLearnButton() {return learnButtonImage;}
     void setLearnButtonValue(bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
@@ -36,6 +36,10 @@ private:
 
     int pluginWidth, pluginHeight, pluginBottom;
     float scalarWidth, scalarHeight ;
+
+    const juce::Displays::Display* screen;
+    juce::Rectangle<int> screenArea;
+    int screenWidth, screenHeight, screenScaleHeight, screenScaleWidth;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };
