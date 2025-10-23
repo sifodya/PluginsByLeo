@@ -198,14 +198,17 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
                 {
                     float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
-                    cout<<"RMS: "<<rms<<" Measured: "<<measuredBlocks<<" Target: "<<targetMeasurements*getSampleRate()/buffer.getNumSamples()<<endl;
-                    rmsValues.push_back(rms);
-                    measuredBlocks++;
+                    if (rms != 0)
+                    {
+                        rmsValues.push_back(rms);
+                        measuredBlocks++;
+                    }
                 }
                     else
                     {
                         learnState = MEASURING;
                     }
+                    cout<<"Measured Blocks: "<<measuredBlocks<<endl;
                 break;
             }
             case END:

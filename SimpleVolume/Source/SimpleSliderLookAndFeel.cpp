@@ -44,13 +44,6 @@ public:
         drawLinearSliderThumb(g,x,y,width,height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         drawLinearSliderBackground(g,x,y,height,width,sliderPos,minSliderPos,maxSliderPos,style,slider);
         createSliderTextBox(slider);
-        drawLinearSliderOutline(g, x, y, width, height, style, slider);
-        std::cout<<" Width: "<<width<<" Height: "<<height<<" slider Pos "<<sliderPos<<std::endl;
-    }
-    void drawLinearSliderOutline(juce::Graphics& g, int x, int y, int width, int height, juce::Slider::SliderStyle, juce::Slider&) override
-    {
-        g.setColour(juce::Colours::violet);
-        g.drawRect(x, y, width, height);
     }
 
     juce::Font getLabelFont(juce::Label& label) override
@@ -85,7 +78,7 @@ public:
         if (!backgroundImage.isNull())
         {
             g.drawImage(backgroundImage,
-                (x+118)*editorScalarWidth, y*editorScalarHeight, width, height,
+                x+118*editorScalarWidth, y, width, height,
                 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
         }
         else
@@ -107,23 +100,22 @@ public:
     {
         if (!thumbImage.isNull())
         {
-            std::cout<<"Thumb width: "<<width<<" Thumb height: "<<height<<std::endl;
-            const int thumbHeight = thumbImage.getHeight();
-            const int thumbWidth = thumbImage.getWidth();
+            const int thumbHeight = thumbImage.getHeight()*editorScalarHeight;
+            const int thumbWidth = thumbImage.getWidth()*editorScalarWidth;
             float drawX, drawY = 0.0f;
-
             drawX = x + (width - thumbWidth) / 2.0f;
             drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(thumbImage,
-                (drawX+59)*editorScalarWidth,
-                drawY*editorScalarHeight,
+                drawX+59*editorScalarWidth,
+                drawY,
                 thumbWidth,
                 thumbHeight,
                 0,
                 0,
-                thumbWidth,
-                thumbHeight);
+                thumbImage.getWidth(),
+                thumbImage.getHeight());
+
         }
         else
         {
