@@ -71,10 +71,10 @@ void AudioPluginAudioProcessorEditor::resized()
     simpleSliderLNF.editorScalarWidth = scalarWidth;
     simpleSliderLNF.editorScalarHeight = scalarHeight;
     gainSlider.sendLookAndFeelChange();
-    pluginTitle.setBounds(44 * scalarWidth, 100 * scalarHeight, 280 * scalarWidth, 158 * scalarHeight);
+    pluginTitle.setBounds(46 * scalarWidth, 102 * scalarHeight, 280 * scalarWidth, 158 * scalarHeight);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
-    gainSlider.setBounds(42 * scalarWidth, 470 * scalarHeight, 750 * scalarWidth , 700 * scalarHeight);
-    learnButtonImage.setBounds(109 * scalarWidth, 365 * scalarHeight, 104 * scalarWidth, 41 * scalarHeight);
+    gainSlider.setBounds(42 * scalarWidth, 469 * scalarHeight, 750 * scalarWidth , 700 * scalarHeight);
+    learnButtonImage.setBounds(110 * scalarWidth, 365 * scalarHeight, 104 * scalarWidth, 41 * scalarHeight);
     linkButton.setBounds(34 * scalarWidth, 1201 * scalarHeight, 300 * scalarWidth, 40 * scalarHeight);
 }
 
