@@ -10,9 +10,7 @@ public:
     LeoPluginTitle()
     {
         titleImage = juce::ImageFileFormat::loadFrom(BinaryData::ueberschrift_png, BinaryData::ueberschrift_pngSize);
-    /*pngTitleFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/SimpleVolume/resources/ueberschrift.png");
-        if (pngTitleFile.existsAsFile())
-            titleImage = juce::ImageFileFormat::loadFrom(pngTitleFile);*/
+
         titleBounds.setSize(titleImage.getWidth(), titleImage.getHeight());
     }
 

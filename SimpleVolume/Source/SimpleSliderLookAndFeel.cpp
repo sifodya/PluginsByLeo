@@ -9,32 +9,16 @@ class SimpleSliderLookAndFeel : public juce::LookAndFeel_V4
 public:
     SimpleSliderLookAndFeel()
     {
-        //loading the custom font as a file from disk and validating it
-        /*fontFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/neue-haas-grotesk-display-pro/NeueHaasDisplayMediu.ttf");
-        if (fontFile.existsAsFile())
-            fontFile.loadFileAsData(fontData);*/
+
 
         //make typeface from fontFile and assining it to LeoFont
         fontTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayMediu_ttf, BinaryData::NeueHaasDisplayMediu_ttfSize);
-        //fontTypeface = juce::Typeface::createSystemTypefaceFor(fontData.getData(), fontData.getSize());
-        //LeoFont = juce::Typeface::createSystemTypefaceFor(fontData.getData(), fontData.getSize());
 
         //loading custom slider images from disk
-        //pngBackground = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/SimpleVolume/resources/fader bg.png");
-        //pngThumb = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/SimpleVolume/resources/fader.png");
 
         backgroundImage = juce::ImageFileFormat::loadFrom(BinaryData::fader_bg_png, BinaryData::fader_bg_pngSize);
         thumbImage = juce::ImageFileFormat::loadFrom(BinaryData::fader_png, BinaryData::fader_pngSize);
 
-        //validating image files
-        /*if (pngBackground.existsAsFile())
-        {
-            backgroundImage = juce::ImageFileFormat::loadFrom(pngBackground);
-        }
-        if (pngThumb.existsAsFile())
-        {
-            thumbImage = juce::ImageFileFormat::loadFrom(pngThumb);
-        }*/
         //setting slider text colour to black
         setColour(juce::Label::textColourId, juce::Colours::black);
     }

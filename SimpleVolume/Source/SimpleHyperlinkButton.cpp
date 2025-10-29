@@ -11,12 +11,8 @@ class SimpleHyperlinkButton : public juce::HyperlinkButton
 public:
     SimpleHyperlinkButton()
     {
-        /*fontFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/neue-haas-grotesk-display-pro/NeueHaasDisplayLight.ttf");
-        if (fontFile.existsAsFile())
-            fontFile.loadFileAsData(fontData);*/
 
         customTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayLight_ttf, BinaryData::NeueHaasDisplayLight_ttfSize);
-        //buttonFont = juce::Typeface::createSystemTypefaceFor(fontData.getData(), fontData.getSize());
         buttonFont = juce::Font(customTypeface);
         setButtonText("check other plugins");
         setURL(juce::URL("https://leo-brennauer.com"));

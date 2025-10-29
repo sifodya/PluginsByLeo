@@ -20,10 +20,8 @@ public:
         ///In addition it checks if the file exists and loads it into the image container.
         ///Then it sets the bounds of the background image to the size of the image.
         ///</summary>
-        //pngFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/SimpleVolume/resources/bg.png");
         image = juce::ImageFileFormat::loadFrom(BinaryData::bg_png, BinaryData::bg_pngSize);
-        /*if (pngFile.existsAsFile())
-            image = juce::ImageFileFormat::loadFrom(pngFile);*/
+
     backgroundBounds.setSize(image.getWidth(), image.getHeight());
     }
 ///<summary>

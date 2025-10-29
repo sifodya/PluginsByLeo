@@ -161,15 +161,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 {
                     if(learnButtonState)
                         learnState = LEARNING;
-                    if (juce::approximatelyEqual (currentGain, previousGain))
-                    {
-                        buffer.applyGain (channel, 0, buffer.getNumSamples(), currentGain);
-                    }
-                    else
-                    {
-                        buffer.applyGainRamp (channel, 0, buffer.getNumSamples(), previousGain, currentGain);
-                        previousGain = currentGain;
-                    }
                     break;
                 }
         case MEASURING:
@@ -240,6 +231,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     }
                 break;
             }
+        }
+        if (juce::approximatelyEqual (currentGain, previousGain))
+        {
+            buffer.applyGain (channel, 0, buffer.getNumSamples(), currentGain);
+        }
+        else
+        {
+            buffer.applyGainRamp (channel, 0, buffer.getNumSamples(), previousGain, currentGain);
+            previousGain = currentGain;
         }
     }
 }
