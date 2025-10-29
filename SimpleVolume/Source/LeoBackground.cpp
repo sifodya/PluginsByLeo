@@ -2,6 +2,8 @@
 // Created by cedri on 05/10/2025.
 //
 #include <juce_gui_basics/juce_gui_basics.h>
+
+#include "BinaryData.h"
 ///<summary>
 ///This class is used to create a background image for the plugin. It is called in PluginEditor.
 ///Further it references the bounds of the plugin parent window and is therefore responsible for
@@ -18,9 +20,10 @@ public:
         ///In addition it checks if the file exists and loads it into the image container.
         ///Then it sets the bounds of the background image to the size of the image.
         ///</summary>
-        pngFile = juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("PluginsByLeo/SimpleVolume/resources/bg.png");
-        if (pngFile.existsAsFile())
-            image = juce::ImageFileFormat::loadFrom(pngFile);
+        //pngFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/SimpleVolume/resources/bg.png");
+        image = juce::ImageFileFormat::loadFrom(BinaryData::bg_png, BinaryData::bg_pngSize);
+        /*if (pngFile.existsAsFile())
+            image = juce::ImageFileFormat::loadFrom(pngFile);*/
     backgroundBounds.setSize(image.getWidth(), image.getHeight());
     }
 ///<summary>

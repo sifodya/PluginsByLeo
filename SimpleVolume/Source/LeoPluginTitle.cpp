@@ -2,15 +2,17 @@
 // Created by cedri on 14/10/2025.
 //
 #include <juce_gui_basics/juce_gui_basics.h>
+#include "BinaryData.h"
 
 class LeoPluginTitle : public juce::Component
 {
 public:
     LeoPluginTitle()
     {
-    pngTitleFile = juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("PluginsByLeo/SimpleVolume/resources/ueberschrift.png");
+        titleImage = juce::ImageFileFormat::loadFrom(BinaryData::ueberschrift_png, BinaryData::ueberschrift_pngSize);
+    /*pngTitleFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/SimpleVolume/resources/ueberschrift.png");
         if (pngTitleFile.existsAsFile())
-            titleImage = juce::ImageFileFormat::loadFrom(pngTitleFile);
+            titleImage = juce::ImageFileFormat::loadFrom(pngTitleFile);*/
         titleBounds.setSize(titleImage.getWidth(), titleImage.getHeight());
     }
 
