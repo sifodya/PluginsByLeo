@@ -116,8 +116,10 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;*/
 
-    if (layouts.getMainOutputChannelSet().getAmbisonicOrder() != -1)
+    if (layouts.getMainInputChannelSet().getAmbisonicOrder() != -1)
         return false;
+
+
 
     // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
