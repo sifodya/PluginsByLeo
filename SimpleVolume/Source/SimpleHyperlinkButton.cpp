@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <juce_gui_basics/juce_gui_basics.h>
+#include "BinaryData.h"
 
 
 class SimpleHyperlinkButton : public juce::HyperlinkButton
@@ -10,11 +11,13 @@ class SimpleHyperlinkButton : public juce::HyperlinkButton
 public:
     SimpleHyperlinkButton()
     {
-        fontFile = juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("PluginsByLeo/neue-haas-grotesk-display-pro/NeueHaasDisplayLight.ttf");
+        /*fontFile = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Git Repo/PluginsByLeo/PluginsByLeo/neue-haas-grotesk-display-pro/NeueHaasDisplayLight.ttf");
         if (fontFile.existsAsFile())
-            fontFile.loadFileAsData(fontData);
+            fontFile.loadFileAsData(fontData);*/
 
-        buttonFont = juce::Typeface::createSystemTypefaceFor(fontData.getData(), fontData.getSize());
+        customTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayLight_ttf, BinaryData::NeueHaasDisplayLight_ttfSize);
+        //buttonFont = juce::Typeface::createSystemTypefaceFor(fontData.getData(), fontData.getSize());
+        buttonFont = juce::Font(customTypeface);
         setButtonText("check other plugins");
         setURL(juce::URL("https://leo-brennauer.com"));
         setFont(buttonFont, true, juce::Justification::centred);
@@ -25,5 +28,6 @@ private:
     juce::MemoryBlock fontData;
     juce::File fontFile;
     juce::LookAndFeel_V4 SimpleHyperlinkButtonLAF;
+    juce::Typeface::Ptr customTypeface;
     };
 
