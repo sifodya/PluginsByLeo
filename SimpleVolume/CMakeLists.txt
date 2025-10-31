@@ -25,7 +25,6 @@ CPMAddPackage(
     GIT_TAG origin/master
 )
 
-
 #Source files to include
 set(SourceFiles
     Source/PluginEditor.cpp
@@ -63,12 +62,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
 
 #Make SourceFiles buildable
 target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles})
-
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
-
-set_target_properties(MyPlugin_VST3 PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/dist"
-)
 
 #toggleable options from JUCE Cmake API
 target_compile_definitions(${PROJECT_NAME}
@@ -116,43 +109,3 @@ juce_add_binary_data(BinaryData SOURCES
 )
 
 juce_generate_juce_header(${PROJECT_NAME})
-
-# -------------------------------
-# Packaging with CPack
-# -------------------------------
-include(InstallRequiredSystemLibraries)
-
-set(CPACK_PACKAGE_NAME "Simple Volume")
-set(CPACK_PACKAGE_VENDOR "LeoPlugins")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Apply's Gain to all the channels")
-set(CPACK_PACKAGE_VERSION "0.1.0")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "LeoPlugins/SimpleVolume")
-
-# This is the default VST3 folder for all users
-set(VST3_INSTALL_DIR "C:/Program Files/Common Files/VST3")
-
-# Install your plugin
-install(DIRECTORY "${CMAKE_BINARY_DIR}/dist/SimpleVolume.vst3"
-        DESTINATION "${VST3_INSTALL_DIR}")
-
-# Optional: include MSVC redistributable (see below)
-set(CPACK_GENERATOR "NSIS")  # Creates a .exe installer
-set(CPACK_NSIS_DISPLAY_NAME "Simple Volume")
-#set(CPACK_NSIS_HELP_LINK "https://mycompany.com/help")
-#set(CPACK_NSIS_URL_INFO_ABOUT "https://mycompany.com")
-#set(CPACK_NSIS_CONTACT "support@mycompany.com")
-set(CPACK_NSIS_MODIFY_PATH OFF)
-
-# MSVC runtime detection (optional but recommended)
-set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-#set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/icon.ico")
-
-include(CPack)
-
-# Add the redistributable to the installer
-install(FILES "${CMAKE_SOURCE_DIR}/installer/vc_redist.x64.exe" DESTINATION .)
-
-# Tell NSIS to run it silently before main install
-set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-  ExecWait '\\\"$INSTDIR\\\\vc_redist.x64.exe\\\" /install /quiet /norestart'
-")
