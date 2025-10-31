@@ -57,6 +57,14 @@ juce_add_plugin(${PROJECT_NAME}
         VST3_CATEGORIES Dynamics
 )
 
+# Set macOS-specific settings for the plugin (only for macOS build)
+if(APPLE)
+    set_target_properties(MyPlugin PROPERTIES
+            MACOSX_BUNDLE TRUE
+            BUNDLE_EXTENSION ".vst3"
+    )
+endif()
+
 #How the SourceFiles appear in IDE
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
 
