@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.24)
 #change to your project name
 project(SIMPLE_VOLUME VERSION 0.1.0)
 
+set(PLUGIN_VERSION "00.00.01")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -55,7 +57,7 @@ juce_add_plugin(${PROJECT_NAME}
         FORMATS VST3 Standalone
         PRODUCT_NAME "Simple Volume"
         #---
-        VERSION "00.01.00"
+        VERSION "${PLUGIN_VERSION}"
         VST3_CATEGORIES Dynamics
 )
 
@@ -119,3 +121,51 @@ juce_add_binary_data(BinaryData SOURCES
 )
 
 juce_generate_juce_header(${PROJECT_NAME})
+
+if(WINDOWS)
+#Enable packaging
+include(InstallRequiredSystemLibraries)
+set(CPACK_GENERATOR "NSIS")
+
+#set basic packaging options
+set(CPACK_PACKAGE_NAME "Simple Volume")
+set(CPACK_PACKAGE_VERSION "${PLUGIN_VERSION}")
+set(CPACK_PACKAGE_DESCRIPTION "Apply gain to all channels")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "C:/Program Files/Common Files/VST3")
+
+#Set up installation rules
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+#include CPack module to generate installer
+include(CPack)
+endif ()
+
+if(APPLE)
+    # macOS packaging
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_PACKAGE_NAME "Simple Volume")
+    set(CPACK_PACKAGE_VERSION "${VERSION}")
+    set(CPACK_PACKAGE_DESCRIPTION "JUCE Audio Plugin")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-macOS")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Applications")
+
+    # Set installation rules for macOS
+    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+    include(CPack)
+endif ()
+
+if(LINUX)
+    # Linux packaging
+    set(CPACK_GENERATOR "DEB")
+    set(CPACK_PACKAGE_NAME "Simple Volume")
+    set(CPACK_PACKAGE_VERSION "${VERSION}")
+    set(CPACK_PACKAGE_DESCRIPTION "JUCE Audio Plugin")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-linux")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "/opt/YourPlugin")
+
+    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+    include(CPack)
+endif ()
