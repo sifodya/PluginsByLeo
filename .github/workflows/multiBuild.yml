@@ -1,0 +1,68 @@
+name: Build and Package JUCE Audio Plugin for Windows, macOS, and Linux
+
+on:
+  push:
+    branches:
+      - simpleVolume  # Trigger only for pushes to 'release' branch
+    #tags:
+    #- 'v*' # Trigger only for pushes with tags like v1.0.0, v2.0.0, etc.
+  workflow_dispatch:
+  
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up CMake
+        uses: cmake/actions/setup-cmake@v2
+        with:
+          cmake-version: '3.21.2'
+
+      - name: Build and Package JUCE Plugin
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make -j$(nproc)  # Build the plugin
+          cpack -G DEB  # Generate .deb package for Linux
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up CMake
+        uses: cmake/actions/setup-cmake@v2
+        with:
+          cmake-version: '3.21.2'
+
+      - name: Build and Package JUCE Plugin
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          xcodebuild -configuration Release  # Build the plugin
+          cpack -G DragNDrop  # Generate .dmg for macOS
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up CMake
+        uses: cmake/actions/setup-cmake@v2
+        with:
+          cmake-version: '3.21.2'
+
+      - name: Build and Package JUCE Plugin
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          MSBuild JUCEPlugin.sln /p:Configuration=Release  # Build the plugin
+          cpack -G NSIS  # Generate .exe installer for Windows
