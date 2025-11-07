@@ -1,7 +1,6 @@
 //
 // Created by cedri on 15/10/2025.
 //
-#include <iostream>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "BinaryData.h"
 

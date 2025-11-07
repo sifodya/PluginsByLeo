@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 #change to your project name
 project(SIMPLE_VOLUME VERSION 0.1.0)
 
-set(PLUGIN_VERSION "00.00.01")
+set(PLUGIN_VERSION "00.01.01")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)

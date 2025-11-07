@@ -18,9 +18,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     previousGain = 0;
 }
 
-AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
-{
-}
+AudioPluginAudioProcessor::~AudioPluginAudioProcessor() = default;
 
 //==============================================================================
 const juce::String AudioPluginAudioProcessor::getName() const
@@ -117,7 +115,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
     // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
-        return false;*/
+        return false;
 
     if (layouts.getMainInputChannelSet().getAmbisonicOrder() != -1)
         return false;
@@ -200,7 +198,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                         measuredBlocks++;
                     }
                 }
-                    else
+                else
                     {
                         learnState = MEASURING;
                     }
@@ -209,8 +207,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
             case END:
             {
-                auto* editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor());
-                if (editor)
+                if (auto* editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
                 {
                     editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);
                     learnButtonState = false;
@@ -269,7 +266,7 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
-    if (xmlState.get() != nullptr)
+    if (xmlState != nullptr)
         if (xmlState->hasTagName (parameters.state.getType()))
             parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }

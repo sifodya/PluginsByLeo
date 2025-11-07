@@ -48,7 +48,7 @@ void setLearnButtonState(bool state) {learnButtonState = state;}
 private:
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
-    juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     juce::AudioProcessorValueTreeState parameters;
     bool learnButtonState = false;
 
