@@ -138,16 +138,16 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::ignoreUnused (midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto const totalNumInputChannels  = getTotalNumInputChannels();
+    auto const totalNumOutputChannels = getTotalNumOutputChannels();
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        float gainAmplitude = gainParameter->load();
-        float currentGain = pow(10.0f, gainAmplitude/20.0f);
+        const float gainAmplitude = gainParameter->load();
+        const float currentGain = pow(10.0f, gainAmplitude/20.0f);
 
         if (!learnButtonState)
         {
@@ -166,8 +166,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 }
         case MEASURING:
             {
-                float rmsSum = std::accumulate(rmsValues.begin(), rmsValues.end(), 0.0f);
-                float rmsAverage = rmsSum/rmsValues.size();
+                const float rmsSum = std::accumulate(rmsValues.begin(), rmsValues.end(), 0.0f);
+                const float rmsAverage = rmsSum/static_cast<float>(rmsValues.size());
                     sort(rmsValues.begin(), rmsValues.end());
                     if (rmsValues.size() % 2 != 0)
                         rmsMedian = rmsValues[rmsValues.size()/2];
@@ -191,8 +191,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             {
                 if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
                 {
-                    float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
-                    if (rms != 0)
+                    if (float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples()); rms != 0)
                     {
                         rmsValues.push_back(rms);
                         measuredBlocks++;
@@ -258,15 +257,14 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    auto state = parameters.copyState();
-    unique_ptr<juce::XmlElement> xml (state.createXml());
+    auto const state = parameters.copyState();
+    unique_ptr<juce::XmlElement> const xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
-void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void AudioPluginAudioProcessor::setStateInformation (const void* data, const int sizeInBytes)
 {
-    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
-    if (xmlState != nullptr)
+    if (std::unique_ptr<juce::XmlElement> const xmlState (getXmlFromBinary (data, sizeInBytes)); xmlState != nullptr)
         if (xmlState->hasTagName (parameters.state.getType()))
             parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }

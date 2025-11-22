@@ -17,10 +17,10 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void initializeSlider();
-    void initializeButton();
+    //void initializeButton();
     void makeContentVisible(int height, int width);
     //=============================================================================
-    const juce::ImageButton& getLearnButton() {return learnButtonImage;}
+    juce::ImageButton& getLearnButton() {return learnButtonImage;}
     void setLearnButtonValue(bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
     SimpleImageButton learnButtonImage;
 

@@ -4,14 +4,14 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "BinaryData.h"
 
-class SimpleSliderLookAndFeel : public juce::LookAndFeel_V4
+class SimpleSliderLookAndFeel final : public juce::LookAndFeel_V4
 {
 public:
     SimpleSliderLookAndFeel()
     {
 
 
-        //make typeface from fontFile and assining it to LeoFont
+        //make typeface from fontFile and assigning it to LeoFont
         fontTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayMediu_ttf, BinaryData::NeueHaasDisplayMediu_ttfSize);
 
         //loading custom slider images from disk
@@ -25,21 +25,21 @@ public:
     //public images of the slider -> need to be public?
     juce::Image backgroundImage;
     juce::Image thumbImage;
-    ///<summary>
-    ///overrides the drawLinearSlider function for customisation purposes.
-    ///is responsible for calling the functions which are drawing the custom graphics and
-    ///the custom text box.
-    ///The function gets its member variable values from the slider set in the editor
-    ///</summary>
-    ///<param></param>
+    /// <summary>
+    /// overrides the drawLinearSlider function for customisation purposes.
+    /// is responsible for calling the functions which are drawing the custom graphics and
+    /// the custom text box.
+    /// The function gets its member variable values from the slider set in the editor
+    /// </summary>
+    /// <param></param>
     void drawLinearSlider(juce::Graphics& g,
-        int x,
-        int y,
-        int width,
-        int height,
-        float sliderPos,
-        float minSliderPos,
-        float maxSliderPos,
+        const int x,
+        const int y,
+        const int width,
+        const int height,
+        const float sliderPos,
+        const float minSliderPos,
+        const float maxSliderPos,
         const juce::Slider::SliderStyle style,
         juce::Slider& slider) override
     {
@@ -48,23 +48,23 @@ public:
         createSliderTextBox(slider);
     }
 
-    ///<summary>
-    ///Overrides the font of the label
-    ///using the custom font set in the constructor and setting a size with scalar.
-    ///</summary>
-    ///<param></param>
+    /// <summary>
+    /// Overrides the font of the label
+    /// using the custom font set in the constructor and setting a size with scalar.
+    /// </summary>
+    /// <param></param>
     juce::Font getLabelFont(juce::Label& label) override
     {
-        return juce::Font(fontTypeface).withHeight(75.0f * editorScalarHeight); //eigentlich 65
+        return {juce::FontOptions{}.withTypeface(fontTypeface).withHeight(75.0f * editorScalarHeight)}; // 65
     }
 
-    ///<summary>
-    ///Overrides and creates a custom text box for the slider
-    ///its setting text colour, position transparency of the background and the outline,
-    ///as well as the edited colours.
-    ///</summary>
-    ///<param></param>
-    juce::Label* SimpleSliderLookAndFeel::createSliderTextBox(juce::Slider& slider) override
+    /// <summary>
+    /// Overrides and creates a custom text box for the slider
+    /// its setting text colour, position transparency of the background and the outline,
+    /// as well as the edited colours.
+    /// </summary>
+    /// <param></param>
+    juce::Label* createSliderTextBox(juce::Slider& slider) override
     {
         juce::Label* label = LookAndFeel_V4::createSliderTextBox(slider);
         label->setColour(juce::Label::textColourId, juce::Colour(33, 33, 29));
@@ -77,17 +77,17 @@ public:
         return label;
     }
 
-    ///<summary>
-    ///Overrides the function that draws the background.
-    ///Is set to draw the custom image set in the constructor and scales it.
-    ///Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
-    ///</summary>
-    ///<params></params>
+    /// <summary>
+    /// Overrides the function that draws the background.
+    /// Is set to draw the custom image set in the constructor and scales it.
+    /// Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
+    /// </summary>
+    /// <params></params>
     void drawLinearSliderBackground(juce::Graphics& g,
-        int x,
-        int y,
-        int height,
-        int width,
+        const int x,
+        const int y,
+        const int height,
+        const int width,
         float /*sliderPos*/,
         float /*minSliderPos*/,
         float /*maxSliderPos*/,
@@ -97,7 +97,7 @@ public:
         if (!backgroundImage.isNull())
         {
             g.drawImage(backgroundImage,
-                x+118*editorScalarWidth, y, width, height,
+                        118 * static_cast<int>(editorScalarWidth) + x, y, width, height,
                 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
         }
         else
@@ -107,19 +107,19 @@ public:
         }
     }
 
-    ///<summary>
-    ///Overrides the function that draws the thumb.
-    ///Is set to draw the custom image set in the constructor and scales it.
-    ///In addition to the scaling it sets the thumb to the correct position on the slider.
-    ///Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
-    ///</summary>
-    ///<params></params>
+    /// <summary>
+    /// Overrides the function that draws the thumb.
+    /// Is set to draw the custom image set in the constructor and scales it.
+    /// In addition to the scaling it sets the thumb to the correct position on the slider.
+    /// Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
+    /// </summary>
+    /// <params></params>
     void drawLinearSliderThumb(juce::Graphics& g,
-        int x,
-        int y,
-        int width,
-        int height,
-        float sliderPos,
+        const int x,
+        const int y,
+        const int width,
+        const int height,
+        const float sliderPos,
         float minSliderPos,
         float maxSliderPos,
         const juce::Slider::SliderStyle style,
@@ -127,15 +127,15 @@ public:
     {
         if (!thumbImage.isNull())
         {
-            const int thumbHeight = thumbImage.getHeight()*editorScalarHeight;
-            const int thumbWidth = thumbImage.getWidth()*editorScalarWidth;
-            float drawX, drawY = 0.0f;
-            drawX = x + (width - thumbWidth) / 2.0f;
-            drawY = sliderPos - thumbHeight / 2.0f;
+            const int thumbHeight = thumbImage.getHeight()*static_cast<int>(editorScalarHeight);
+            const int thumbWidth = thumbImage.getWidth()*static_cast<int>(editorScalarWidth);
+            float drawY = 0.0f;
+            const float drawX = static_cast<float>(x) + (static_cast<float>(width) - static_cast<float>(thumbWidth)) / 2.0f;
+            drawY = sliderPos - static_cast<float>(thumbHeight) / 2.0f;
 
             g.drawImage(thumbImage,
-                drawX+59*editorScalarWidth,
-                drawY,
+                static_cast<int>(drawX)+59*static_cast<int>(editorScalarWidth),
+                static_cast<int>(drawY),
                 thumbWidth,
                 thumbHeight,
                 0,
@@ -147,25 +147,25 @@ public:
         else
         {
             g.setColour(juce::Colours::violet);
-            g.fillEllipse(x, y, width, height);
+            g.fillEllipse(static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height));
         }
     }
 
-    ///<summary>
-    ///Overrides the slider layout. Allows to create a new slider layout in this case
-    ///to set the text box further below the slider
-    ///</summary>
+    /// <summary>
+    /// Overrides the slider layout. Allows to create a new slider layout in this case
+    /// to set the text box further below the slider
+    /// </summary>
     juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
 {
     juce::Slider::SliderLayout layout;
-        layout.sliderBounds = juce::Rectangle<int>(0*editorScalarWidth, 0*editorScalarHeight, 119*editorScalarWidth, 544*editorScalarHeight);
-        layout.textBoxBounds = juce::Rectangle<int>(0*editorScalarWidth, 600*editorScalarHeight, 250*editorScalarWidth, 100*editorScalarHeight);
+        layout.sliderBounds = juce::Rectangle<int>(static_cast<int>(editorScalarWidth) * 0, static_cast<int>(editorScalarHeight) * 0, static_cast<int>(editorScalarWidth) * 119, static_cast<int>(editorScalarHeight) * 544);
+        layout.textBoxBounds = juce::Rectangle<int>(static_cast<int>(editorScalarWidth) * 0, static_cast<int>(editorScalarHeight) * 600, static_cast<int>(editorScalarWidth) * 250, static_cast<int>(editorScalarHeight) * 100);
 
     return layout;
 }
 
     //variables for scaling, set by the editor
-    float editorScalarWidth, editorScalarHeight;
+    float editorScalarWidth{}, editorScalarHeight{};
     ~SimpleSliderLookAndFeel() override = default;
 private:
     juce::File fontFile; //containing the font file
@@ -173,6 +173,5 @@ private:
     juce::File pngThumb; //containing the png for the thumb
     juce::MemoryBlock fontData; //data block for the font File
     juce::Typeface::Ptr fontTypeface; //typeface to be set by the font file
-    //juce::Font LeoFont; //complete custom font
-    juce::Label *sliderLabel; //custom lable
+    juce::Label *sliderLabel{}; //custom label
 };

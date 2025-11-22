@@ -40,8 +40,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     pluginWidth = getWidth();
     pluginHeight = getHeight();
     pluginBottom = getBottom();
-    scalarWidth = getWidth()/368.0f;
-    scalarHeight = getHeight()/1281.0f;
+    scalarWidth = static_cast<float>(getWidth())/368.0f;
+    scalarHeight = static_cast<float>(getHeight())/1281.0f;
     cout << "Plugin height "<<getHeight()<<" Plugin width "<<getWidth()<<endl;
 }
 
@@ -66,16 +66,16 @@ void AudioPluginAudioProcessorEditor::resized()
     auto pluginArea = getLocalBounds();
     fullPluginTemplate.resizeFromEditor(pluginArea);
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    scalarWidth = getWidth()/368.0f;
-    scalarHeight = getHeight()/1281.0f;
+    scalarWidth = static_cast<float>(getWidth())/368.0f;
+    scalarHeight = static_cast<float>(getHeight())/1281.0f;
     simpleSliderLNF.editorScalarWidth = scalarWidth;
     simpleSliderLNF.editorScalarHeight = scalarHeight;
     gainSlider.sendLookAndFeelChange();
-    pluginTitle.setBounds(46 * scalarWidth, 102 * scalarHeight, 280 * scalarWidth, 158 * scalarHeight);
+    pluginTitle.setBounds(static_cast<int>(scalarWidth) * 46, static_cast<int>(scalarHeight) * 102, static_cast<int>(scalarWidth) * 280,static_cast<int>(scalarHeight) * 158);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
-    gainSlider.setBounds(42 * scalarWidth, 469 * scalarHeight, 750 * scalarWidth , 700 * scalarHeight);
-    learnButtonImage.setBounds(110 * scalarWidth, 365 * scalarHeight, 104 * scalarWidth, 41 * scalarHeight);
-    linkButton.setBounds(34 * scalarWidth, 1201 * scalarHeight, 300 * scalarWidth, 40 * scalarHeight);
+    gainSlider.setBounds(static_cast<int>(scalarWidth) * 42, static_cast<int>(scalarHeight) * 469, static_cast<int>(scalarWidth) * 750, static_cast<int>(scalarHeight) * 700);
+    learnButtonImage.setBounds(static_cast<int>(scalarWidth) * 110, static_cast<int>(scalarHeight) * 365, static_cast<int>(scalarWidth) * 104, static_cast<int>(scalarHeight) * 41);
+    linkButton.setBounds(static_cast<int>(scalarWidth) * 34, static_cast<int>(scalarHeight) * 1201, static_cast<int>(scalarWidth) * 300, static_cast<int>(scalarHeight) * 40);
 }
 
 void AudioPluginAudioProcessorEditor::initializeSlider()

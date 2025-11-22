@@ -4,12 +4,12 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "BinaryData.h"
-///<summary>
-///This class is used to create a background image for the plugin. It is called in PluginEditor.
-///Further it references the bounds of the plugin parent window and is therefore responsible for
-///the entire resize calculations.
-///</summary>
-class LeoBackground : public juce::Component
+/// <summary>
+/// This class is used to create a background image for the plugin. It is called in PluginEditor.
+/// Further it references the bounds of the plugin parent window and is therefore responsible for
+/// the entire resize calculations.
+/// </summary>
+class LeoBackground final : public juce::Component
 
 {
 public:
@@ -22,22 +22,22 @@ public:
         ///</summary>
         image = juce::ImageFileFormat::loadFrom(BinaryData::bg_png, BinaryData::bg_pngSize);
 
-    backgroundBounds.setSize(image.getWidth(), image.getHeight());
+    backgroundBounds.setSize(static_cast<float>(image.getWidth()), static_cast<float>(image.getHeight()));
     }
-///<summary>
-///This function is used by the PluginEditor to pass on the values of the resized parent window.
-///This is done in order to resize the background image to the size of the parent window.
-///</summary>
-///<param name="size"></param>
-    void LeoBackground::resizeFromEditor(juce::Rectangle<int> size)
+/// <summary>
+/// This function is used by the PluginEditor to pass on the values of the resized parent window.
+/// This is done in order to resize the background image to the size of the parent window.
+/// </summary>
+/// <param name="size"></param>
+    void resizeFromEditor(juce::Rectangle<int> const size)
     {
-        backgroundBounds.setSize(size.getWidth(), size.getHeight());
+        backgroundBounds.setSize(static_cast<float>(size.getWidth()), static_cast<float>(size.getHeight()));
     }
-///<summary>
-///This function is used to paint the background image to the bounds of this component
-///</summary>
-///<param name="g"></param>
-    void LeoBackground::paint(juce::Graphics& g) override
+/// <summary>
+/// This function is used to paint the background image to the bounds of this component
+/// </summary>
+/// <param name="g"></param>
+    void paint(juce::Graphics& g) override
     {
         if (image.isValid())
             g.drawImage(image, backgroundBounds);
