@@ -35,7 +35,7 @@ private:
     SimpleHyperlinkButton linkButton;
 
     int pluginWidth, pluginHeight, pluginBottom;
-    float scalarWidth, scalarHeight ;
+    float scalarWidth, scalarHeight, scalarRatio;
 
     const juce::Displays::Display* screen;
     juce::Rectangle<int> screenArea;

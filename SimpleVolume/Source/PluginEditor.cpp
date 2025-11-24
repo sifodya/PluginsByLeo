@@ -2,7 +2,8 @@
 #include "PluginEditor.h"
 #include <iostream>
 using namespace std;
-
+#define PLUGIN_HEIGHT 1281; //org 1281 neu 981
+#define PLUGIN_WIDTH 368 //org 368 neu 283
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
@@ -20,11 +21,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         screenArea = screen->totalArea;
         screenWidth = screenArea.getWidth();
         screenHeight = screenArea.getHeight();
-        screenScaleHeight = (screenHeight / 1440) * 1281;
-        screenScaleWidth = (screenWidth / 2560) * 368;
+        screenScaleHeight = (screenHeight / 1440) * PLUGIN_HEIGHT;
+        screenScaleWidth = (screenWidth / 2560) * PLUGIN_WIDTH;
         cout << "Screen Scale Height: " << screenScaleHeight << "Screen Scale Width: " << screenScaleWidth <<endl;
     }
-
 
     learnButtonImage.onClick = [this]()
     {
@@ -37,11 +37,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     initializeSlider();
 
     makeContentVisible(screenScaleHeight, screenScaleWidth);
+
     pluginWidth = getWidth();
     pluginHeight = getHeight();
     pluginBottom = getBottom();
-    scalarWidth = static_cast<float>(getWidth())/368.0f;
-    scalarHeight = static_cast<float>(getHeight())/1281.0f;
+    scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
+    scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
     cout << "Plugin height "<<getHeight()<<" Plugin width "<<getWidth()<<endl;
 }
 
@@ -63,11 +64,11 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    auto pluginArea = getLocalBounds();
+    scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
+    scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
+    const auto pluginArea = getLocalBounds();
     fullPluginTemplate.resizeFromEditor(pluginArea);
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    scalarWidth = static_cast<float>(getWidth())/368.0f;
-    scalarHeight = static_cast<float>(getHeight())/1281.0f;
     simpleSliderLNF.editorScalarWidth = scalarWidth;
     simpleSliderLNF.editorScalarHeight = scalarHeight;
     gainSlider.sendLookAndFeelChange();
@@ -91,7 +92,7 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
     gainSlider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
 }
 
-void AudioPluginAudioProcessorEditor::makeContentVisible(int height, int width)
+void AudioPluginAudioProcessorEditor::makeContentVisible(const int height, const int width)
 {
     setSize (width, height);
     addAndMakeVisible(fullPluginTemplate);

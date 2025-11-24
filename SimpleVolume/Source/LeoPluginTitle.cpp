@@ -27,10 +27,10 @@ public:
             g.fillAll(juce::Colours::pink);
     }
 
-    void resized() override
+    /*void resized() override
     {
 
-    }
+    }*/
     juce::Image titleImage;
 private:
     juce::File pngTitleFile;
