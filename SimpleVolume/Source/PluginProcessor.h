@@ -58,7 +58,7 @@ private:
     int measuredBlocksRe = 1;
     float targetLoudness = -12.0f;
     enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
-    enum LearnState learnState = IDLE;
+    LearnState learnState = IDLE;
     float learnThreshold = 0.5f;
     float rmsMedian = 0.0f;
     //==============================================================================

@@ -34,8 +34,12 @@ private:
     LeoPluginTitle pluginTitle;
     SimpleHyperlinkButton linkButton;
 
-    int pluginWidth, pluginHeight, pluginBottom;
-    float scalarWidth, scalarHeight ;
+    int pluginWidth, pluginHeight, pluginBottom, oldPluginWidth, oldPluginHeight;
+    float scalarWidth, scalarHeight;
+    float aspectRatioHeight = 80.0f, aspectRationWidth = 23.0f;
+    enum ResizeDirection {TOP_BOTTOM, LEFT_RIGHT, DIAGONAL};
+    ResizeDirection resizeDirection;
+    double pluginRatio = 368.0f/1281.0f;
 
     const juce::Displays::Display* screen;
     juce::Rectangle<int> screenArea;

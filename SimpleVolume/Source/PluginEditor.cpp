@@ -2,7 +2,11 @@
 #include "PluginEditor.h"
 #include <iostream>
 using namespace std;
-
+#define PLUGIN_MINWIDTH 60
+#define PLUGIN_MAXWIDTH 500
+#define PLUGIN_INITWIDTH 300
+#define PLUGIN_WIDTH 368
+#define PLUGIN_HEIGHT 1281
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
@@ -13,36 +17,31 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      gainSlider)
 {
     juce::ignoreUnused(processorRef);
-
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
         screenArea = screen->totalArea;
         screenWidth = screenArea.getWidth();
         screenHeight = screenArea.getHeight();
-        screenScaleHeight = (screenHeight / 1440) * 1281;
-        screenScaleWidth = (screenWidth / 2560) * 368;
-        cout << "Screen Scale Height: " << screenScaleHeight << "Screen Scale Width: " << screenScaleWidth <<endl;
     }
 
+    int screenRatio = screenArea.getAspectRatio();
+
+    setResizable(true, false);
+    setResizeLimits(PLUGIN_MINWIDTH, PLUGIN_MINWIDTH/pluginRatio, PLUGIN_MAXWIDTH, PLUGIN_MAXWIDTH/pluginRatio);
+    getConstrainer()->setFixedAspectRatio(pluginRatio);
+
+    initializeSlider();
+
+    makeContentVisible(PLUGIN_INITWIDTH/screenRatio, PLUGIN_INITWIDTH);
+    pluginBottom = getBottom();
+    scalarWidth = getWidth()/PLUGIN_WIDTH;
+    scalarHeight = getHeight()/PLUGIN_HEIGHT;
 
     learnButtonImage.onClick = [this]()
     {
         processorRef.setLearnButtonState(learnButtonImage.getToggleState());
     };
-
-    setResizable(true, true);
-    setResizeLimits(200, 500, 1000, 2500);
-
-    initializeSlider();
-
-    makeContentVisible(screenScaleHeight, screenScaleWidth);
-    pluginWidth = getWidth();
-    pluginHeight = getHeight();
-    pluginBottom = getBottom();
-    scalarWidth = getWidth()/368.0f;
-    scalarHeight = getHeight()/1281.0f;
-    cout << "Plugin height "<<getHeight()<<" Plugin width "<<getWidth()<<endl;
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -63,11 +62,29 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
+    scalarWidth = getWidth()/PLUGIN_WIDTH;
+    scalarHeight = getHeight()/PLUGIN_HEIGHT;
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*//auto pluginArea = getLocalBounds();
+    //fullPluginTemplate.resizeFromEditor(pluginArea);
+    fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
+    //simpleSliderLNF.editorScalarWidth = scalarWidth;
+    //simpleSliderLNF.editorScalarHeight = scalarHeight;
+    //gainSlider.sendLookAndFeelChange();
+    pluginTitle.setBounds(46, 102, 280, 158);
+    //pluginTitle.resizeFromEditor(pluginTitle.getBounds());
+    gainSlider.setBounds(42, 469, 750, 700);
+    learnButtonImage.setBounds(110, 365, 104, 41);
+    linkButton.setBounds(34, 1201, 300, 40);
+    oldPluginWidth = pluginWidth;
+    oldPluginHeight = pluginHeight;*/
+    //------------------------------------------------------------------------------------------------------------------
     auto pluginArea = getLocalBounds();
     fullPluginTemplate.resizeFromEditor(pluginArea);
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    scalarWidth = getWidth()/368.0f;
-    scalarHeight = getHeight()/1281.0f;
+
     simpleSliderLNF.editorScalarWidth = scalarWidth;
     simpleSliderLNF.editorScalarHeight = scalarHeight;
     gainSlider.sendLookAndFeelChange();
@@ -94,9 +111,12 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
 void AudioPluginAudioProcessorEditor::makeContentVisible(int height, int width)
 {
     setSize (width, height);
+    cout<<width<<" "<<height<<endl;
     addAndMakeVisible(fullPluginTemplate);
     addAndMakeVisible(pluginTitle);
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
 }
+
+
