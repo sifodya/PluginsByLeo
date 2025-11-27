@@ -34,9 +34,6 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     initializeSlider();
 
     makeContentVisible(PLUGIN_INITWIDTH/screenRatio, PLUGIN_INITWIDTH);
-    pluginBottom = getBottom();
-    scalarWidth = getWidth()/PLUGIN_WIDTH;
-    scalarHeight = getHeight()/PLUGIN_HEIGHT;
 
     learnButtonImage.onClick = [this]()
     {
@@ -62,35 +59,21 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    scalarWidth = getWidth()/PLUGIN_WIDTH;
-    scalarHeight = getHeight()/PLUGIN_HEIGHT;
+    scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
+    scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
 
     //------------------------------------------------------------------------------------------------------------------
 
-    /*//auto pluginArea = getLocalBounds();
-    //fullPluginTemplate.resizeFromEditor(pluginArea);
-    fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    //simpleSliderLNF.editorScalarWidth = scalarWidth;
-    //simpleSliderLNF.editorScalarHeight = scalarHeight;
-    //gainSlider.sendLookAndFeelChange();
-    pluginTitle.setBounds(46, 102, 280, 158);
-    //pluginTitle.resizeFromEditor(pluginTitle.getBounds());
-    gainSlider.setBounds(42, 469, 750, 700);
-    learnButtonImage.setBounds(110, 365, 104, 41);
-    linkButton.setBounds(34, 1201, 300, 40);
-    oldPluginWidth = pluginWidth;
-    oldPluginHeight = pluginHeight;*/
-    //------------------------------------------------------------------------------------------------------------------
     auto pluginArea = getLocalBounds();
-    fullPluginTemplate.resizeFromEditor(pluginArea);
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
+    fullPluginTemplate.resizeFromEditor(pluginArea);
 
     simpleSliderLNF.editorScalarWidth = scalarWidth;
     simpleSliderLNF.editorScalarHeight = scalarHeight;
     gainSlider.sendLookAndFeelChange();
     pluginTitle.setBounds(46 * scalarWidth, 102 * scalarHeight, 280 * scalarWidth, 158 * scalarHeight);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
-    gainSlider.setBounds(42 * scalarWidth, 469 * scalarHeight, 750 * scalarWidth , 700 * scalarHeight);
+    gainSlider.setBounds(42 * scalarWidth, 419 * scalarHeight, 750 * scalarWidth , 750 * scalarHeight);
     learnButtonImage.setBounds(110 * scalarWidth, 365 * scalarHeight, 104 * scalarWidth, 41 * scalarHeight);
     linkButton.setBounds(34 * scalarWidth, 1201 * scalarHeight, 300 * scalarWidth, 40 * scalarHeight);
 }
@@ -101,7 +84,11 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
     gainSlider.setTextBoxIsEditable(true);
     gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     gainSlider.setLookAndFeel(&simpleSliderLNF);
-    gainSlider.setTextValueSuffix(" dB");
+    //gainSlider.setTextValueSuffix(" dB");
+    //gainSlider.setNumDecimalPlacesToDisplay(1);
+    gainSlider.textFromValueFunction = [](double value){
+        return juce::String(value, 1);
+    };
     gainSlider.setValue(0.0f);
     gainSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     gainSlider.setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::black);

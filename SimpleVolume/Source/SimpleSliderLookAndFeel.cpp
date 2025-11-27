@@ -73,9 +73,28 @@ public:
         label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::black);
         label->setColour(juce::Label::backgroundWhenEditingColourId, juce::Colours::transparentBlack);
         label->setColour(juce::Label::outlineWhenEditingColourId, juce::Colours::transparentBlack);
+        // Remove JUCE’s suffix behaviour (important)
+        slider.setTextValueSuffix("");
+
+        // Create fixed “ dB” component
+        auto* suffix = new FixedSuffixLabel(" dB", fontTypeface);
+        suffix->setInterceptsMouseClicks(false, false);
+        label->addAndMakeVisible(suffix);
+
+        // Create listener & store it so it stays alive
+        auto listener = std::make_shared<SuffixPositionListener>(suffix);
+        label->addComponentListener(listener.get());
+
+        // Save both suffix and listener
+        suffixComponents.set(label, suffix);
+        suffixListeners.set(label, listener);
+
+        // Force at least one layout now
+        listener->componentMovedOrResized(*label, true, true);
 
         return label;
     }
+
 
     ///<summary>
     ///Overrides the function that draws the background.
@@ -158,15 +177,23 @@ public:
     juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
 {
     juce::Slider::SliderLayout layout;
-        layout.sliderBounds = juce::Rectangle<int>(0*editorScalarWidth, 0*editorScalarHeight, 119*editorScalarWidth, 544*editorScalarHeight);
-        layout.textBoxBounds = juce::Rectangle<int>(0*editorScalarWidth, 600*editorScalarHeight, 250*editorScalarWidth, 100*editorScalarHeight);
+        layout.sliderBounds = juce::Rectangle<int>(0*editorScalarWidth, 50*editorScalarHeight, 119*editorScalarWidth, 544*editorScalarHeight);
+        layout.textBoxBounds = juce::Rectangle<int>(-100*editorScalarWidth, 640*editorScalarHeight, 350*editorScalarWidth, 100*editorScalarHeight);
 
     return layout;
 }
 
     //variables for scaling, set by the editor
     float editorScalarWidth, editorScalarHeight;
-    ~SimpleSliderLookAndFeel() override = default;
+    ~SimpleSliderLookAndFeel() override
+    {
+        for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
+        {
+            if (auto* label = it.getKey())
+                if (auto* suffix = it.getValue())
+                    label->removeChildComponent(suffix);
+        }
+    }
 private:
     juce::File fontFile; //containing the font file
     juce::File pngBackground; //containing the png for the background
@@ -175,4 +202,53 @@ private:
     juce::Typeface::Ptr fontTypeface; //typeface to be set by the font file
     //juce::Font LeoFont; //complete custom font
     juce::Label *sliderLabel; //custom lable
+
+    //------------------------------------------------------------------------------------------------------------------
+    class FixedSuffixLabel : public juce::Component
+    {
+    public:
+        FixedSuffixLabel(const juce::String& s, juce::Typeface::Ptr tf)
+            : suffix(s), typeface(tf)
+        {}
+
+        void paint(juce::Graphics& g) override
+        {
+            g.setColour(juce::Colour::fromRGB(33, 33, 29));
+
+            juce::Font suffixFont(typeface);
+            suffixFont.setHeight(getHeight() * 0.75f);   // scale as you like
+
+            g.setFont(suffixFont);
+            g.drawFittedText(suffix, getLocalBounds(), juce::Justification::centredRight, 1);
+        }
+
+    private:
+        juce::String suffix;
+        juce::Typeface::Ptr typeface;
+    };
+
+    //====================================================================
+    class SuffixPositionListener : public juce::ComponentListener
+    {
+    public:
+        SuffixPositionListener(juce::Component* suffixComp)
+            : suffix(suffixComp)
+        {}
+
+        void componentMovedOrResized(juce::Component& c, bool, bool) override
+        {
+            auto b = c.getLocalBounds();
+
+            int suffixWidth = int(b.getWidth() * 0.25f);   // adjustable
+            suffix->setBounds(b.removeFromRight(suffixWidth));
+        }
+
+    private:
+        juce::Component* suffix;
+    };
+    //====================================================================
+    juce::HashMap<juce::Label*, std::shared_ptr<SuffixPositionListener>> suffixListeners;
+    juce::HashMap<juce::Label*, juce::Component*> suffixComponents;
+
 };
+
