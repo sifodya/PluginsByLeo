@@ -23,6 +23,11 @@ public:
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
+    void getEditorSize(const int width, const int height)
+    {
+        editorWidth = width;
+        editorHeight = height;
+    }
     //==============================================================================
     const juce::String getName() const override;
 
@@ -43,7 +48,11 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::AudioProcessorValueTreeState& getParameters() {return parameters;}
-void setLearnButtonState(bool state) {learnButtonState = state;}
+    void setLearnButtonState(const bool newState) {learnButtonState = newState;}
+
+    int getEditorWidth();
+    int getEditorHeight();
+    void setEditorSize(int width, int height);
 
 private:
     std::atomic<float>* gainParameter = nullptr;
@@ -61,6 +70,10 @@ private:
     LearnState learnState = IDLE;
     float learnThreshold = 0.5f;
     float rmsMedian = 0.0f;
+    int editorWidth = 0;
+    int editorHeight = 0;
+    juce::ValueTree state = parameters.copyState();
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

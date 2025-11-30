@@ -2,16 +2,18 @@
 // Created by cedri on 07/10/2025.
 //
 #include <juce_gui_basics/juce_gui_basics.h>
+
+#include <utility>
 #include "BinaryData.h"
 
-class SimpleSliderLookAndFeel : public juce::LookAndFeel_V4
+class SimpleSliderLookAndFeel final: public juce::LookAndFeel_V4
 {
 public:
     SimpleSliderLookAndFeel()
     {
 
 
-        //make typeface from fontFile and assining it to LeoFont
+        //make typeface from fontFile and assigning it to LeoFont
         fontTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayMediu_ttf, BinaryData::NeueHaasDisplayMediu_ttfSize);
 
         //loading custom slider images from disk
@@ -25,21 +27,21 @@ public:
     //public images of the slider -> need to be public?
     juce::Image backgroundImage;
     juce::Image thumbImage;
-    ///<summary>
-    ///overrides the drawLinearSlider function for customisation purposes.
-    ///is responsible for calling the functions which are drawing the custom graphics and
-    ///the custom text box.
-    ///The function gets its member variable values from the slider set in the editor
-    ///</summary>
-    ///<param></param>
+    /// <summary>
+    /// overrides the drawLinearSlider function for customisation purposes.
+    /// is responsible for calling the functions which are drawing the custom graphics and
+    /// the custom text box.
+    /// The function gets its member variable values from the slider set in the editor
+    /// </summary>
+    /// <param></param>
     void drawLinearSlider(juce::Graphics& g,
-        int x,
-        int y,
-        int width,
-        int height,
-        float sliderPos,
-        float minSliderPos,
-        float maxSliderPos,
+        const int x,
+        const int y,
+        const int width,
+        const int height,
+        const float sliderPos,
+        const float minSliderPos,
+        const float maxSliderPos,
         const juce::Slider::SliderStyle style,
         juce::Slider& slider) override
     {
@@ -48,27 +50,34 @@ public:
         createSliderTextBox(slider);
     }
 
-    ///<summary>
-    ///Overrides the font of the label
-    ///using the custom font set in the constructor and setting a size with scalar.
-    ///</summary>
-    ///<param></param>
+    /// <summary>
+    /// Overrides the font of the label
+    /// using the custom font set in the constructor and setting a size with scalar.
+    /// </summary>
+    /// <param></param>
     juce::Font getLabelFont(juce::Label& label) override
     {
         return juce::Font(fontTypeface).withHeight(75.0f * editorScalarHeight); //eigentlich 65
     }
 
-    ///<summary>
-    ///Overrides and creates a custom text box for the slider
-    ///its setting text colour, position transparency of the background and the outline,
-    ///as well as the edited colours.
-    ///</summary>
-    ///<param></param>
-    juce::Label* SimpleSliderLookAndFeel::createSliderTextBox(juce::Slider& slider) override
+    /// <summary>
+    /// Overrides and creates a custom text box for the slider
+    /// its setting text colour, position transparency of the background and the outline,
+    /// as well as the edited colours.
+    /// </summary>
+    /// <param></param>
+    juce::Label* createSliderTextBox(juce::Slider& slider) override
     {
         juce::Label* label = LookAndFeel_V4::createSliderTextBox(slider);
         label->setColour(juce::Label::textColourId, juce::Colour(33, 33, 29));
         label->setJustificationType(juce::Justification::centred);
+        label->onEditorShow = [label]
+        {
+            if (auto* editor = label->getCurrentTextEditor())
+            {
+                editor->setJustification(juce::Justification::centred);
+            }
+        };
         label->setColour(juce::Label::backgroundColourId, juce::Colours::transparentBlack);
         label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::black);
         label->setColour(juce::Label::backgroundWhenEditingColourId, juce::Colours::transparentBlack);
@@ -82,7 +91,7 @@ public:
         label->addAndMakeVisible(suffix);
 
         // Create listener & store it so it stays alive
-        auto listener = std::make_shared<SuffixPositionListener>(suffix);
+        const auto listener = std::make_shared<SuffixPositionListener>(suffix);
         label->addComponentListener(listener.get());
 
         // Save both suffix and listener
@@ -96,17 +105,17 @@ public:
     }
 
 
-    ///<summary>
-    ///Overrides the function that draws the background.
-    ///Is set to draw the custom image set in the constructor and scales it.
-    ///Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
-    ///</summary>
-    ///<params></params>
+    /// <summary>
+    /// Overrides the function that draws the background.
+    /// Is set to draw the custom image set in the constructor and scales it.
+    /// Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
+    /// </summary>
+    /// <params></params>
     void drawLinearSliderBackground(juce::Graphics& g,
-        int x,
-        int y,
-        int height,
-        int width,
+        const int x,
+        const int y,
+        const int height,
+        const int width,
         float /*sliderPos*/,
         float /*minSliderPos*/,
         float /*maxSliderPos*/,
@@ -116,7 +125,7 @@ public:
         if (!backgroundImage.isNull())
         {
             g.drawImage(backgroundImage,
-                x+118*editorScalarWidth, y, width, height,
+                x + editorScalarWidth * 118, y, width, height,
                 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
         }
         else
@@ -126,19 +135,19 @@ public:
         }
     }
 
-    ///<summary>
-    ///Overrides the function that draws the thumb.
-    ///Is set to draw the custom image set in the constructor and scales it.
-    ///In addition to the scaling it sets the thumb to the correct position on the slider.
-    ///Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
-    ///</summary>
-    ///<params></params>
+    /// <summary>
+    /// Overrides the function that draws the thumb.
+    /// Is set to draw the custom image set in the constructor and scales it.
+    /// In addition to the scaling it sets the thumb to the correct position on the slider.
+    /// Also, it checks if the image is not NULL otherwise it will fill the background with a colour.
+    /// </summary>
+    /// <params></params>
     void drawLinearSliderThumb(juce::Graphics& g,
-        int x,
-        int y,
-        int width,
-        int height,
-        float sliderPos,
+        const int x,
+        const int y,
+        const int width,
+        const int height,
+        const float sliderPos,
         float minSliderPos,
         float maxSliderPos,
         const juce::Slider::SliderStyle style,
@@ -148,8 +157,8 @@ public:
         {
             const int thumbHeight = thumbImage.getHeight()*editorScalarHeight;
             const int thumbWidth = thumbImage.getWidth()*editorScalarWidth;
-            float drawX, drawY = 0.0f;
-            drawX = x + (width - thumbWidth) / 2.0f;
+            float drawY = 0.0f;
+            const float drawX = x + (width - thumbWidth) / 2.0f;
             drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(thumbImage,
@@ -170,15 +179,17 @@ public:
         }
     }
 
-    ///<summary>
-    ///Overrides the slider layout. Allows to create a new slider layout in this case
-    ///to set the text box further below the slider
-    ///</summary>
+    /// <summary>
+    /// Overrides the slider layout. Allows to create a new slider layout in this case
+    /// to set the text box further below the slider
+    /// </summary>
     juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
 {
     juce::Slider::SliderLayout layout;
-        layout.sliderBounds = juce::Rectangle<int>(0*editorScalarWidth, 50*editorScalarHeight, 119*editorScalarWidth, 544*editorScalarHeight);
-        layout.textBoxBounds = juce::Rectangle<int>(-100*editorScalarWidth, 640*editorScalarHeight, 350*editorScalarWidth, 100*editorScalarHeight);
+        layout.sliderBounds = juce::Rectangle<int>(0 * editorScalarWidth, 50 * editorScalarHeight,
+                                                   119 * editorScalarWidth, 544 * editorScalarHeight);
+        layout.textBoxBounds = juce::Rectangle<int>(-100 * editorScalarWidth, 640 * editorScalarHeight,
+                                                    350 * editorScalarWidth, 100 * editorScalarHeight);
 
     return layout;
 }
@@ -201,14 +212,14 @@ private:
     juce::MemoryBlock fontData; //data block for the font File
     juce::Typeface::Ptr fontTypeface; //typeface to be set by the font file
     //juce::Font LeoFont; //complete custom font
-    juce::Label *sliderLabel; //custom lable
+    juce::Label *sliderLabel; //custom label
 
     //------------------------------------------------------------------------------------------------------------------
-    class FixedSuffixLabel : public juce::Component
+    class FixedSuffixLabel final : public juce::Component
     {
     public:
-        FixedSuffixLabel(const juce::String& s, juce::Typeface::Ptr tf)
-            : suffix(s), typeface(tf)
+        FixedSuffixLabel(juce::String  s, juce::Typeface::Ptr  tf)
+            : suffix(std::move(s)), typeface(std::move(tf))
         {}
 
         void paint(juce::Graphics& g) override
@@ -228,19 +239,17 @@ private:
     };
 
     //====================================================================
-    class SuffixPositionListener : public juce::ComponentListener
+    class SuffixPositionListener final: public juce::ComponentListener
     {
     public:
-        SuffixPositionListener(juce::Component* suffixComp)
+        explicit SuffixPositionListener(juce::Component* suffixComp)
             : suffix(suffixComp)
         {}
 
         void componentMovedOrResized(juce::Component& c, bool, bool) override
         {
             auto b = c.getLocalBounds();
-
-            int suffixWidth = int(b.getWidth() * 0.25f);   // adjustable
-            suffix->setBounds(b.removeFromRight(suffixWidth));
+            suffix->setBounds(b.removeFromRight(350));
         }
 
     private:
