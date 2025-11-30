@@ -161,7 +161,7 @@ public:
             drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(thumbImage,
-                static_cast<int>(drawX)+59*static_cast<int>(editorScalarWidth),
+                static_cast<int>(drawX)+59*editorScalarWidth,
                 static_cast<int>(drawY),
                 thumbWidth,
                 thumbHeight,
