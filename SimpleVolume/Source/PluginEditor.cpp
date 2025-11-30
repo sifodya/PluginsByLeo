@@ -111,8 +111,6 @@ void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)
 {
     if (event.eventComponent == &gainSlider)
         lastSliderValue = gainSlider.getValue();
-
-    cout<<"Mouse Down"<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
@@ -125,6 +123,8 @@ void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
         if (capture==false)
         {
             captureOffset = event.position.y;
+            if (event.eventComponent == &gainSlider)
+                lastSliderValue = gainSlider.getValue();
             capture = true;
         }
         fineFactor = 0.2f;
@@ -132,18 +132,20 @@ void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
     }
     else
     {
-        capture = false;
+        if (capture==true)
+        {
+            if (event.eventComponent == &gainSlider)
+                lastSliderValue = gainSlider.getValue();
+            capture = false;
+        }
         fineFactor = 1.0f;
         pixelDelta = -event.getOffsetFromDragStart().getY();//-(event.position.y - event.mouseDownPosition.y);
     }
-
     // Slider height controls default sensitivity
     const float sliderLength = gainSlider.getLookAndFeel().getSliderLayout(gainSlider).sliderBounds.getHeight();
 
     const float valueDelta = pixelDelta / sliderLength
                        * (gainSlider.getMaximum() - gainSlider.getMinimum())
                        * fineFactor;
-
-    cout<<event.position.y<<" "<<event.mouseDownPosition.y<<" "<<captureOffset<<" "<<pixelDelta<<" "<<valueDelta<<endl;
     gainSlider.setValue(lastSliderValue + valueDelta, juce::sendNotificationSync);
 }
