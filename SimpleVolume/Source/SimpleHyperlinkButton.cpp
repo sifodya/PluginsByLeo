@@ -16,7 +16,7 @@ public:
         setButtonText("check other plugins");
         setURL(juce::URL("https://leo-brennauer.com/#minishop"));
         setFont(buttonFont, true, juce::Justification::centred);
-        setColour(juce::HyperlinkButton::textColourId, juce::Colours::black);
+        setColour(textColourId, juce::Colours::black);
     }
 private:
     juce::MemoryBlock fontData;

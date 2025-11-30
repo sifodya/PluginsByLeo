@@ -2,6 +2,8 @@
 // Created by cedri on 07/10/2025.
 //
 #include <juce_gui_basics/juce_gui_basics.h>
+
+#include <utility>
 #include "BinaryData.h"
 
 class SimpleSliderLookAndFeel final : public juce::LookAndFeel_V4
@@ -69,10 +71,35 @@ public:
         juce::Label* label = LookAndFeel_V4::createSliderTextBox(slider);
         label->setColour(juce::Label::textColourId, juce::Colour(33, 33, 29));
         label->setJustificationType(juce::Justification::centred);
+        label->onEditorShow = [label]
+        {
+            if (auto* editor = label->getCurrentTextEditor())
+            {
+                editor->setJustification(juce::Justification::centred);
+            }
+        };
         label->setColour(juce::Label::backgroundColourId, juce::Colours::transparentBlack);
         label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::black);
         label->setColour(juce::Label::backgroundWhenEditingColourId, juce::Colours::transparentBlack);
         label->setColour(juce::Label::outlineWhenEditingColourId, juce::Colours::transparentBlack);
+        // Remove JUCE’s suffix behaviour (important)
+        slider.setTextValueSuffix("");
+
+        // Create fixed “ dB” component
+        auto* suffix = new FixedSuffixLabel(" dB", fontTypeface);
+        suffix->setInterceptsMouseClicks(false, false);
+        label->addAndMakeVisible(suffix);
+
+        // Create listener & store it so it stays alive
+        const auto listener = std::make_shared<SuffixPositionListener>(suffix);
+        label->addComponentListener(listener.get());
+
+        // Save both suffix and listener
+        suffixComponents.set(label, suffix);
+        suffixListeners.set(label, listener);
+
+        // Force at least one layout now
+        listener->componentMovedOrResized(*label, true, true);
 
         return label;
     }
@@ -97,7 +124,7 @@ public:
         if (!backgroundImage.isNull())
         {
             g.drawImage(backgroundImage,
-                        118 * static_cast<int>(editorScalarWidth) + x, y, width, height,
+                x + editorScalarWidth * 118, y, width, height,
                 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
         }
         else
@@ -127,11 +154,11 @@ public:
     {
         if (!thumbImage.isNull())
         {
-            const int thumbHeight = thumbImage.getHeight()*static_cast<int>(editorScalarHeight);
-            const int thumbWidth = thumbImage.getWidth()*static_cast<int>(editorScalarWidth);
+            const int thumbHeight = thumbImage.getHeight()*editorScalarHeight;
+            const int thumbWidth = thumbImage.getWidth()*editorScalarWidth;
             float drawY = 0.0f;
-            const float drawX = static_cast<float>(x) + (static_cast<float>(width) - static_cast<float>(thumbWidth)) / 2.0f;
-            drawY = sliderPos - static_cast<float>(thumbHeight) / 2.0f;
+            const float drawX = x + (width - thumbWidth) / 2.0f;
+            drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(thumbImage,
                 static_cast<int>(drawX)+59*static_cast<int>(editorScalarWidth),
@@ -158,20 +185,78 @@ public:
     juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
 {
     juce::Slider::SliderLayout layout;
-        layout.sliderBounds = juce::Rectangle<int>(static_cast<int>(editorScalarWidth) * 0, static_cast<int>(editorScalarHeight) * 0, static_cast<int>(editorScalarWidth) * 119, static_cast<int>(editorScalarHeight) * 544);
-        layout.textBoxBounds = juce::Rectangle<int>(static_cast<int>(editorScalarWidth) * 0, static_cast<int>(editorScalarHeight) * 600, static_cast<int>(editorScalarWidth) * 250, static_cast<int>(editorScalarHeight) * 100);
+        layout.sliderBounds = juce::Rectangle<int>(0 * editorScalarWidth, 50 * editorScalarHeight,
+                                                   119 * editorScalarWidth, 544 * editorScalarHeight);
+        layout.textBoxBounds = juce::Rectangle<int>(-100 * editorScalarWidth, 640 * editorScalarHeight,
+                                                    350 * editorScalarWidth, 100 * editorScalarHeight);
 
     return layout;
 }
 
     //variables for scaling, set by the editor
-    float editorScalarWidth{}, editorScalarHeight{};
-    ~SimpleSliderLookAndFeel() override = default;
+    float editorScalarWidth, editorScalarHeight;
+    ~SimpleSliderLookAndFeel() override
+    {
+        for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
+        {
+            if (auto* label = it.getKey())
+                if (auto* suffix = it.getValue())
+                    label->removeChildComponent(suffix);
+        }
+    }
 private:
     juce::File fontFile; //containing the font file
     juce::File pngBackground; //containing the png for the background
     juce::File pngThumb; //containing the png for the thumb
     juce::MemoryBlock fontData; //data block for the font File
     juce::Typeface::Ptr fontTypeface; //typeface to be set by the font file
-    juce::Label *sliderLabel{}; //custom label
+    //juce::Font LeoFont; //complete custom font
+    juce::Label *sliderLabel; //custom label
+
+    //------------------------------------------------------------------------------------------------------------------
+    class FixedSuffixLabel final : public juce::Component
+    {
+    public:
+        FixedSuffixLabel(juce::String  s, juce::Typeface::Ptr  tf)
+            : suffix(std::move(s)), typeface(std::move(tf))
+        {}
+
+        void paint(juce::Graphics& g) override
+        {
+            g.setColour(juce::Colour::fromRGB(33, 33, 29));
+
+            juce::Font suffixFont(typeface);
+            suffixFont.setHeight(getHeight() * 0.75f);   // scale as you like
+
+            g.setFont(suffixFont);
+            g.drawFittedText(suffix, getLocalBounds(), juce::Justification::centredRight, 1);
+        }
+
+    private:
+        juce::String suffix;
+        juce::Typeface::Ptr typeface;
+    };
+
+    //====================================================================
+    class SuffixPositionListener final: public juce::ComponentListener
+    {
+    public:
+        explicit SuffixPositionListener(juce::Component* suffixComp)
+            : suffix(suffixComp)
+        {}
+
+        void componentMovedOrResized(juce::Component& c, bool, bool) override
+        {
+            auto b = c.getLocalBounds();
+            suffix->setBounds(b.removeFromRight(350));
+        }
+
+    private:
+        juce::Component* suffix;
+    };
+    //====================================================================
+    juce::HashMap<juce::Label*, std::shared_ptr<SuffixPositionListener>> suffixListeners;
+    juce::HashMap<juce::Label*, juce::Component*> suffixComponents;
+
 };
+

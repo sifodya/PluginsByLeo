@@ -2,8 +2,8 @@
 // Created by cedri on 05/10/2025.
 //
 #include <juce_gui_basics/juce_gui_basics.h>
-
 #include "BinaryData.h"
+
 /// <summary>
 /// This class is used to create a background image for the plugin. It is called in PluginEditor.
 /// Further it references the bounds of the plugin parent window and is therefore responsible for
@@ -15,11 +15,11 @@ class LeoBackground final : public juce::Component
 public:
     LeoBackground()
     {
-        ///<summary>
-        ///This function is used to load the background image from the resources folder.
-        ///In addition it checks if the file exists and loads it into the image container.
-        ///Then it sets the bounds of the background image to the size of the image.
-        ///</summary>
+        /// <summary>
+        /// This function is used to load the background image from the resources folder.
+        /// In addition it checks if the file exists and loads it into the image container.
+        /// Then it sets the bounds of the background image to the size of the image.
+        /// </summary>
         image = juce::ImageFileFormat::loadFrom(BinaryData::bg_png, BinaryData::bg_pngSize);
 
     backgroundBounds.setSize(static_cast<float>(image.getWidth()), static_cast<float>(image.getHeight()));

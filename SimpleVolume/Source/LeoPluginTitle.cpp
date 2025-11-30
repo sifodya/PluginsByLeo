@@ -27,7 +27,7 @@ public:
             g.fillAll(juce::Colours::pink);
     }
 
-    /*void resized() override
+    /*void LeoPluginTitle::resized() override
     {
 
     }*/

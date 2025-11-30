@@ -4,7 +4,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "BinaryData.h"
 
-class SimpleImageButton : public juce::ImageButton
+class SimpleImageButton final: public juce::ImageButton
 {
 public:
     SimpleImageButton()
