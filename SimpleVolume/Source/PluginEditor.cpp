@@ -111,6 +111,7 @@ void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)
 {
     if (event.eventComponent == &gainSlider)
         lastSliderValue = gainSlider.getValue();
+    captureOffset = event.position.y;
 }
 
 void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
@@ -134,12 +135,13 @@ void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
     {
         if (capture==true)
         {
+            captureOffset = event.position.y;
             if (event.eventComponent == &gainSlider)
                 lastSliderValue = gainSlider.getValue();
             capture = false;
         }
         fineFactor = 1.0f;
-        pixelDelta = -event.getOffsetFromDragStart().getY();//-(event.position.y - event.mouseDownPosition.y);
+        pixelDelta = (event.position.y-captureOffset) * -1.0f;//-(event.position.y - event.mouseDownPosition.y);
     }
     // Slider height controls default sensitivity
     const float sliderLength = gainSlider.getLookAndFeel().getSliderLayout(gainSlider).sliderBounds.getHeight();

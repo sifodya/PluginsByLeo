@@ -42,7 +42,7 @@ private:
     juce::Rectangle<int> screenArea;
     int screenWidth, screenHeight, screenScaleHeight, screenScaleWidth;
     double lastSliderValue = 0.0;
-    bool capture = true;
+    bool capture = false;
     float captureOffset = 0.0f;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };
