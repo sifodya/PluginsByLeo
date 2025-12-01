@@ -46,6 +46,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
     gainSlider.setLookAndFeel(nullptr);
+    processorRef.setEditorSize(getWidth(), getHeight());
 }
 
 

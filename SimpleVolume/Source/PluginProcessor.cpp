@@ -274,20 +274,22 @@ void AudioPluginAudioProcessor::setEditorSize (const int width, const int height
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    //state = parameters.copyState();
-    const unique_ptr xml (state.createXml());
-    copyXmlToBinary (*xml, destData);
+    state.copyPropertiesFrom(parameters.copyState(), nullptr);
+
+    if (auto xml = state.createXml())
+        copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, const int sizeInBytes)
 {
-    if (auto* editor = getActiveEditor())
+    if (auto xml = getXmlFromBinary (data, sizeInBytes))
     {
-        editor->setSize (getEditorWidth(), getEditorHeight());
+        if (xml->hasTagName (state.getType()))
+        {
+            state = juce::ValueTree::fromXml (*xml);
+            parameters.replaceState(state);
+        }
     }
-    if (const std::unique_ptr xmlState (getXmlFromBinary (data, sizeInBytes)); xmlState != nullptr)
-        if (xmlState->hasTagName (parameters.state.getType()))
-            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================
