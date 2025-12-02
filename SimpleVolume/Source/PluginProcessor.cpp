@@ -274,20 +274,33 @@ void AudioPluginAudioProcessor::setEditorSize (const int width, const int height
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    state.copyPropertiesFrom(parameters.copyState(), nullptr);
+    juce::ValueTree copy = state.createCopy();
 
-    if (auto xml = state.createXml())
-        copyXmlToBinary (*xml, destData);
+    // Store APVTS parameter state in its own child
+    auto paramsTree = parameters.copyState();
+    copy.removeChild(copy.getChildWithName("Parameters"), nullptr);
+    copy.addChild(paramsTree, -1, nullptr);
+
+    if (auto xml = copy.createXml())
+        copyXmlToBinary(*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, const int sizeInBytes)
 {
     if (auto xml = getXmlFromBinary (data, sizeInBytes))
     {
-        if (xml->hasTagName (state.getType()))
+        juce::ValueTree loaded = juce::ValueTree::fromXml(*xml);
+
+        if (loaded.hasType("PluginState"))
         {
-            state = juce::ValueTree::fromXml (*xml);
-            parameters.replaceState(state);
+            state = loaded;
+
+            // Restore parameters
+            if (auto valid = state.getChildWithName("Parameters").isValid())
+            {
+                auto paramTree = state.getChildWithName("Parameters");
+                parameters.replaceState(paramTree);
+            }
         }
     }
 }
