@@ -15,8 +15,6 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        ),
     parameters (*this, nullptr, "Parameters", createParameters())
 {
-    state.addChild(uiState, -1, nullptr);
-    state.addChild(parameters.copyState(), -1, nullptr);
     previousGain = 0;
 }
 
@@ -258,58 +256,52 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 
 int AudioPluginAudioProcessor::getEditorWidth()
 {
-    return uiState.getProperty ("width", editorWidth);
+    const auto size = state.getOrCreateChildWithName ("lastSize", nullptr);
+    return size.getProperty ("width", editorWidth);
 }
 int AudioPluginAudioProcessor::getEditorHeight()
 {
-    return uiState.getProperty ("height", editorHeight);
+    const auto size = state.getOrCreateChildWithName ("lastSize", nullptr);
+    return size.getProperty ("height", editorHeight);
 }
 
 void AudioPluginAudioProcessor::setEditorSize (const int width, const int height)
 {
-    uiState.setProperty ("width", width, nullptr);
-    uiState.setProperty ("height", height, nullptr);
+    auto size = state.getOrCreateChildWithName ("lastSize", nullptr);
+    size.setProperty ("width", width, nullptr);
+    size.setProperty ("height", height, nullptr);
 }
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // Replace parameter tree
-    auto paramTree = parameters.copyState();
+    juce::ValueTree copy = state.createCopy();
 
-    // Replace existing PARAMETERS child
-    if (auto check = state.getChildWithName("PARAMETERS").isValid())
-    {
-        auto existing = state.getChildWithName("PARAMETERS");
-       state.removeChild(existing, nullptr);
-    }
+    // Store APVTS parameter state in its own child
+    auto paramsTree = parameters.copyState();
+    copy.removeChild(copy.getChildWithName("Parameters"), nullptr);
+    copy.addChild(paramsTree, -1, nullptr);
 
-    state.addChild(paramTree, -1, nullptr);
-
-    // Export XML
-    if (auto xml = state.createXml())
+    if (auto xml = copy.createXml())
         copyXmlToBinary(*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, const int sizeInBytes)
 {
-    if (auto xml = getXmlFromBinary(data, sizeInBytes))
+    if (auto xml = getXmlFromBinary (data, sizeInBytes))
     {
-        auto loaded = juce::ValueTree::fromXml(*xml);
+        juce::ValueTree loaded = juce::ValueTree::fromXml(*xml);
 
-        if (!loaded.hasType("PluginState"))
-            return;
-
-        state = loaded;
-
-        // Restore parameters
-        if (auto check = state.getChildWithName("PARAMETERS").isValid())
+        if (loaded.hasType("PluginState"))
         {
-            auto params = state.getChildWithName("PARAMETERS");
-           parameters.replaceState(params);
-        }
+            state = loaded;
 
-        // Restore UI state
-        uiState = state.getChildWithName("UI");
+            // Restore parameters
+            if (auto valid = state.getChildWithName("Parameters").isValid())
+            {
+                auto paramTree = state.getChildWithName("Parameters");
+                parameters.replaceState(paramTree);
+            }
+        }
     }
 }
 
