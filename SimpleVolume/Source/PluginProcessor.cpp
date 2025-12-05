@@ -256,20 +256,19 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 
 int AudioPluginAudioProcessor::getEditorWidth()
 {
-    const auto size = editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    return size.getProperty ("width", editorWidth);
+    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
+    return editorSize.getProperty ("width", editorWidth);
 }
 int AudioPluginAudioProcessor::getEditorHeight()
 {
-    const auto size = editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    return size.getProperty ("height", editorHeight);
+    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
+    return editorSize.getProperty ("height", editorHeight);
 }
 
 void AudioPluginAudioProcessor::setEditorSize (const int width, const int height)
 {
-    auto size = editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    size.setProperty ("width", width, nullptr);
-    size.setProperty ("height", height, nullptr);
+        editorSize.setProperty ("width", width, nullptr);
+        editorSize.setProperty ("height", height, nullptr);
 }
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
@@ -277,13 +276,23 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     auto state = parameters.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
+
+    auto editorSizeState = editorSize.createCopy();
+    std::unique_ptr<juce::XmlElement> editorSizeXml (editorSizeState.createXml());
+    copyXmlToBinary (*editorSizeXml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, const int sizeInBytes)
 {
-    if (std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes)); xmlState != nullptr)
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    if (xmlState.get() != nullptr)
         if (xmlState->hasTagName (parameters.state.getType()))
             parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
+
+    std::unique_ptr<juce::XmlElement> editorSizeState (getXmlFromBinary (data, sizeInBytes));
+    if (editorSizeState.get() != nullptr)
+        if (editorSizeState->hasTagName (editorSize.getType()))
+            editorSize = juce::ValueTree::fromXml (*editorSizeState);
 }
 
 //==============================================================================
