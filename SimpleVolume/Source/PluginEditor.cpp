@@ -103,7 +103,7 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
         return juce::String(value, 1);
     };
     gainSlider.addMouseListener(this, false);
-    gainSlider.setValue(0.0f);
+    //gainSlider.setValue(0.0f);
     gainSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     gainSlider.setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::black);
     gainSlider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
