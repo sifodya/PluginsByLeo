@@ -25,11 +25,23 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         screenHeight = screenArea.getHeight();
     }
 
-
-    const int screenRatio = screenArea.getAspectRatio();
-    setSize(PLUGIN_INITWIDTH, PLUGIN_INITWIDTH/screenRatio);
-    processorRef.getEditorSize(PLUGIN_INITWIDTH, PLUGIN_INITWIDTH/screenRatio);
-
+    // Get saved size from processor or use default
+    int width = processorRef.getEditorWidth();
+    int height = processorRef.getEditorHeight();
+    
+    // If no saved size, use default
+    if (width <= 0 || height <= 0)
+    {
+        const int screenRatio = screenArea.getAspectRatio();
+        width = PLUGIN_INITWIDTH;
+        height = PLUGIN_INITWIDTH/screenRatio;
+    }
+    
+    // Ensure size is within bounds
+    width = juce::jlimit(PLUGIN_MINWIDTH, PLUGIN_MAXWIDTH, width);
+    height = width / pluginRatio;
+    
+    setSize(width, height);
     setResizable(true, false);
     setResizeLimits(PLUGIN_MINWIDTH, PLUGIN_MINWIDTH/pluginRatio, PLUGIN_MAXWIDTH, PLUGIN_MAXWIDTH/pluginRatio);
     getConstrainer()->setFixedAspectRatio(pluginRatio);
@@ -64,11 +76,11 @@ void AudioPluginAudioProcessorEditor::resized()
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
 
-    //------------------------------------------------------------------------------------------------------------------
+    // Update the processor with the new size
+    processorRef.setEditorSize(getWidth(), getHeight());
 
     const auto pluginArea = getLocalBounds();
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    processorRef.setEditorSize (getWidth(), getHeight());
     fullPluginTemplate.resizeFromEditor(pluginArea);
 
     simpleSliderLNF.editorScalarWidth = scalarWidth;
