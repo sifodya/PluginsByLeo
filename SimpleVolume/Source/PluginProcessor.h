@@ -72,7 +72,7 @@ private:
     float rmsMedian = 0.0f;
     int editorWidth = 0;
     int editorHeight = 0;
-    juce::ValueTree state { "PluginState" };
+    juce::ValueTree editorSize;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

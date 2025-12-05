@@ -256,53 +256,34 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 
 int AudioPluginAudioProcessor::getEditorWidth()
 {
-    const auto size = state.getOrCreateChildWithName ("lastSize", nullptr);
+    const auto size = editorSize.getOrCreateChildWithName ("lastSize", nullptr);
     return size.getProperty ("width", editorWidth);
 }
 int AudioPluginAudioProcessor::getEditorHeight()
 {
-    const auto size = state.getOrCreateChildWithName ("lastSize", nullptr);
+    const auto size = editorSize.getOrCreateChildWithName ("lastSize", nullptr);
     return size.getProperty ("height", editorHeight);
 }
 
 void AudioPluginAudioProcessor::setEditorSize (const int width, const int height)
 {
-    auto size = state.getOrCreateChildWithName ("lastSize", nullptr);
+    auto size = editorSize.getOrCreateChildWithName ("lastSize", nullptr);
     size.setProperty ("width", width, nullptr);
     size.setProperty ("height", height, nullptr);
 }
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    juce::ValueTree copy = state.createCopy();
-
-    // Store APVTS parameter state in its own child
-    auto paramsTree = parameters.copyState();
-    copy.removeChild(copy.getChildWithName("Parameters"), nullptr);
-    copy.addChild(paramsTree, -1, nullptr);
-
-    if (auto xml = copy.createXml())
-        copyXmlToBinary(*xml, destData);
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, const int sizeInBytes)
 {
-    if (auto xml = getXmlFromBinary (data, sizeInBytes))
-    {
-        juce::ValueTree loaded = juce::ValueTree::fromXml(*xml);
-
-        if (loaded.hasType("PluginState"))
-        {
-            state = loaded;
-
-            // Restore parameters
-            if (auto valid = state.getChildWithName("Parameters").isValid())
-            {
-                auto paramTree = state.getChildWithName("Parameters");
-                parameters.replaceState(paramTree);
-            }
-        }
-    }
+    if (std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes)); xmlState != nullptr)
+        if (xmlState->hasTagName (parameters.state.getType()))
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================
