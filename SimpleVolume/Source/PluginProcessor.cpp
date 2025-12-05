@@ -13,12 +13,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-    parameters (*this, nullptr, "Parameters", createParameters()),
-    editorSize ("EditorSize")
+    parameters (*this, nullptr, "Parameters", createParameters())
 {
     previousGain = 0;
-    editorSize.setProperty("width", 0, nullptr);
-    editorSize.setProperty("height", 0, nullptr);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor() = default;
@@ -276,9 +273,9 @@ void AudioPluginAudioProcessor::setEditorSize(int width, int height)
         editorHeight = height;
         
         // Update the editor size in the state
-        auto state = parameters.copyState();
-        state.state.setProperty("editorWidth", editorWidth, nullptr);
-        state.state.setProperty("editorHeight", editorHeight, nullptr);
+        //auto state = parameters.copyState();
+        editorSize.setProperty("editorWidth", editorWidth, nullptr);
+        editorSize.setProperty("editorHeight", editorHeight, nullptr);
     }
 }
 
@@ -289,8 +286,8 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     auto state = parameters.copyState();
     
     // Add editor size to the state
-    state.state.setProperty("editorWidth", editorWidth, nullptr);
-    state.state.setProperty("editorHeight", editorHeight, nullptr);
+    state.appendChild(editorSize, nullptr);
+
     
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
@@ -310,7 +307,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
             editorWidth = newState.getProperty("editorWidth");
             editorHeight = newState.getProperty("editorHeight");
         }
-        
+
+        newState.removeChild(editorSize, nullptr);
         parameters.replaceState(newState);
     }
 }
