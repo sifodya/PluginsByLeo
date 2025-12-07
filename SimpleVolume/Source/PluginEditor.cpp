@@ -25,23 +25,20 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         screenHeight = screenArea.getHeight();
     }
 
-    // Get saved size from processor or use default
-    int width = processorRef.getEditorWidth();
-    int height = processorRef.getEditorHeight();
-    
-    // If no saved size, use default
-    if (width <= 0 || height <= 0)
-    {
+
         const int screenRatio = screenArea.getAspectRatio();
-        width = PLUGIN_INITWIDTH;
-        height = PLUGIN_INITWIDTH/screenRatio;
-    }
+        const int width = PLUGIN_INITWIDTH;
+        const int height = PLUGIN_INITWIDTH/screenRatio;
+
     
     // Ensure size is within bounds
-    width = juce::jlimit(PLUGIN_MINWIDTH, PLUGIN_MAXWIDTH, width);
-    height = width / pluginRatio;
-    
-    setSize(width, height);
+    /*width = juce::jlimit(PLUGIN_MINWIDTH, PLUGIN_MAXWIDTH, width);
+    height = width / pluginRatio;*/
+
+    if (processorRef.firstTimeLoaded)
+        setSize(processorRef.getEditorWidth(), processorRef.getEditorHeight());
+    else
+        setSize(width, height);
     setResizable(true, false);
     setResizeLimits(PLUGIN_MINWIDTH, PLUGIN_MINWIDTH/pluginRatio, PLUGIN_MAXWIDTH, PLUGIN_MAXWIDTH/pluginRatio);
     getConstrainer()->setFixedAspectRatio(pluginRatio);
@@ -111,7 +108,6 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
 
 void AudioPluginAudioProcessorEditor::makeContentVisible()
 {
-    setSize (processorRef.getEditorWidth(), processorRef.getEditorHeight());
     addAndMakeVisible(fullPluginTemplate);
     addAndMakeVisible(pluginTitle);
     addAndMakeVisible(gainSlider);
