@@ -54,15 +54,12 @@ public:
     int getEditorHeight();
     void setEditorSize(int width, int height);
 
-    bool firstTimeLoaded = false;
-
 private:
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     juce::AudioProcessorValueTreeState parameters;
     bool learnButtonState = false;
-
 
     std::vector <float> rmsValues;
     int targetMeasurements = 5; //in seconds

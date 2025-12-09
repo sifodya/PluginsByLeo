@@ -256,40 +256,61 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 
 int AudioPluginAudioProcessor::getEditorWidth()
 {
-    const int width = parameters.getParameter("editorWidth")->getValue();
-    return width;
+    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
+    return editorSize.getProperty ("width", editorWidth);
 }
 int AudioPluginAudioProcessor::getEditorHeight()
 {
-    const int height = parameters.getParameter("editorHeight")->getValue();
-    return height;
+    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
+    return editorSize.getProperty ("height", editorHeight);
 }
 
 void AudioPluginAudioProcessor::setEditorSize(int width, int height)
 {
     if (width > 0 && height > 0)
     {
-        parameters.getParameter("editorWidth")->setValue(width);
-        parameters.getParameter("editorHeight")->setValue(height);
+        editorWidth = width;
+        editorHeight = height;
+        
+        // Update the editor size in the state
+        //auto state = parameters.copyState();
+        editorSize.setProperty("editorWidth", editorWidth, nullptr);
+        editorSize.setProperty("editorHeight", editorHeight, nullptr);
     }
 }
 
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    // Save the current editor size to the state
     auto state = parameters.copyState();
+    
+    // Add editor size to the state
+    state.appendChild(editorSize, nullptr);
+
+    
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
-    xml->setAttribute("firstTimeLoaded", "false");
     copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    
     if (xmlState.get() != nullptr)
-        if (xmlState->hasTagName (parameters.state.getType()))
-            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
-    firstTimeLoaded = xmlState->getStringAttribute("firstTimeLoaded") == "true";
+    {
+        auto newState = juce::ValueTree::fromXml (*xmlState);
+        
+        // Load editor size from state if available
+        if (newState.hasProperty("editorWidth") && newState.hasProperty("editorHeight"))
+        {
+            editorWidth = newState.getProperty("editorWidth");
+            editorHeight = newState.getProperty("editorHeight");
+        }
+
+        newState.removeChild(editorSize, nullptr);
+        parameters.replaceState(newState);
+    }
 }
 
 //==============================================================================
@@ -302,24 +323,13 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameters()
 {
     return{
-        make_unique<juce::AudioParameterFloat>("gain",
-            "Gain",
-            -39.21f,
-            15.21f,
-            0.0f),
-        make_unique<juce::AudioParameterBool>("learnButton",
-            "Learn Button",
-            false),
-
-        make_unique<juce::AudioParameterInt>("editorWidth",
-            "EditorWidth",
-            60,
-            500,
-            300),
-        make_unique<juce::AudioParameterInt>("editorHeight",
-            "EditorHeight",
-            210,
-            1743,
-            1046)
-};
+    make_unique<juce::AudioParameterFloat>("gain",
+        "Gain",
+        -39.21f,
+        15.21f,
+        0.0f),
+    make_unique<juce::AudioParameterBool>("learnButton",
+        "Learn Button",
+        false)
+        };
 }
