@@ -197,12 +197,12 @@ public:
     float editorScalarWidth, editorScalarHeight;
     ~SimpleSliderLookAndFeel() override
     {
-        for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
+        /*for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
         {
             if (auto* label = it.getKey())
                 if (auto* suffix = it.getValue())
                     label->removeChildComponent(suffix);
-        }
+        }*/
     }
 private:
     juce::File fontFile; //containing the font file
