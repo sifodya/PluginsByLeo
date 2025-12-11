@@ -7,6 +7,7 @@ using namespace std;
 #define PLUGIN_INITWIDTH 300
 #define PLUGIN_WIDTH 368
 #define PLUGIN_HEIGHT 1281
+#define NUMBER_OF_DECIMALS 1
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
@@ -24,7 +25,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         screenWidth = screenArea.getWidth();
         screenHeight = screenArea.getHeight();
     }
-
+    cout<<"Screen "<<screen->totalArea.getWidth()<<endl;
     // Get saved size from processor or use default
     int width = processorRef.getEditorWidth();
     int height = processorRef.getEditorHeight();
@@ -32,7 +33,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // If no saved size, use default
     if (width <= 0 || height <= 0)
     {
-        float screenRatio = screenWidth/3840.0f;
+        float screenRatio = screenWidth/2560.0f;
         width = PLUGIN_INITWIDTH * screenRatio;
         height = width/pluginRatio;
         cout<<"default size width: "<<width<<" height: "<<height<<" screenRatio "<<screenRatio<<endl;
@@ -107,9 +108,10 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
     gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     gainSlider.setLookAndFeel(&simpleSliderLNF);
     gainSlider.textFromValueFunction = [](const double value){
-        return juce::String(value, 1);
+        return juce::String(value, NUMBER_OF_DECIMALS);
     };
     gainSlider.addMouseListener(this, false);
+    gainSlider.setNumDecimalPlacesToDisplay(NUMBER_OF_DECIMALS);
     //gainSlider.setValue(0.0f);
     gainSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     gainSlider.setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::black);
