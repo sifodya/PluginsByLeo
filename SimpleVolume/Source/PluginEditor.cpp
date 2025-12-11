@@ -28,31 +28,35 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // Get saved size from processor or use default
     int width = processorRef.getEditorWidth();
     int height = processorRef.getEditorHeight();
-    
+    cout<<"width: "<<width<<" height: "<<height<<endl;
     // If no saved size, use default
     if (width <= 0 || height <= 0)
     {
-        const int screenRatio = screenArea.getAspectRatio();
-        width = PLUGIN_INITWIDTH;
-        height = PLUGIN_INITWIDTH/screenRatio;
+        float screenRatio = screenWidth/3840.0f;
+        width = PLUGIN_INITWIDTH * screenRatio;
+        height = width/pluginRatio;
+        cout<<"default size width: "<<width<<" height: "<<height<<" screenRatio "<<screenRatio<<endl;
     }
-    
+
+
     // Ensure size is within bounds
     width = juce::jlimit(PLUGIN_MINWIDTH, PLUGIN_MAXWIDTH, width);
     height = width / pluginRatio;
-    
-    setSize(width, height);
-    setResizable(true, false);
+
     setResizeLimits(PLUGIN_MINWIDTH, PLUGIN_MINWIDTH/pluginRatio, PLUGIN_MAXWIDTH, PLUGIN_MAXWIDTH/pluginRatio);
     getConstrainer()->setFixedAspectRatio(pluginRatio);
+    setResizable(true, false);
+    setSize(width, height);
 
     initializeSlider();
     makeContentVisible();
+
 
     learnButtonImage.onClick = [this]
     {
         processorRef.setLearnButtonState(learnButtonImage.getToggleState());
     };
+    cout<<"editor constructor "<<getWidth()<<" "<<getHeight()<<endl;
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -69,6 +73,8 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
         linkButton.setColour(juce::HyperlinkButton::textColourId, juce::Colours::blueviolet);
     else
         linkButton.setColour(juce::HyperlinkButton::textColourId, juce::Colours::black);
+
+    cout<<"Editor Paint "<<getWidth()<<" "<<getHeight()<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::resized()
@@ -91,6 +97,7 @@ void AudioPluginAudioProcessorEditor::resized()
     gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
     learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
     linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
+    cout<<"editor resized"<<" width: "<<getWidth()<<":height "<<getHeight()<<" scalar width "<<screenWidth<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::initializeSlider()
@@ -107,11 +114,12 @@ void AudioPluginAudioProcessorEditor::initializeSlider()
     gainSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     gainSlider.setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::black);
     gainSlider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
+    cout<<"gainSlider"<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::makeContentVisible()
 {
-    setSize (processorRef.getEditorWidth(), processorRef.getEditorHeight());
+    //setSize (processorRef.getEditorWidth(), processorRef.getEditorHeight());
     addAndMakeVisible(fullPluginTemplate);
     addAndMakeVisible(pluginTitle);
     addAndMakeVisible(gainSlider);
@@ -164,3 +172,5 @@ void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
                        * fineFactor;
     gainSlider.setValue(lastSliderValue + valueDelta, juce::sendNotificationSync);
 }
+
+

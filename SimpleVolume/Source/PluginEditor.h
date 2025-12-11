@@ -24,11 +24,11 @@ public:
     void mouseDown(const juce::MouseEvent& event) override;
     void mouseDrag(const juce::MouseEvent& event) override;
     SimpleImageButton learnButtonImage;
+    juce::Slider gainSlider;
 
 private:
     SimpleSliderLookAndFeel simpleSliderLNF;
     AudioPluginAudioProcessor& processorRef;
-    juce::Slider gainSlider;
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
     LeoBackground fullPluginTemplate;
     LeoPluginTitle pluginTitle;

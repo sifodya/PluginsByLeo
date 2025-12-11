@@ -296,7 +296,7 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
-    
+
     if (xmlState.get() != nullptr)
     {
         auto newState = juce::ValueTree::fromXml (*xmlState);
