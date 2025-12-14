@@ -65,11 +65,11 @@ private:
     int targetMeasurements = 5; //in seconds
     int measuredBlocks = 1;
     int measuredBlocksRe = 1;
-    float targetLoudness = -12.0f;
+    float targetLoudnessLin {pow(10.0f, -18.0f/20.0f)}, targetLoudness {-18.0f};
     enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
     LearnState learnState = IDLE;
     float learnThreshold = 0.5f;
-    float rmsMedian = 0.0f;
+    float rmsMedian {0.0f};
     int editorWidth = 0;
     int editorHeight = 0;
     juce::ValueTree editorSize {"EditorSize"};

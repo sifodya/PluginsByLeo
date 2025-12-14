@@ -1,6 +1,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include <cmath>
+#define dbToLin(lin) pow(10.0f, (lin/20.0f)
+#define linToDb(db) (20.0f * log10(db))
 using namespace std;
 
 //==============================================================================
@@ -94,7 +96,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     gainParameter = parameters.getRawParameterValue("gain");
 
     const float gainAmplitude = gainParameter->load();
-    previousGain = pow(10.0f, gainAmplitude/20.0f);
+    previousGain = dbToLin(gainAmplitude));
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -147,11 +149,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         const float gainAmplitude = gainParameter->load();
-        const float currentGain = pow(10.0f, gainAmplitude/20.0f);
+        const float currentGain = dbToLin(gainAmplitude));
 
         if (!learnButtonState)
         {
             learnState=IDLE;
+            rmsValues.clear();
             measuredBlocks = 1;
             measuredBlocksRe = 1;
         }
@@ -166,8 +169,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 }
         case MEASURING:
             {
-                const float rmsSum = std::accumulate(rmsValues.begin(), rmsValues.end(), 0.0f);
-                const float rmsAverage = rmsSum/rmsValues.size();
+                 float rmsSum {0};
+                    for (auto i {0}; i < rmsValues.size(); i++)
+                        rmsSum = rmsSum + rmsValues[i];
+                    float rmsAverage = rmsSum/rmsValues.size();
                     sort(rmsValues.begin(), rmsValues.end());
                     if (rmsValues.size() % 2 != 0)
                         rmsMedian = rmsValues[rmsValues.size()/2];
@@ -177,9 +182,17 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     {
                         float valueToSet = 0;
                         if (rmsMedian != 0)
-                         valueToSet = targetLoudness - 20.0f * log10(rmsMedian);
+                        {
+                            //const auto rmsMedianDb = 20.0f * log10(rmsMedian/0.707f);
+                            auto target = targetLoudness - rmsMedian;
+                            //target = target + 3.0f;
+                            valueToSet = target;
+                            cout<<"Value to set DB: "<<target<<" rms Median db :"<<rmsMedian<<" Sum: "<<rmsSum<<endl;
+                        }
                         else
                             valueToSet = targetLoudness;
+
+                        cout<<"Value to Set: "<<valueToSet<<" Target: "<<targetLoudnessLin<<" Median: "<<rmsMedian<<" Avg: "<<rmsAverage<<endl;
                         parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
                         learnState = END;
                         break;
@@ -189,19 +202,23 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
             case LEARNING:
             {
+                    //rmsValues.clear();
                 if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
                 {
                     if (float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples()); rms != 0)
                     {
+                        rms = 20.0f * log10(rms/0.707f);
+                        rms = round(rms * 100.0f) / 100.0f;
                         rmsValues.push_back(rms);
                         measuredBlocks++;
+                        //cout<<"RMS: "<<rms<<endl;
                     }
                 }
                 else
                     {
                         learnState = MEASURING;
                     }
-                    cout<<"Measured Blocks: "<<measuredBlocks<<endl;
+                    //cout<<"Measured Blocks: "<<measuredBlocks<<endl;
                 break;
             }
             case END:
