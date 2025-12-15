@@ -1,5 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+
+#include <base/source/fstring.h>
 using namespace std;
 
 #define PLUGIN_MINWIDTH 60
@@ -35,7 +37,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     int width = processorRef.getEditorWidth();
     int height = processorRef.getEditorHeight();
 
-    //cout<<"width: "<<width<<" height: "<<height<<endl;
+    cout<<"width: "<<width<<" height: "<<height<<endl;
 
     initializeSlider();
     makeContentVisible();
@@ -47,16 +49,17 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     if (width <= 0 || height <= 0)
     {
-        float screenRatio = screenWidth/2560.0f;
+        float screenRatio = screenWidth/3840.0f;
         width = PLUGIN_INITWIDTH * screenRatio;
         height = width/pluginRatio;
         setSize(width, height);
+        cout<<"Ratio: "<<screenRatio<<" Screen Width: "<<screenWidth<<endl;
     }
     else
     {
         setSize(width, height);
     }
-    //cout<<"editor constructor "<<getWidth()<<" "<<getHeight()<<endl;
+    cout<<"editor constructor "<<getWidth()<<" "<<getHeight()<<endl;
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -83,9 +86,6 @@ void AudioPluginAudioProcessorEditor::resized()
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
 
-    // Update the processor with the new size
-    processorRef.setEditorSize(getWidth(), getHeight());
-
     const auto pluginArea = getLocalBounds();
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
     fullPluginTemplate.resizeFromEditor(pluginArea);
@@ -98,7 +98,7 @@ void AudioPluginAudioProcessorEditor::resized()
     gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
     learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
     linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
-    cout<<"editor resized "<<getConstrainer()->getFixedAspectRatio()<<" "<<getConstrainer()->getMaximumWidth()<<" "<<getConstrainer()->getMinimumWidth()<<endl;
+    cout<<"editor resized "<<getWidth()<<" "<<getHeight()<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::initializeSlider()

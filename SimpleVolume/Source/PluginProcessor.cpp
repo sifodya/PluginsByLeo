@@ -202,17 +202,18 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
             case LEARNING:
             {
-                    //rmsValues.clear();
+                    cout<<"Learning"<<endl;
+                    if (!getPlayHead()->getPosition()->getIsPlaying())
+                        return;
+                    cout<<"Measure Start"<<endl;
                 if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
                 {
-                    if (float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples()); rms != 0)
-                    {
-                        rms = 20.0f * log10(rms/0.707f);
-                        rms = round(rms * 100.0f) / 100.0f;
-                        rmsValues.push_back(rms);
-                        measuredBlocks++;
-                        //cout<<"RMS: "<<rms<<endl;
-                    }
+                    auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                    rms = 20.0f * log10(rms/0.707f);
+                    rms = round(rms * 100.0f) / 100.0f;
+                    rmsValues.push_back(rms);
+                    measuredBlocks++;
+                    //cout<<"RMS: "<<rms<<endl;
                 }
                 else
                     {
@@ -237,6 +238,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     if (measuredBlocksRe <= targetMeasurements*getSampleRate()/buffer.getNumSamples()/5)
                     {
                         float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                        rms = 20.0f * log10(rms/0.707f);
+                        rms = round(rms * 100.0f) / 100.0f;
                         rmsValues.push_back(rms);
                         measuredBlocksRe++;
                     }
@@ -273,22 +276,25 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 
 int AudioPluginAudioProcessor::getEditorWidth()
 {
+    cout<<"getEditorWidth"<<endl;
     editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    return editorSize.getProperty ("width", editorWidth);
+    return editorSize.getProperty ("editorWidth", editorWidth);
 }
 int AudioPluginAudioProcessor::getEditorHeight()
 {
+    cout<<"getEditorHeight"<<endl;
     editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    return editorSize.getProperty ("height", editorHeight);
+    return editorSize.getProperty ("editorHeight", editorHeight);
 }
 
 void AudioPluginAudioProcessor::setEditorSize(int width, int height)
 {
+
     if (width > 0 && height > 0)
     {
         editorWidth = width;
         editorHeight = height;
-        
+        cout<<"set Editor Size Height: "<<editorWidth<<" "<<editorHeight<<endl;
         // Update the editor size in the state
         //auto state = parameters.copyState();
         editorSize.setProperty("editorWidth", editorWidth, nullptr);
