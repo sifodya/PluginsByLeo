@@ -117,6 +117,9 @@ jobs:
         with:
           cmake-version: '3.24'
       
+      - name: Configure (Visual Studio)
+        run: cmake -S . -B build
+        
       - name: Install NSIS (for CPack NSIS generator)
         run: choco install nsis -y
 
