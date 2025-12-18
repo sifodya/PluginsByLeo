@@ -48,6 +48,7 @@ jobs:
 
       - name: Build and Package JUCE Plugin
         run: |
+          rm -rf build
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -77,10 +78,12 @@ jobs:
 
       - name: Build and Package JUCE Plugin
         run: |
+          rm -rf build
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          xcodebuild -configuration Release  # Build the plugin
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+          cd build
           cpack -G DragNDrop  # Generate .dmg for macOS
 
       - name: Upload macOS plugin artifacts
@@ -119,12 +122,13 @@ jobs:
       
       - name: Configure (Visual Studio)
         run: cmake -S . -B build
-        
+
       - name: Install NSIS (for CPack NSIS generator)
         run: choco install nsis -y
 
       - name: Build and Package JUCE Plugin
         run: |
+          rm -rf build
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
