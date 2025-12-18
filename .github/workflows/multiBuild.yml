@@ -81,8 +81,8 @@ jobs:
           rm -rf build
           mkdir build
           cd build
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
           cd build
           cpack -G DragNDrop  # Generate .dmg for macOS
 
@@ -128,12 +128,10 @@ jobs:
 
       - name: Build and Package JUCE Plugin
         run: |
-          rm -rf build
-          mkdir build
+          cmake -S . -B build
+          cmake --build build --config Release
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          MSBuild JUCEPlugin.sln /p:Configuration=Release  # Build the plugin
-          cpack -G NSIS  # Generate .exe installer for Windows
+          cpack -G NSIS -C Release
 
       - name: Upload Windows plugin artifacts
         uses: actions/upload-artifact@v4
