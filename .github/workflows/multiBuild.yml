@@ -119,7 +119,13 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.24'
-      
+
+      - name: Clean packaging outputs
+        shell: pwsh
+        run: |
+          if (Test-Path build\SimpleVolume\simpleVolume_artefacts) { Remove-Item -Recurse -Force build\SimpleVolume\simpleVolume_artefacts }
+          if (Test-Path build\_CPack_Packages) { Remove-Item -Recurse -Force build\_CPack_Packages }
+
       - name: Configure (Visual Studio)
         run: cmake -S . -B build
 
