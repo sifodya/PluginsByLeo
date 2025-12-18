@@ -3,7 +3,7 @@
 //
 #include <juce_gui_basics/juce_gui_basics.h>
 
-// #include "BinaryData.h" // file does not exist (edited by Nina)
+#include "BinaryData.h" // file does not exist (edited by Nina)
 ///<summary>
 ///This class is used to create a background image for the plugin. It is called in PluginEditor.
 ///Further it references the bounds of the plugin parent window and is therefore responsible for
