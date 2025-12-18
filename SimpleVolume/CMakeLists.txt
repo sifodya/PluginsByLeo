@@ -1,171 +1,146 @@
-cmake_minimum_required(VERSION 3.24)
+# Example Audio Plugin CMakeLists.txt
 
-#change to your project name
-project(SIMPLE_VOLUME VERSION 0.1.0)
+# To get started on a new plugin, copy this entire folder (containing this file and C++ sources) to
+# a convenient location, and then start making modifications.
 
-set(PLUGIN_VERSION "00.01.01")
+# The first line of any CMake project should be a call to `cmake_minimum_required`, which checks
+# that the installed CMake will be able to understand the following CMakeLists, and ensures that
+# CMake's behaviour is compatible with the named version. This is a standard CMake command, so more
+# information can be found in the CMake docs.
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_XCODE_GENERATE_SCHEME OFF)
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+cmake_minimum_required(VERSION 3.22)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
+# `project()` command. `project()` sets up some helpful variables that describe source/binary
+# directories, and the current project version. This is a standard CMake command.
 
-#CPM check if installed, if not install it
-set(CPM_DOWNLOAD_VERSION 0.34.0)
-set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
+project(SIMPLE_VOLUME VERSION 0.0.1)
 
-if (NOT EXISTS $[{CPM_DOWNLOAD_LOCATION})
-    message(STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}")
-    file(DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake ${CPM_DOWNLOAD_LOCATION})
+# If you've installed JUCE somehow (via a package manager, or directly using the CMake install
+# target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
+# included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
+# include that subdirectory as part of the build.
+
+# find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
+# or
+# add_subdirectory("../JUCE" JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+
+# If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
+# system. This setup should be done before calling `juce_add_plugin`.
+
+# juce_set_vst2_sdk_path(...)
+# juce_set_aax_sdk_path(...)
+
+# `juce_add_plugin` adds a static library target with the name passed as the first argument
+# (AudioPluginExample here). This target is a normal CMake target, but has a lot of extra properties set
+# up by default. As well as this shared code static library, this function adds targets for each of
+# the formats specified by the FORMATS arguments. This function accepts many optional arguments.
+# Check the readme at `docs/CMake API.md` in the JUCE repo for the full list.
+
+juce_add_plugin(simpleVolume
+    # VERSION ...                               # Set this if the plugin version is different to the project version
+    # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
+    # ICON_SMALL ...
+    COMPANY_NAME Leo Plugins                          # Specify the name of the plugin's author
+    # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
+    # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
+    # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
+    # IS_MIDI_EFFECT TRUE/FALSE                 # Is this plugin a MIDI effect?
+    # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
+    # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
+    PLUGIN_MANUFACTURER_CODE Leop               # A four-character manufacturer id with at least one upper-case character
+    PLUGIN_CODE Sivo                            # A unique four-character plugin id with exactly one upper-case character
+                                                # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
+    FORMATS VST3                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    PRODUCT_NAME "Simple Volume")        # The name of the final executable, which can differ from the target name
+
+# `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
+# into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
+# this header will be automatically added to the target. The main function of the JuceHeader is to
+# include all your JUCE module headers; if you're happy to include module headers directly, you
+# probably don't need to call this.
+
+# link freetype package for Linux build ============================
+if(UNIX AND NOT APPLE)  # nur Linux
+  find_package(Freetype REQUIRED)
+  # dein JUCE/Projekt-Target hier einsetzen:
+  target_link_libraries(simpleVolume PRIVATE Freetype::Freetype)
+  # Optional, falls dein FindFreetype alt ist:
+  # target_include_directories(juce_add_plugin PRIVATE ${FREETYPE_INCLUDE_DIRS})
 endif()
+# ==================================================================
 
-include(${CPM_DOWNLOAD_LOCATION})
+# juce_generate_juce_header(simpleVolume)
 
-#Bring in JUCE locally
-CPMAddPackage(
-    NAME juce
-    GITHUB_REPOSITORY juce-framework/JUCE
-    GIT_TAG origin/master
-)
+# `target_sources` adds source files to a target. We pass the target that needs the sources as the
+# first argument, then a visibility parameter for the sources which should normally be PRIVATE.
+# Finally, we supply a list of source files that will be built into the target. This is a standard
+# CMake command.
 
-#Source files to include
-set(SourceFiles
-    Source/PluginEditor.cpp
-    Source/PluginProcessor.cpp
-    Source/PluginEditor.h
-    Source/PluginProcessor.h
-        Source/LeoBackground.cpp
-        Source/SimpleSliderLookAndFeel.cpp
-        Source/LeoPluginTitle.cpp
-        Source/SimpleImageButton.cpp
-        Source/SimpleHyperlinkButton.cpp
-)
+target_sources(simpleVolume
+    PRIVATE
+        PluginEditor.cpp
+        PluginProcessor.cpp)
 
-#Plugin Details
-juce_add_plugin(${PROJECT_NAME}
-        COMPANY_NAME LeoPlugins
-        IS_SYNTH FALSE
-        NEEDS_MIDI_INPUT FALSE
-        NEEDS_MIDI_OUTPUT FALSE
-        IS_MIDI_EFFECT FALSE
-        EDITOR_WANTS_KEYBOARD_FOCUS FALSE
-        JUCE_VST3_CAN_REPLACE_VST2 FALSE
-        COPY_PLUGIN_AFTER_BUILD TRUE
-        PLUGIN_MANUFACTURER_CODE Leop
-        PLUGIN_CODE Sivo
-        FORMATS VST3 Standalone
-        PRODUCT_NAME "Simple Volume"
-        #---
-        VERSION "${PLUGIN_VERSION}"
-        VST3_CATEGORIES Dynamics
-)
+# `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
+# project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
+# of compile definitions to switch certain features on/off, so if there's a particular feature you
+# need that's not on by default, check the module header for the correct flag to set here. These
+# definitions will be visible both to your code, and also the JUCE module code, so for new
+# definitions, pick unique names that are unlikely to collide! This is a standard CMake command.
 
-# Set macOS-specific settings for the plugin (only for macOS build)
-if(APPLE)
-    set_target_properties(MyPlugin PROPERTIES
-            MACOSX_BUNDLE TRUE
-            BUNDLE_EXTENSION ".vst3"
-    )
-endif()
+target_compile_definitions(simpleVolume
+    PUBLIC
+        # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
+        JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
+        JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
+        JUCE_VST3_CAN_REPLACE_VST2=0)
 
-#How the SourceFiles appear in IDE
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
+# If your target needs extra binary assets, you can add them here. The first argument is the name of
+# a new static library target that will include all the binary resources. There is an optional
+# `NAMESPACE` argument that can specify the namespace of the generated binary data class. Finally,
+# the SOURCES argument should be followed by a list of source files that should be built into the
+# static library. These source files can be of any kind (wav data, images, fonts, icons etc.).
+# Conversion to binary-data will happen when your target is built.
 
-#Make SourceFiles buildable
-target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles})
+# juce_add_binary_data(AudioPluginData SOURCES ...)
 
-#toggleable options from JUCE Cmake API
-target_compile_definitions(${PROJECT_NAME}
-        PUBLIC
-        JUCE_WEB_BROWSER=0
-        JUCE_USE_CURL=0
-        JUCE_VST3_CAN_REPLACE_VST2=0
-)
+# `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
+# we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
+# dependencies are resolved automatically, so `juce_core`, `juce_events` and so on will also be
+# linked automatically. If we'd generated a binary data target above, we would need to link to it
+# here too. This is a standard CMake command.
 
-#JUCE libraries to bringt into project
-target_link_libraries(${PROJECT_NAME}
-        PUBLIC
-        juce::juce_analytics
-        juce::juce_audio_basics
-        juce::juce_audio_devices
-        juce::juce_core
-        juce::juce_data_structures
-        juce::juce_graphics
-        juce::juce_gui_basics
-        juce::juce_gui_extra
+target_link_libraries(simpleVolume
+    PRIVATE
+        # AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
-        juce::juce_dsp
+    PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags
-        PRIVATE
-        BinaryData
-)
+        juce::juce_recommended_warning_flags)
 
-#add Resources
-juce_add_binary_data(BinaryData SOURCES
-        resources/bg.png
-        resources/fader.png
-        resources/fader_bg.png
-        resources/full.png
-        resources/learn_normal.png
-        resources/learn_plain_red.png
-        resources/learn_plain_yellow.png
-        resources/learn_red.png
-        resources/learn_yellow.png
-        resources/learn_plain.png
-        resources/ueberschrift.png
-        resources/NeueHaasDisplayLight.ttf
-        resources/NeueHaasDisplayMediu.ttf
-)
+# --------------------------------------------------
+# Install-Rules for the Plugin (for CPack / Installer)
+# --------------------------------------------------
 
-juce_generate_juce_header(${PROJECT_NAME})
-
-if(WINDOWS)
-#Enable packaging
-include(InstallRequiredSystemLibraries)
-set(CPACK_GENERATOR "NSIS")
-
-#set basic packaging options
-set(CPACK_PACKAGE_NAME "Simple Volume")
-set(CPACK_PACKAGE_VERSION "${PLUGIN_VERSION}")
-set(CPACK_PACKAGE_DESCRIPTION "Apply gain to all channels")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "C:/Program Files/Common Files/VST3")
-
-#Set up installation rules
-install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-
-#include CPack module to generate installer
-include(CPack)
-endif ()
-
-if(APPLE)
-    # macOS packaging
-    set(CPACK_GENERATOR "DragNDrop")
-    set(CPACK_PACKAGE_NAME "Simple Volume")
-    set(CPACK_PACKAGE_VERSION "${VERSION}")
-    set(CPACK_PACKAGE_DESCRIPTION "JUCE Audio Plugin")
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-macOS")
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Applications")
-
-    # Set installation rules for macOS
-    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-
-    include(CPack)
-endif ()
-
-if(LINUX)
-    # Linux packaging
-    set(CPACK_GENERATOR "DEB")
-    set(CPACK_PACKAGE_NAME "Simple Volume")
-    set(CPACK_PACKAGE_VERSION "${VERSION}")
-    set(CPACK_PACKAGE_DESCRIPTION "JUCE Audio Plugin")
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-linux")
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "/opt/YourPlugin")
-
-    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-
-    include(CPack)
-endif ()
+if(WIN32)
+    # For the NSIS-Installer: Plugin put into subdirectory "VST3"
+    install(TARGETS simpleVolume_VST3
+        RUNTIME DESTINATION "VST3"
+        LIBRARY DESTINATION "VST3"
+    )
+elseif(APPLE)
+    # VST3 ist a Bundle -> put into "VST3" in .dmg
+    install(TARGETS simpleVolume_VST3
+        BUNDLE DESTINATION "."
+        LIBRARY DESTINATION "."
+    )
+elseif(UNIX) # Linux
+    # Entweder direkt systempfad:
+    # install(TARGETS simpleVolume LIBRARY DESTINATION "usr/lib/vst3")
+    # oder im Paket einfach in einen Ordner "VST3":
+    install(TARGETS simpleVolume_VST3
+        LIBRARY DESTINATION "VST3"
+    )
+endif()

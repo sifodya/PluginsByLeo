@@ -37,14 +37,14 @@ jobs:
             libfreetype6-dev libfontconfig1-dev \
             libcurl4-openssl-dev \
             libgtk-3-dev libwebkit2gtk-4.0-dev
-      
-      - name: Configure (Ninja, verbose)
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.24'
+
+      - name: Configure (Ninja, verbose)
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON
 
       - name: Build and Package JUCE Plugin
         run: |
