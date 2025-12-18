@@ -111,7 +111,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -120,22 +120,23 @@ jobs:
         with:
           cmake-version: '3.24'
 
-      - name: Clean packaging outputs
-        shell: pwsh
-        run: |
-          if (Test-Path build\SimpleVolume\simpleVolume_artefacts) { Remove-Item -Recurse -Force build\SimpleVolume\simpleVolume_artefacts }
-          if (Test-Path build\_CPack_Packages) { Remove-Item -Recurse -Force build\_CPack_Packages }
+      - name: Install NSIS (for CPack NSIS generator)
+        run: choco install nsis -y
 
       - name: Configure (Visual Studio)
         run: cmake -S . -B build
 
-      - name: Install NSIS (for CPack NSIS generator)
-        run: choco install nsis -y
+      - name: Build (Release)
+        run: cmake --build build --config Release
 
-      - name: Build and Package JUCE Plugin
+      - name: Clean CPack staging (before packaging)
+        shell: pwsh
         run: |
-          cmake -S . -B build
-          cmake --build build --config Release
+          if (Test-Path build\_CPack_Packages) { Remove-Item -Recurse -Force build\_CPack_Packages }
+          if (Test-Path build\SimpleVolume\simpleVolume_artefacts) { Remove-Item -Recurse -Force build\SimpleVolume\simpleVolume_artefacts }
+
+      - name: Package (NSIS)
+        run: |
           cd build
           cpack -G NSIS -C Release
 
