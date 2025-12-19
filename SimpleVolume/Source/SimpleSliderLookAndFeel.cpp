@@ -64,7 +64,7 @@ public:
     ///as well as the edited colours.
     ///</summary>
     ///<param></param>
-    juce::Label* SimpleSliderLookAndFeel::createSliderTextBox(juce::Slider& slider) override
+    juce::Label* createSliderTextBox(juce::Slider& slider) override
     {
         juce::Label* label = LookAndFeel_V4::createSliderTextBox(slider);
         label->setColour(juce::Label::textColourId, juce::Colour(33, 33, 29));
