@@ -29,7 +29,7 @@ public:
 ///This is done in order to resize the background image to the size of the parent window.
 ///</summary>
 ///<param name="size"></param>
-    void LeoBackground::resizeFromEditor(juce::Rectangle<int> size)
+    void resizeFromEditor(juce::Rectangle<int> size)
     {
         backgroundBounds.setSize(size.getWidth(), size.getHeight());
     }
@@ -37,7 +37,7 @@ public:
 ///This function is used to paint the background image to the bounds of this component
 ///</summary>
 ///<param name="g"></param>
-    void LeoBackground::paint(juce::Graphics& g) override
+    void paint(juce::Graphics& g) override
     {
         if (image.isValid())
             g.drawImage(image, backgroundBounds);

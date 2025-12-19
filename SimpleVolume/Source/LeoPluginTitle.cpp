@@ -14,12 +14,12 @@ public:
         titleBounds.setSize(titleImage.getWidth(), titleImage.getHeight());
     }
 
-    void LeoPluginTitle::resizeFromEditor(juce::Rectangle<int> size)
+    void resizeFromEditor(juce::Rectangle<int> size)
     {
         titleBounds.setSize(size.getWidth(), size.getHeight());
     }
 
-    void LeoPluginTitle::paint(juce::Graphics& g) override
+    void paint(juce::Graphics& g) override
     {
         if (titleImage.isValid())
             g.drawImage(titleImage, titleBounds);
@@ -27,7 +27,7 @@ public:
             g.fillAll(juce::Colours::pink);
     }
 
-    void LeoPluginTitle::resized() override
+    void resized() override
     {
 
     }
