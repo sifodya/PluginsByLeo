@@ -58,8 +58,10 @@ jobs:
         with:
           name: linux-plugin
           path: |
-            build/*_artefacts/Release/**
-            build/*.deb
+            build/**/_artefacts/**
+            build/**/*.deb
+            **/*.deb
+
 
   build-macos:
     runs-on: macos-latest

@@ -41,7 +41,7 @@ juce_add_plugin(simpleVolume
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME Leo Plugins                          # Specify the name of the plugin's author
+    COMPANY_NAME Leo Plugins                    # Specify the name of the plugin's author
     # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
@@ -51,8 +51,8 @@ juce_add_plugin(simpleVolume
     PLUGIN_MANUFACTURER_CODE Leop               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Sivo                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "Simple Volume")        # The name of the final executable, which can differ from the target name
+    FORMATS VST3                                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    PRODUCT_NAME "Simple Volume")               # The name of the final executable, which can differ from the target name
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -140,22 +140,20 @@ target_link_libraries(simpleVolume
 # --------------------------------------------------
 
 if(WIN32)
-    # For the NSIS-Installer: Plugin put into subdirectory "VST3"
-    install(TARGETS simpleVolume_VST3
-        RUNTIME DESTINATION "VST3"
-        LIBRARY DESTINATION "VST3"
-    )
-elseif(APPLE)
-    # VST3 ist a Bundle -> put into "VST3" in .dmg
+    set(JUCE_VST3_INSTALL_PATH
+        "C:/Program Files/Common Files/VST3"
+        CACHE STRING "VST3 install path"
+    )      
     install(TARGETS simpleVolume_VST3
         BUNDLE DESTINATION "."
-        LIBRARY DESTINATION "."
     )
-elseif(UNIX) # Linux
-    # Entweder direkt systempfad:
-    # install(TARGETS simpleVolume LIBRARY DESTINATION "usr/lib/vst3")
-    # oder im Paket einfach in einen Ordner "VST3":
+elseif(APPLE)
     install(TARGETS simpleVolume_VST3
-        LIBRARY DESTINATION "VST3"
+        BUNDLE DESTINATION "."
+    )
+elseif(UNIX)
+    install(TARGETS simpleVolume_VST3
+        BUNDLE DESTINATION "VST3"
     )
 endif()
+
