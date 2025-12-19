@@ -154,9 +154,8 @@ elseif(APPLE)
         LIBRARY DESTINATION "."
     )
 elseif(UNIX)
-    install(TARGETS simpleVolume_VST3
-        BUNDLE DESTINATION "VST3"
-        LIBRARY DESTINATION "VST3"
-    )
+  install(TARGETS simpleVolume_VST3
+    BUNDLE DESTINATION "lib/vst3"
+    LIBRARY DESTINATION "lib/vst3"
+  )
 endif()
-

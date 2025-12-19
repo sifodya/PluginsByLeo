@@ -22,10 +22,10 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Collection of Leo Audio Plugins")
 
 # --- Debian-spezifisch ---
 if(UNIX AND NOT APPLE)
-  set(CPACK_GENERATOR "DEB")
-  set(CPACK_DEBIAN_PACKAGE_SECTION "sound")
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libstdc++6, libx11-6, libasound2")
+  set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "" FORCE)
+  set(CPACK_PACKAGING_INSTALL_PREFIX "/")  # sorgt dafür, dass /usr/... im Paket landet
 endif()
+
 
 if(APPLE)
   set(CPACK_GENERATOR "DragNDrop")
@@ -36,8 +36,6 @@ if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 endif()
 
-include(CPack)
-
 # build all Plugins
 
 # add_subdirectory(SeriousBrassEnhancer)
@@ -47,3 +45,6 @@ include(CPack)
 # add_subdirectory(SimpleColoration)
 # add_subdirectory(SimpleEmotion)
 add_subdirectory(SimpleVolume)
+
+
+include(CPack)
