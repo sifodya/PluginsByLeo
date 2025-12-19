@@ -103,7 +103,22 @@ target_compile_definitions(simpleVolume
 # static library. These source files can be of any kind (wav data, images, fonts, icons etc.).
 # Conversion to binary-data will happen when your target is built.
 
-# juce_add_binary_data(AudioPluginData SOURCES ...)
+# Assets (generate BinaryData.h)
+juce_add_binary_data(SimpleVolume_BinaryData
+    SOURCES 
+        resources/bg.png 
+        resources/fader_bg.png 
+        resources/fader.png 
+        resources/full.png 
+        resources/learn_normal.png 
+        resources/learn_plain_red.png 
+        resources/learn_plain_yellow.png 
+        resources/learn_plain.png 
+        resources/learn_red.png 
+        resources/learn_yellow.png 
+        resources/NeueHaasDisplayLight.ttf 
+        resources/NeueHaasDisplayMediu.ttf 
+        resources/ueberschrift.png)
 
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
@@ -113,7 +128,7 @@ target_compile_definitions(simpleVolume
 
 target_link_libraries(simpleVolume
     PRIVATE
-        # AudioPluginData           # If we'd created a binary data target, we'd link to it here
+        SimpleVolume_BinaryData  # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
     PUBLIC
         juce::juce_recommended_config_flags
