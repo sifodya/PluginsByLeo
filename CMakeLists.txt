@@ -26,7 +26,6 @@ if(UNIX AND NOT APPLE)
   set(CPACK_PACKAGING_INSTALL_PREFIX "/")  # sorgt dafür, dass /usr/... im Paket landet
 endif()
 
-
 if(APPLE)
   set(CPACK_GENERATOR "DragNDrop")
   set(CPACK_DMG_VOLUME_NAME "Leo Audio Plugins")
@@ -35,6 +34,15 @@ if(APPLE)
   # Universal Binary: Intel + Apple Silicon
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 endif()
+
+if(WIN32)
+  # Root = C:/Program Files/Common Files
+  set(CPACK_NSIS_INSTALL_ROOT "$COMMONFILES64")
+  # Unterordner = VST3
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3")
+endif() 
+
+include(CPack)
 
 # build all Plugins
 
@@ -45,6 +53,3 @@ endif()
 # add_subdirectory(SimpleColoration)
 # add_subdirectory(SimpleEmotion)
 add_subdirectory(SimpleVolume)
-
-
-include(CPack)
