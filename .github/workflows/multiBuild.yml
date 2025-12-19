@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
             submodules: recursive
       
@@ -43,17 +43,15 @@ jobs:
         with:
           cmake-version: '3.24'
 
-      - name: Configure (Ninja, verbose)
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build and Package JUCE Plugin
-        run: |
-          rm -rf build
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make -j$(nproc)  # Build the plugin
-          cpack -G DEB  # Generate .deb package for Linux
+      - name: Build
+        run: cmake --build build
+
+      - name: Package
+        run: cpack --config build/CPackConfig.cmake -G DEB
+
 
       - name: Upload Linux plugin artifacts
         uses: actions/upload-artifact@v4
@@ -67,7 +65,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -83,7 +81,6 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release
-          cd build
           cpack -G DragNDrop  # Generate .dmg for macOS
 
       - name: Upload macOS plugin artifacts
@@ -93,13 +90,16 @@ jobs:
           path: |
             build/*_artefacts/Release/**
             build/*.dmg
+            SimpleVolume-macOS.dmg
 
       - name: Create DMG with only VST3
         run: |
           # Ordner für das .vst3 vorbereiten
           mkdir -p package
           # Pfad an dein Artefakt anpassen, falls der etwas anders heißt
-          cp "build/simpleVolume_artefacts/Release/VST3/Simple Volume.vst3" package/
+          VST3_PATH="$(find build -type d -name '*.vst3' | head -n 1)"
+          cp -R "$VST3_PATH" package/
+
 
           # .dmg erzeugen, das NUR diesen Ordner enthält
           hdiutil create \
@@ -129,11 +129,15 @@ jobs:
       - name: Build (Release)
         run: cmake --build build --config Release
 
+      - name: Debug VST3 output (cmd)
+        shell: cmd
+        run: |
+          dir /s "build\SimpleVolume\simpleVolume_artefacts\Release\VST3"
+
       - name: Clean CPack staging (before packaging)
         shell: pwsh
         run: |
           if (Test-Path build\_CPack_Packages) { Remove-Item -Recurse -Force build\_CPack_Packages }
-          if (Test-Path build\SimpleVolume\simpleVolume_artefacts) { Remove-Item -Recurse -Force build\SimpleVolume\simpleVolume_artefacts }
 
       - name: Package (NSIS)
         run: |
