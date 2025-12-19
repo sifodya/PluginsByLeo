@@ -105,20 +105,20 @@ target_compile_definitions(simpleVolume
 
 # Assets (generate BinaryData.h)
 juce_add_binary_data(SimpleVolume_BinaryData
-    SOURCES 
-        resources/bg.png 
-        resources/fader_bg.png 
-        resources/fader.png 
-        resources/full.png 
-        resources/learn_normal.png 
-        resources/learn_plain_red.png 
-        resources/learn_plain_yellow.png 
-        resources/learn_plain.png 
-        resources/learn_red.png 
-        resources/learn_yellow.png 
-        resources/NeueHaasDisplayLight.ttf 
-        resources/NeueHaasDisplayMediu.ttf 
-        resources/ueberschrift.png)
+    SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/bg.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader_bg.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/full.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_normal.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_red.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_yellow.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_red.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_yellow.png 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayLight.ttf 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayMediu.ttf 
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/ueberschrift.png)
 
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
