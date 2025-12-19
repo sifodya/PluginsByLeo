@@ -146,14 +146,17 @@ if(WIN32)
     )      
     install(TARGETS simpleVolume_VST3
         BUNDLE DESTINATION "."
+        LIBRARY DESTINATION "."
     )
 elseif(APPLE)
     install(TARGETS simpleVolume_VST3
         BUNDLE DESTINATION "."
+        LIBRARY DESTINATION "."
     )
 elseif(UNIX)
     install(TARGETS simpleVolume_VST3
         BUNDLE DESTINATION "VST3"
+        LIBRARY DESTINATION "VST3"
     )
 endif()
 
