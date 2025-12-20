@@ -1,6 +1,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include <cmath>
+#define dbToLin(lin) pow(10.0f, (lin/20.0f)
+#define linToDb(db) (20.0f * log10(db))
 using namespace std;
 
 //==============================================================================
@@ -93,8 +95,8 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     juce::ignoreUnused (sampleRate, samplesPerBlock);
     gainParameter = parameters.getRawParameterValue("gain");
 
-    float gainAmplitude = gainParameter->load();
-    previousGain = pow(10.0f, gainAmplitude/20.0f);
+    const float gainAmplitude = gainParameter->load();
+    previousGain = dbToLin(gainAmplitude));
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -138,20 +140,21 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::ignoreUnused (midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    const auto totalNumInputChannels  = getTotalNumInputChannels();
+    const auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        float gainAmplitude = gainParameter->load();
-        float currentGain = pow(10.0f, gainAmplitude/20.0f);
+        const float gainAmplitude = gainParameter->load();
+        const float currentGain = dbToLin(gainAmplitude));
 
         if (!learnButtonState)
         {
             learnState=IDLE;
+            rmsValues.clear();
             measuredBlocks = 1;
             measuredBlocksRe = 1;
         }
@@ -166,8 +169,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 }
         case MEASURING:
             {
-                float rmsSum = std::accumulate(rmsValues.begin(), rmsValues.end(), 0.0f);
-                float rmsAverage = rmsSum/rmsValues.size();
+                 float rmsSum {0};
+                    for (auto i {0}; i < rmsValues.size(); i++)
+                        rmsSum = rmsSum + rmsValues[i];
+                    float rmsAverage = rmsSum/rmsValues.size();
                     sort(rmsValues.begin(), rmsValues.end());
                     if (rmsValues.size() % 2 != 0)
                         rmsMedian = rmsValues[rmsValues.size()/2];
@@ -177,9 +182,17 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     {
                         float valueToSet = 0;
                         if (rmsMedian != 0)
-                         valueToSet = targetLoudness - 20.0f * log10(rmsMedian);
+                        {
+                            //const auto rmsMedianDb = 20.0f * log10(rmsMedian/0.707f);
+                            auto target = targetLoudness - rmsMedian;
+                            //target = target + 3.0f;
+                            valueToSet = target;
+                            cout<<"Value to set DB: "<<target<<" rms Median db :"<<rmsMedian<<" Sum: "<<rmsSum<<endl;
+                        }
                         else
                             valueToSet = targetLoudness;
+
+                        cout<<"Value to Set: "<<valueToSet<<" Target: "<<targetLoudnessLin<<" Median: "<<rmsMedian<<" Avg: "<<rmsAverage<<endl;
                         parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
                         learnState = END;
                         break;
@@ -189,20 +202,24 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
             case LEARNING:
             {
+                    cout<<"Learning"<<endl;
+                    if (!getPlayHead()->getPosition()->getIsPlaying())
+                        return;
+                    cout<<"Measure Start"<<endl;
                 if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
                 {
-                    float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
-                    if (rms != 0)
-                    {
-                        rmsValues.push_back(rms);
-                        measuredBlocks++;
-                    }
+                    auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                    rms = 20.0f * log10(rms/0.707f);
+                    rms = round(rms * 100.0f) / 100.0f;
+                    rmsValues.push_back(rms);
+                    measuredBlocks++;
+                    //cout<<"RMS: "<<rms<<endl;
                 }
                 else
                     {
                         learnState = MEASURING;
                     }
-                    cout<<"Measured Blocks: "<<measuredBlocks<<endl;
+                    //cout<<"Measured Blocks: "<<measuredBlocks<<endl;
                 break;
             }
             case END:
@@ -218,9 +235,11 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
             case RELEARNING:
             {
-                    if (measuredBlocksRe <= (targetMeasurements*getSampleRate()/buffer.getNumSamples())/5)
+                    if (measuredBlocksRe <= targetMeasurements*getSampleRate()/buffer.getNumSamples()/5)
                     {
                         float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                        rms = 20.0f * log10(rms/0.707f);
+                        rms = round(rms * 100.0f) / 100.0f;
                         rmsValues.push_back(rms);
                         measuredBlocksRe++;
                     }
@@ -255,20 +274,66 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
     return new AudioPluginAudioProcessorEditor (*this);
 }
 
+int AudioPluginAudioProcessor::getEditorWidth()
+{
+    cout<<"getEditorWidth"<<endl;
+    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
+    return editorSize.getProperty ("editorWidth", editorWidth);
+}
+int AudioPluginAudioProcessor::getEditorHeight()
+{
+    cout<<"getEditorHeight"<<endl;
+    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
+    return editorSize.getProperty ("editorHeight", editorHeight);
+}
+
+void AudioPluginAudioProcessor::setEditorSize(int width, int height)
+{
+
+    if (width > 0 && height > 0)
+    {
+        editorWidth = width;
+        editorHeight = height;
+        cout<<"set Editor Size Height: "<<editorWidth<<" "<<editorHeight<<endl;
+        // Update the editor size in the state
+        //auto state = parameters.copyState();
+        editorSize.setProperty("editorWidth", editorWidth, nullptr);
+        editorSize.setProperty("editorHeight", editorHeight, nullptr);
+    }
+}
+
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    // Save the current editor size to the state
     auto state = parameters.copyState();
-    unique_ptr<juce::XmlElement> xml (state.createXml());
+    
+    // Add editor size to the state
+    state.appendChild(editorSize, nullptr);
+
+    
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
-    if (xmlState != nullptr)
-        if (xmlState->hasTagName (parameters.state.getType()))
-            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
+
+    if (xmlState.get() != nullptr)
+    {
+        auto newState = juce::ValueTree::fromXml (*xmlState);
+        
+        // Load editor size from state if available
+        if (newState.hasProperty("editorWidth") && newState.hasProperty("editorHeight"))
+        {
+            editorWidth = newState.getProperty("editorWidth");
+            editorHeight = newState.getProperty("editorHeight");
+        }
+
+        newState.removeChild(editorSize, nullptr);
+        parameters.replaceState(newState);
+    }
 }
 
 //==============================================================================

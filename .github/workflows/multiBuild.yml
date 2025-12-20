@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - simpleVolume  # Trigger only for pushes to 'release' branch
-    #tags:
-    #- 'v*' # Trigger only for pushes with tags like v1.0.0, v2.0.0, etc.
+    tags:
+    - 'v*' # Trigger only for pushes with tags like v1.0.0, v2.0.0, etc.
   workflow_dispatch:
   
 

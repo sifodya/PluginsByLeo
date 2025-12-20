@@ -4,19 +4,19 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "BinaryData.h"
 
-class LeoPluginTitle : public juce::Component
+class LeoPluginTitle final : public juce::Component
 {
 public:
     LeoPluginTitle()
     {
         titleImage = juce::ImageFileFormat::loadFrom(BinaryData::ueberschrift_png, BinaryData::ueberschrift_pngSize);
 
-        titleBounds.setSize(titleImage.getWidth(), titleImage.getHeight());
+        titleBounds.setSize(static_cast<float>(titleImage.getWidth()), static_cast<float>(titleImage.getHeight()));
     }
 
-    void resizeFromEditor(juce::Rectangle<int> size)
+    void resizeFromEditor(juce::Rectangle<int> const size)
     {
-        titleBounds.setSize(size.getWidth(), size.getHeight());
+        titleBounds.setSize(static_cast<float>(size.getWidth()), static_cast<float>(size.getHeight()));
     }
 
     void paint(juce::Graphics& g) override
@@ -27,10 +27,10 @@ public:
             g.fillAll(juce::Colours::pink);
     }
 
-    void resized() override
+    /*void LeoPluginTitle::resized() override
     {
 
-    }
+    }*/
     juce::Image titleImage;
 private:
     juce::File pngTitleFile;

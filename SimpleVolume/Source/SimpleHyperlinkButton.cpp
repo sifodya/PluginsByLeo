@@ -5,21 +5,20 @@
 #include "BinaryData.h"
 
 
-class SimpleHyperlinkButton : public juce::HyperlinkButton
+class SimpleHyperlinkButton final : public juce::HyperlinkButton
 {
 public:
     SimpleHyperlinkButton()
     {
 
         customTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayLight_ttf, BinaryData::NeueHaasDisplayLight_ttfSize);
-        buttonFont = juce::Font(customTypeface);
+        auto buttonFont = juce::Font(juce::FontOptions{}.withTypeface(customTypeface));
         setButtonText("check other plugins");
-        setURL(juce::URL("https://leo-brennauer.com"));
+        setURL(juce::URL("https://leo-brennauer.com/#minishop"));
         setFont(buttonFont, true, juce::Justification::centred);
-        setColour(juce::HyperlinkButton::textColourId, juce::Colours::black);
+        setColour(textColourId, juce::Colours::black);
     }
 private:
-    juce::Font buttonFont;
     juce::MemoryBlock fontData;
     juce::File fontFile;
     juce::LookAndFeel_V4 SimpleHyperlinkButtonLAF;

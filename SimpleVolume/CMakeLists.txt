@@ -1,4 +1,9 @@
-# Example Audio Plugin CMakeLists.txt
+cmake_minimum_required(VERSION 3.24)
+
+#change to your project name
+project(SIMPLE_VOLUME VERSION 0.1.0)
+
+set(PLUGIN_VERSION "00.02.01")
 
 # To get started on a new plugin, copy this entire folder (containing this file and C++ sources) to
 # a convenient location, and then start making modifications.
@@ -6,15 +11,7 @@
 # The first line of any CMake project should be a call to `cmake_minimum_required`, which checks
 # that the installed CMake will be able to understand the following CMakeLists, and ensures that
 # CMake's behaviour is compatible with the named version. This is a standard CMake command, so more
-# information can be found in the CMake docs.
-
-cmake_minimum_required(VERSION 3.24)
-
-# The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
-# `project()` command. `project()` sets up some helpful variables that describe source/binary
-# directories, and the current project version. This is a standard CMake command.
-
-project(SIMPLE_VOLUME VERSION 0.0.1)
+# information can be found in the CMa
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -35,24 +32,18 @@ project(SIMPLE_VOLUME VERSION 0.0.1)
 # (AudioPluginExample here). This target is a normal CMake target, but has a lot of extra properties set
 # up by default. As well as this shared code static library, this function adds targets for each of
 # the formats specified by the FORMATS arguments. This function accepts many optional arguments.
-# Check the readme at `docs/CMake API.md` in the JUCE repo for the full list.
-
-juce_add_plugin(simpleVolume
+# Check the readme at `docs/CMake API.md` in the JUCE repo for the full li
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
-    # ICON_SMALL ...
-    COMPANY_NAME Leo Plugins                    # Specify the name of the plugin's author
+    # ICON_SMALL ...                 # Specify the name of the plugin's author
     # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
     # IS_MIDI_EFFECT TRUE/FALSE                 # Is this plugin a MIDI effect?
     # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
     # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
-    PLUGIN_MANUFACTURER_CODE Leop               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Sivo                            # A unique four-character plugin id with exactly one upper-case character
-                                                # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3                                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "Simple Volume")               # The name of the final executable, which can differ from the target name
+             # A four-character manufacturer id with at least one upper-case characte                         # A unique four-character plugin id with exactly one upper-case character
+                                                # GarageBand 10.3 requires the first letter to be upper-case, and the               # The name of the final executable, which can differ from the target name
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -67,6 +58,53 @@ if(UNIX AND NOT APPLE)  # nur Linux
   target_link_libraries(simpleVolume PRIVATE Freetype::Freetype)
   # Optional, falls dein FindFreetype alt ist:
   # target_include_directories(juce_add_plugin PRIVATE ${FREETYPE_INCLUDE_DIRS})
+include(${CPM_DOWNLOAD_LOCATION})
+
+#Bring in JUCE locally
+CPMAddPackage(
+    NAME juce
+    GITHUB_REPOSITORY juce-framework/JUCE
+    GIT_TAG origin/master
+)
+
+#Source files to include
+set(SourceFiles
+    Source/PluginEditor.cpp
+    Source/PluginProcessor.cpp
+    Source/PluginEditor.h
+    Source/PluginProcessor.h
+        Source/LeoBackground.cpp
+        Source/SimpleSliderLookAndFeel.cpp
+        Source/LeoPluginTitle.cpp
+        Source/SimpleImageButton.cpp
+        Source/SimpleHyperlinkButton.cpp
+)
+
+#Plugin Details
+juce_add_plugin(${PROJECT_NAME}
+        COMPANY_NAME LeoPlugins
+        IS_SYNTH FALSE
+        NEEDS_MIDI_INPUT FALSE
+        NEEDS_MIDI_OUTPUT FALSE
+        IS_MIDI_EFFECT FALSE
+        EDITOR_WANTS_KEYBOARD_FOCUS TRUE
+        JUCE_VST3_CAN_REPLACE_VST2 FALSE
+        COPY_PLUGIN_AFTER_BUILD TRUE
+        PLUGIN_MANUFACTURER_CODE Leop
+        PLUGIN_CODE Sivo
+        FORMATS VST3 Standalone
+        PRODUCT_NAME "Simple Volume"
+        #---
+        VERSION "${PLUGIN_VERSION}"
+        VST3_CATEGORIES Dynamics
+)
+
+# Set macOS-specific settings for the plugin (only for macOS build)
+if(APPLE)
+    set_target_properties(MyPlugin PROPERTIES
+            MACOSX_BUNDLE TRUE
+            BUNDLE_EXTENSION ".vst3"
+    )
 endif()
 # ==================================================================
 
