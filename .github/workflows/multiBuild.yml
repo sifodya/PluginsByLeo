@@ -7,7 +7,6 @@ on:
     tags:
     - 'v*' # Trigger only for pushes with tags like v1.0.0, v2.0.0, etc.
   workflow_dispatch:
-  
 
 jobs:
   build-linux:
@@ -17,14 +16,6 @@ jobs:
         uses: actions/checkout@v4
         with:
             submodules: recursive
-      
-      - name: Install JUCE Linux dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential ninja-build pkg-config \
-            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
-            libasound2-dev libgl1-mesa-dev libfreetype6-dev
 
       - name: Install build toolchain & JUCE deps
         run: |

@@ -1,3 +1,6 @@
+cmake_minimum_required(VERSION 3.24)
+project(PluginsByLeo VERSION 1.0.0)
+
 # 1. JUCE nichts installieren lassen
 set(JUCE_INSTALL_TARGETS OFF CACHE BOOL "Don't install JUCE targets" FORCE)
 # optional:
@@ -39,8 +42,6 @@ if(WIN32)
   set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3")
 endif() 
 
-include(CPack)
-
 # build all Plugins
 
 # add_subdirectory(SeriousBrassEnhancer)
@@ -50,3 +51,5 @@ include(CPack)
 # add_subdirectory(SimpleColoration)
 # add_subdirectory(SimpleEmotion)
 add_subdirectory(SimpleVolume)
+
+include(CPack)
