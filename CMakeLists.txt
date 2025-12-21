@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.24)
-project(PluginsByLeo VERSION 1.0.0)
-
 # 1. JUCE nichts installieren lassen
 set(JUCE_INSTALL_TARGETS OFF CACHE BOOL "Don't install JUCE targets" FORCE)
 # optional:

@@ -1,9 +1,5 @@
-cmake_minimum_required(VERSION 3.24)
-
 #change to your project name
 project(SIMPLE_VOLUME VERSION 0.1.0)
-
-set(PLUGIN_VERSION "00.02.01")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
@@ -11,23 +7,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-#CPM check if installed, if not install it
-set(CPM_DOWNLOAD_VERSION 0.34.0)
-set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
-
-if (NOT EXISTS $[{CPM_DOWNLOAD_LOCATION})
-    message(STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}")
-    file(DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake ${CPM_DOWNLOAD_LOCATION})
-endif()
-
-include(${CPM_DOWNLOAD_LOCATION})
-
-#Bring in JUCE locally
-CPMAddPackage(
-    NAME juce
-    GITHUB_REPOSITORY juce-framework/JUCE
-    GIT_TAG origin/master
-)
+set(PLUGIN_VERSION "00.02.01")
 
 #Source files to include
 set(SourceFiles
@@ -61,14 +41,6 @@ juce_add_plugin(${PROJECT_NAME}
         VST3_CATEGORIES Dynamics
 )
 
-# Set macOS-specific settings for the plugin (only for macOS build)
-if(APPLE)
-    set_target_properties(MyPlugin PROPERTIES
-            MACOSX_BUNDLE TRUE
-            BUNDLE_EXTENSION ".vst3"
-    )
-endif()
-
 #How the SourceFiles appear in IDE
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
 
@@ -81,6 +53,23 @@ target_compile_definitions(${PROJECT_NAME}
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0
+)
+
+#add Resources
+juce_add_binary_data(BinaryData SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/bg.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader_bg.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/full.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_normal.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_red.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_yellow.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_red.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_yellow.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/ueberschrift.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayLight.ttf
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayMediu.ttf
 )
 
 #JUCE libraries to bringt into project
@@ -101,23 +90,6 @@ target_link_libraries(${PROJECT_NAME}
         juce::juce_recommended_warning_flags
         PRIVATE
         BinaryData
-)
-
-#add Resources
-juce_add_binary_data(BinaryData SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/bg.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader_bg.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/full.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_normal.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_red.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_yellow.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_red.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_yellow.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/ueberschrift.png
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayLight.ttf
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayMediu.ttf
 )
 
 juce_generate_juce_header(${PROJECT_NAME})
