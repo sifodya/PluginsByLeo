@@ -11,58 +11,145 @@ on:
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+            submodules: recursive
+      
+      - name: Install JUCE Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential ninja-build pkg-config \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+            libasound2-dev libgl1-mesa-dev libfreetype6-dev
+
+      - name: Install build toolchain & JUCE deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential ninja-build pkg-config \
+            libasound2-dev \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+            libgl1-mesa-dev \
+            libfreetype6-dev libfontconfig1-dev \
+            libcurl4-openssl-dev \
+            libgtk-3-dev libwebkit2gtk-4.0-dev
 
       - name: Set up CMake
-        uses: cmake/actions/setup-cmake@v2
+        uses: jwlawson/actions-setup-cmake@v2
         with:
-          cmake-version: '3.21.2'
+          cmake-version: '3.24'
 
-      - name: Build and Package JUCE Plugin
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make -j$(nproc)  # Build the plugin
-          cpack -G DEB  # Generate .deb package for Linux
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Package
+        run: cpack --config build/CPackConfig.cmake -G DEB
+
+
+      - name: Upload Linux plugin artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-plugin
+          path: |
+            build/**/_artefacts/**
+            build/**/*.deb
+            **/*.deb
+
 
   build-macos:
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up CMake
-        uses: cmake/actions/setup-cmake@v2
+        uses: jwlawson/actions-setup-cmake@v2
         with:
-          cmake-version: '3.21.2'
+          cmake-version: '3.24'
 
       - name: Build and Package JUCE Plugin
         run: |
+          rm -rf build
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          xcodebuild -configuration Release  # Build the plugin
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
           cpack -G DragNDrop  # Generate .dmg for macOS
+
+      - name: Upload macOS plugin artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-plugin
+          path: |
+            build/*_artefacts/Release/**
+            build/*.dmg
+            SimpleVolume-macOS.dmg
+
+      - name: Create DMG with only VST3
+        run: |
+          # Ordner für das .vst3 vorbereiten
+          mkdir -p package
+          # Pfad an dein Artefakt anpassen, falls der etwas anders heißt
+          VST3_PATH="$(find build -type d -name '*.vst3' | head -n 1)"
+          cp -R "$VST3_PATH" package/
+
+
+          # .dmg erzeugen, das NUR diesen Ordner enthält
+          hdiutil create \
+            -volname "Simple Volume" \
+            -srcfolder package \
+            -ov -format UDZO SimpleVolume-macOS.dmg
 
   build-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up CMake
-        uses: cmake/actions/setup-cmake@v2
+        uses: jwlawson/actions-setup-cmake@v2
         with:
-          cmake-version: '3.21.2'
+          cmake-version: '3.24'
 
-      - name: Build and Package JUCE Plugin
+      - name: Install NSIS (for CPack NSIS generator)
+        run: choco install nsis -y
+
+      - name: Configure (Visual Studio)
+        run: cmake -S . -B build
+
+      - name: Build (Release)
+        run: cmake --build build --config Release
+
+      - name: Debug VST3 output (cmd)
+        shell: cmd
         run: |
-          mkdir build
+          dir /s "build\SimpleVolume\simpleVolume_artefacts\Release\VST3"
+
+      - name: Clean CPack staging (before packaging)
+        shell: pwsh
+        run: |
+          if (Test-Path build\_CPack_Packages) { Remove-Item -Recurse -Force build\_CPack_Packages }
+
+      - name: Package (NSIS)
+        run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          MSBuild JUCEPlugin.sln /p:Configuration=Release  # Build the plugin
-          cpack -G NSIS  # Generate .exe installer for Windows
+          cpack -G NSIS -C Release
+
+      - name: Upload Windows plugin artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-plugin
+          path: |
+            build/*_artefacts/Release/**
+            build/*.exe

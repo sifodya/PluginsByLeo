@@ -105,19 +105,19 @@ target_link_libraries(${PROJECT_NAME}
 
 #add Resources
 juce_add_binary_data(BinaryData SOURCES
-        resources/bg.png
-        resources/fader.png
-        resources/fader_bg.png
-        resources/full.png
-        resources/learn_normal.png
-        resources/learn_plain_red.png
-        resources/learn_plain_yellow.png
-        resources/learn_red.png
-        resources/learn_yellow.png
-        resources/learn_plain.png
-        resources/ueberschrift.png
-        resources/NeueHaasDisplayLight.ttf
-        resources/NeueHaasDisplayMediu.ttf
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/bg.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader_bg.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/full.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_normal.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_red.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_yellow.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_red.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_yellow.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/ueberschrift.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayLight.ttf
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayMediu.ttf
 )
 
 juce_generate_juce_header(${PROJECT_NAME})
