@@ -84,21 +84,41 @@ jobs:
             build/*_artefacts/Release/**
             build/*.dmg
             SimpleVolume-macOS.dmg
-
-      - name: Create DMG with only VST3
-        run: |
+      
+      #- name: Create DMG with only VST3  # for DMG
+      #  run: |
           # Ordner für das .vst3 vorbereiten
-          mkdir -p package
+      #    mkdir -p package
           # Pfad an dein Artefakt anpassen, falls der etwas anders heißt
-          VST3_PATH="$(find build -type d -name '*.vst3' | head -n 1)"
-          cp -R "$VST3_PATH" package/
+      #    VST3_PATH="$(find build -type d -name '*.vst3' | head -n 1)"
+      #    cp -R "$VST3_PATH" package/
 
 
           # .dmg erzeugen, das NUR diesen Ordner enthält
-          hdiutil create \
-            -volname "Simple Volume" \
-            -srcfolder package \
-            -ov -format UDZO SimpleVolume-macOS.dmg
+      #    hdiutil create \
+      #      -volname "Simple Volume" \
+      #      -srcfolder package \
+      #      -ov -format UDZO SimpleVolume-macOS.dmg
+
+      # workaround for using PlugIn without Apple Developer Licence
+      - name: Create ZIP with only VST3
+        run: |
+          mkdir -p package
+          VST3_PATH="$(find build -type d -name '*.vst3' | head -n 1)"
+          echo "VST3_PATH=$VST3_PATH"
+          cp -R "$VST3_PATH" package/
+
+          cd package
+          # zip muss "folder.vst3" als Ordner enthalten (VST3 ist ein Bundle)
+          zip -r ../SimpleVolume-macOS.zip ./*.vst3
+
+      - name: Upload macOS ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-zip
+          path: |
+            SimpleVolume-macOS.zip
+
 
   build-windows:
     runs-on: windows-latest
