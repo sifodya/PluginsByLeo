@@ -35,24 +35,54 @@ if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 endif()
 
+# --- Windows NSIS Configuration ---
 if(WIN32)
-  # Root = C:/Program Files/Common Files
+  set(CPACK_GENERATOR "NSIS")
   set(CPACK_NSIS_INSTALL_ROOT "$COMMONFILES64")
-  # Unterordner = VST3
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3")
-  #sets the name of the uninstall file
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3\\LeoPlugins")
   set(CPACK_NSIS_UNINSTALL_NAME "Leo Plugins Uninstall")
-endif() 
+  set(CPACK_NSIS_PACKAGE_NAME "Leo Plugins")
+  
+  # NSIS specific settings
+  # set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/path/to/icon.ico")
+  set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+  set(CPACK_NSIS_DISPLAY_NAME "Leo Audio Plugins ${PROJECT_VERSION}")
+endif()
 
-# build all Plugins
+# List of all available plugins
+set(ALL_PLUGINS
+  SeriousBrassEnhancer
+  SeriousPercussionEnhancer
+  SeriousStringEnhancer
+  SimpleCinematicPower
+  SimpleColoration
+  SimpleEmotion
+  SimpleVolume
+)
 
-# add_subdirectory(SeriousBrassEnhancer)
-# add_subdirectory(SeriousPercussionEnhancer)
-# add_subdirectory(SeriousStringEnhancer)
-# add_subdirectory(SimpleCinematicPower)
-# add_subdirectory(SimpleColoration)
-# add_subdirectory(SimpleEmotion)
-add_subdirectory(SimpleVolume)
+# Build all plugins by default, or specify with: cmake -DPLUGINS_TO_BUILD="SimpleVolume;SimpleColoration"
+set(PLUGINS_TO_BUILD "${ALL_PLUGINS}" CACHE STRING "SimpleVolume")
 
+# Add plugin subdirectories
+foreach(PLUGIN ${PLUGINS_TO_BUILD})
+  if(EXISTS "${CMAKE_SOURCE_DIR}/${PLUGIN}/CMakeLists.txt")
+    add_subdirectory(${PLUGIN})
+    message(STATUS "Added plugin: ${PLUGIN}")
+  else()
+    message(WARNING "Plugin not found: ${PLUGIN}")
+  endif()
+endforeach()
+
+# Set package name based on which plugins are included
+string(REPLACE ";" "_" PLUGIN_SUFFIX "${PLUGINS_TO_BUILD}")
+if(PLUGINS_TO_BUILD STREQUAL ALL_PLUGINS)
+  set(CPACK_PACKAGE_NAME "PluginsByLeo-AllPlugins")
+  set(CPACK_PACKAGE_FILE_NAME "PluginsByLeo-AllPlugins-${PROJECT_VERSION}-win64")
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Complete Collection of Leo Audio Plugins")
+else()
+  set(CPACK_PACKAGE_NAME "PluginsByLeo-${PLUGIN_SUFFIX}")
+  set(CPACK_PACKAGE_FILE_NAME "PluginsByLeo-${PLUGIN_SUFFIX}-${PROJECT_VERSION}-win64")
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Leo Audio Plugins: ${PLUGIN_SUFFIX}")
+endif()
 
 include(CPack)
