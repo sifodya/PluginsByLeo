@@ -39,29 +39,29 @@ endif()
 if(WIN32)
   set(CPACK_GENERATOR "NSIS")
   set(CPACK_NSIS_INSTALL_ROOT "$COMMONFILES64")
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3\\LeoPlugins")
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3/LeoPlugins")
   set(CPACK_NSIS_UNINSTALL_NAME "Leo Plugins Uninstall")
   set(CPACK_NSIS_PACKAGE_NAME "Leo Plugins")
   
   # NSIS specific settings
-  # set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/path/to/icon.ico")
+  #  (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/path/to/icon.ico") set
   set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
   set(CPACK_NSIS_DISPLAY_NAME "Leo Audio Plugins ${PROJECT_VERSION}")
 endif()
 
 # List of all available plugins
 set(ALL_PLUGINS
-  SeriousBrassEnhancer
-  SeriousPercussionEnhancer
-  SeriousStringEnhancer
-  SimpleCinematicPower
-  SimpleColoration
-  SimpleEmotion
+  # SeriousBrassEnhancer
+  # SeriousPercussionEnhancer
+  #SeriousStringEnhancer
+  #SimpleCinematicPower
+  #SimpleColoration
+  #SimpleEmotion
   SimpleVolume
 )
 
 # Build all plugins by default, or specify with: cmake -DPLUGINS_TO_BUILD="SimpleVolume;SimpleColoration"
-set(PLUGINS_TO_BUILD "${ALL_PLUGINS}" CACHE STRING "SimpleVolume")
+set(PLUGINS_TO_BUILD "${ALL_PLUGINS}" CACHE STRING "List of plugins to build")
 
 # Add plugin subdirectories
 foreach(PLUGIN ${PLUGINS_TO_BUILD})
@@ -86,3 +86,4 @@ else()
 endif()
 
 include(CPack)
+
