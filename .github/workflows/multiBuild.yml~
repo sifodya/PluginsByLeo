@@ -160,7 +160,7 @@ jobs:
       - name: Upload Windows plugin artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: PluginsByLeo-win64
+          name: windows-plugin
           path: |
             build/*_artefacts/Release/**
             build/*.exe
