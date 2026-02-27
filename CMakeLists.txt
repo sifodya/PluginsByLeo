@@ -38,8 +38,9 @@ endif()
 # --- Windows NSIS Configuration ---
 if(WIN32)
   set(CPACK_GENERATOR "NSIS")
+  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
   set(CPACK_NSIS_INSTALL_ROOT "$COMMONFILES64")
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3/LeoPlugins")
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3\\LeoPlugins")
   set(CPACK_COMPONENTS_ALL VST3) # Cpack only installs things marked with VST3 component
   # set(CPACK_NSIS_COMPONENT_INSTALL OFF) #Hide Component selection Page
   set(CPACK_NSIS_UNINSTALL_NAME "Leo Plugins Uninstall")

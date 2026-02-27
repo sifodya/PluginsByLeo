@@ -1,0 +1,27 @@
+END USER LICENSE AGREEMENT (EULA)
+
+This End User License Agreement is a legal agreement between you and Leo Plugins 
+for the software product "PluginsByLeo".
+
+1. GRANT OF LICENSE
+Leo Plugins grants you a non-exclusive license to use the software on your 
+computers for the purpose of audio production and processing.
+
+2. RESTRICTIONS
+You may not decompile, reverse engineer, or modify the software. You may not 
+redistribute the binary files without express written permission from Leo Plugins.
+
+3. OWNERSHIP
+All title and copyrights in and to the software are owned by Leo Plugins.
+
+4. NO WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. THE AUTHOR 
+DISCLAIMS ALL WARRANTIES, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+TO THE WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+5. LIMITATION OF LIABILITY
+In no event shall the author be liable for any special, incidental, indirect, 
+or consequential damages whatsoever arising out of the use of or inability 
+to use the software.
+
+By installing this software, you agree to be bound by the terms of this EULA.
