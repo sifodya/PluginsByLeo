@@ -274,7 +274,7 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
     return new AudioPluginAudioProcessorEditor (*this);
 }
 
-int AudioPluginAudioProcessor::getEditorWidth()
+/*int AudioPluginAudioProcessor::getEditorWidth()
 {
     cout<<"getEditorWidth"<<endl;
     editorSize.getOrCreateChildWithName ("lastSize", nullptr);
@@ -285,7 +285,7 @@ int AudioPluginAudioProcessor::getEditorHeight()
     cout<<"getEditorHeight"<<endl;
     editorSize.getOrCreateChildWithName ("lastSize", nullptr);
     return editorSize.getProperty ("editorHeight", editorHeight);
-}
+}*/
 
 void AudioPluginAudioProcessor::setEditorSize(int width, int height)
 {
@@ -307,9 +307,11 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
 {
     // Save the current editor size to the state
     auto state = parameters.copyState();
-    
+
+    state.setProperty("editorWidth", editorWidth, nullptr);
+    state.setProperty("editorHeight", editorHeight, nullptr);
     // Add editor size to the state
-    state.appendChild(editorSize, nullptr);
+    //state.appendChild(editorSize, nullptr);
 
     
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
@@ -320,19 +322,22 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 {
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
-    if (xmlState.get() != nullptr)
+    if (xmlState)
     {
         auto newState = juce::ValueTree::fromXml (*xmlState);
         
-        // Load editor size from state if available
+        /*// Load editor size from state if available
         if (newState.hasProperty("editorWidth") && newState.hasProperty("editorHeight"))
         {
             editorWidth = newState.getProperty("editorWidth");
             editorHeight = newState.getProperty("editorHeight");
         }
 
-        newState.removeChild(editorSize, nullptr);
+        newState.removeChild(editorSize, nullptr);*/
         parameters.replaceState(newState);
+
+        editorWidth = newState.getProperty("editorWidth");
+        editorHeight = newState.getProperty("editorHeight");
     }
 }
 

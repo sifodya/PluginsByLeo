@@ -51,8 +51,8 @@ public:
     juce::AudioProcessorValueTreeState& getParameters() {return parameters;}
     void setLearnButtonState(const bool newState) {learnButtonState = newState;}
 
-    int getEditorWidth();
-    int getEditorHeight();
+    int getEditorWidth() const {return editorWidth;};
+    int getEditorHeight() const {return editorHeight;};
     void setEditorSize(int width, int height);
 
 private:
@@ -73,7 +73,16 @@ private:
     float rmsMedian {0.0f};
     int editorWidth = 0;
     int editorHeight = 0;
-    juce::ValueTree editorSize {"EditorSize"};
+    juce::ValueTree editorSize {"EditorSize", {},
+        {
+            {"Group", {{"name", "lastSize"}},
+                {
+                {"Property", {{"id", "editorWidth"}, {"value", 0}}},
+                    {"Property", {{"id", "editorHeight"}, {"value", 0}}}
+                }
+            }
+        }
+    };
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
