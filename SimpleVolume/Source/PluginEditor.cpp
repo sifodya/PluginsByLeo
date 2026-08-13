@@ -39,7 +39,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     cout<<"width: "<<width<<" height: "<<height<<endl;
 
-    initializeSlider();
+    //initializeSlider();
     makeContentVisible();
 
     learnButtonImage.onClick = [this]
@@ -64,7 +64,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
-    gainSlider.setLookAndFeel(nullptr);
+    //gainSlider.setLookAndFeel(nullptr);
     processorRef.setEditorSize(getWidth(), getHeight());
 }
 
@@ -90,9 +90,11 @@ void AudioPluginAudioProcessorEditor::resized()
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
     fullPluginTemplate.resizeFromEditor(pluginArea);
 
-    simpleSliderLNF.editorScalarWidth = scalarWidth;
-    simpleSliderLNF.editorScalarHeight = scalarHeight;
+    /*simpleSliderLNF.editorScalarWidth = scalarWidth;
+    simpleSliderLNF.editorScalarHeight = scalarHeight;*/
+    gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
     gainSlider.sendLookAndFeelChange();
+
     pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
     gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
@@ -127,7 +129,7 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
-    gainSlider.setDoubleClickReturnValue(true, 0.0f, juce::ModifierKeys::ctrlModifier);
+    //gainSlider.setDoubleClickReturnValue(true, 0.0f, juce::ModifierKeys::ctrlModifier);
 }
 
 void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)

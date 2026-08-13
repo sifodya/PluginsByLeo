@@ -44,6 +44,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/LeoPluginTitle.cpp
             Source/SimpleImageButton.cpp
             Source/SimpleHyperlinkButton.cpp
+            Source/LeoSlider.cpp
+            Source/LeoSlider.h
+            Source/LeoExceptions.h
     )
 
     #Plugin Details
