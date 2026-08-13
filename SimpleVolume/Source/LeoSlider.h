@@ -79,7 +79,7 @@ public:
 
     juce::Font getLabelFont(juce::Label& label) override
     {
-        return {juce::FontOptions{}.withTypeface(m_fontTypeface).withHeight(75.0f * m_editorScalarHeight)}; // 65
+        return {juce::FontOptions{m_fontTypeface->getName(),m_fontTypeface->getStyle(), 70.0f * m_editorScalarHeight }};//.withTypeface(m_fontTypeface).withHeight(75.0f * m_editorScalarHeight).withStyle(m_fontTypeface->getStyle())}; // 65
     }
 
     juce::Label* createSliderTextBox(juce::Slider& slider) override;
@@ -218,6 +218,10 @@ class LeoGainSlider final : public LeoSlider
     public:
     LeoGainSlider():LeoGainSlider(400, 50, 1){};
     LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals);
+    juce::String getTextFromValue(double value) override
+    {
+        return juce::String(value, m_numberOfDecimals);
+    };
     LeoSliderLNF* getLNF() const {return mPtr_parentLNF;};
 private:
     int m_numberOfDecimals {1};

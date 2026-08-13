@@ -2,7 +2,7 @@
 #include "PluginEditor.h"
 
 #include <base/source/fstring.h>
-using namespace std;
+using  std::cout, std::endl;
 
 #define PLUGIN_MINWIDTH 60
 #define PLUGIN_MAXWIDTH 500
@@ -32,15 +32,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     setResizeLimits(PLUGIN_MINWIDTH, PLUGIN_MINWIDTH/pluginRatio, PLUGIN_MAXWIDTH, PLUGIN_MAXWIDTH/pluginRatio);
     setResizable(false, true);
 
-    //cout<<"Screen "<<screen->totalArea.getWidth()<<endl;
-
     int width = processorRef.getEditorWidth();
     int height = processorRef.getEditorHeight();
-
-    cout<<"width: "<<width<<" height: "<<height<<endl;
-
-    //initializeSlider();
+    cout<<"Num of Decimals: "<<gainSlider.getNumDecimalPlacesToDisplay()<<endl;
     makeContentVisible();
+    gainSlider.addMouseListener(this, false);
+    cout<<"Num of Decimals: "<<gainSlider.getNumDecimalPlacesToDisplay()<<endl;
 
     learnButtonImage.onClick = [this]
     {
@@ -53,18 +50,14 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         width = PLUGIN_INITWIDTH * screenRatio;
         height = width/pluginRatio;
         setSize(width, height);
-        cout<<"Ratio: "<<screenRatio<<" Screen Width: "<<screenWidth<<endl;
     }
     else
-    {
         setSize(width, height);
-    }
-    cout<<"editor constructor "<<getWidth()<<" "<<getHeight()<<endl;
+
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
-    //gainSlider.setLookAndFeel(nullptr);
     processorRef.setEditorSize(getWidth(), getHeight());
 }
 
@@ -76,8 +69,6 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
         linkButton.setColour(juce::HyperlinkButton::textColourId, juce::Colours::blueviolet);
     else
         linkButton.setColour(juce::HyperlinkButton::textColourId, juce::Colours::black);
-
-    //cout<<"Editor Paint "<<getWidth()<<" "<<getHeight()<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::resized()
@@ -90,46 +81,24 @@ void AudioPluginAudioProcessorEditor::resized()
     fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
     fullPluginTemplate.resizeFromEditor(pluginArea);
 
-    /*simpleSliderLNF.editorScalarWidth = scalarWidth;
-    simpleSliderLNF.editorScalarHeight = scalarHeight;*/
     gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
     gainSlider.sendLookAndFeelChange();
+
 
     pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
     gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
     learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
     linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
-    cout<<"editor resized "<<getWidth()<<" "<<getHeight()<<endl;
-}
-
-void AudioPluginAudioProcessorEditor::initializeSlider()
-{
-    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 400, 50);
-    gainSlider.setTextBoxIsEditable(true);
-    gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    gainSlider.setLookAndFeel(&simpleSliderLNF);
-    gainSlider.textFromValueFunction = [](const double value){
-        return juce::String(value, NUMBER_OF_DECIMALS);
-    };
-    gainSlider.addMouseListener(this, false);
-    gainSlider.setNumDecimalPlacesToDisplay(NUMBER_OF_DECIMALS);
-    //gainSlider.setValue(0.0f);
-    gainSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
-    gainSlider.setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::black);
-    gainSlider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
-    //cout<<"gainSlider"<<endl;
 }
 
 void AudioPluginAudioProcessorEditor::makeContentVisible()
 {
-    //setSize (processorRef.getEditorWidth(), processorRef.getEditorHeight());
     addAndMakeVisible(fullPluginTemplate);
     addAndMakeVisible(pluginTitle);
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
-    //gainSlider.setDoubleClickReturnValue(true, 0.0f, juce::ModifierKeys::ctrlModifier);
 }
 
 void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)
@@ -177,4 +146,15 @@ void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
     gainSlider.setValue(lastSliderValue + valueDelta, juce::sendNotificationSync);
 }
 
+void AudioPluginAudioProcessorEditor::resizeComponent(Component& c) const
+{
+    const auto bounds = c.getBounds();
+    const auto position = c.getPosition();
 
+    const int w = std::lround(static_cast<float>(bounds.getY()) * scalarWidth);
+    const int h = std::lround(static_cast<float>(bounds.getHeight()) * scalarHeight);
+    const int x = std::lround(static_cast<float>(position.getX()) * scalarWidth);
+    const int y = std::lround(static_cast<float>(position.getY()) * scalarHeight);
+
+    c.setBounds(x, y, w, h);
+}

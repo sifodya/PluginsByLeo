@@ -11,12 +11,13 @@
 
 LeoSliderLNF::~LeoSliderLNF()
 {
-    for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
+    //TODO Fix this
+    /*for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
     {
         if (auto* label = it.getKey())
             if (auto* suffix = it.getValue())
                 label->removeChildComponent(suffix);
-    }
+    }*/
 }
 
 juce::Label* LeoSliderLNF::createSliderTextBox(juce::Slider& slider)
@@ -107,11 +108,11 @@ LeoGainSlider::LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, 
     setTextBoxStyle(TextBoxBelow, false, textBoxWidth, textBoxHeight);
     setTextBoxIsEditable(true);
     setSliderStyle(LinearVertical);
-    textFromValueFunction = [this](const double value){
+    /*textFromValueFunction = [this](const double value){
         return juce::String(value, m_numberOfDecimals);
     };
-    addMouseListener(this, false);
-    setNumDecimalPlacesToDisplay(m_numberOfDecimals);
+    //addMouseListener(this, false);
+    setNumDecimalPlacesToDisplay(m_numberOfDecimals);*/
     //gainSlider.setValue(0.0f);
     setColour(textBoxOutlineColourId, juce::Colours::transparentBlack);
     setColour(textBoxHighlightColourId, juce::Colours::black);
