@@ -11,12 +11,14 @@
 
 LeoSliderLNF::~LeoSliderLNF()
 {
-    //TODO Fix this
+    delete m_suffix;
     /*for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
     {
         if (auto* label = it.getKey())
             if (auto* suffix = it.getValue())
+            {
                 label->removeChildComponent(suffix);
+            }
     }*/
 }
 
@@ -40,16 +42,17 @@ juce::Label* LeoSliderLNF::createSliderTextBox(juce::Slider& slider)
     slider.setTextValueSuffix("");
 
     // Create fixed “ dB” component
-    auto suffix = new FixedSuffixLabel(" dB", m_fontTypeface);
-    suffix->setInterceptsMouseClicks(false, false);
-    label->addAndMakeVisible(suffix);
+    m_suffix = new FixedSuffixLabel(" dB", m_fontTypeface);
+    //auto suffix = std::make_shared<FixedSuffixLabel>(" dB", m_fontTypeface);
+    m_suffix->setInterceptsMouseClicks(false, false);
+    label->addAndMakeVisible(m_suffix);
 
     // Create listener & store it so it stays alive
-    const auto listener = std::make_shared<SuffixPositionListener>(suffix);
+    const auto listener = std::make_shared<SuffixPositionListener>(m_suffix);
     label->addComponentListener(listener.get());
 
     // Save both suffix and listener
-    suffixComponents.set(label, suffix);
+    suffixComponents.set(label, m_suffix);
     suffixListeners.set(label, listener);
 
     // Force at least one layout now

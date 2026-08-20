@@ -173,6 +173,7 @@ private:
     float m_editorScalarWidth, m_editorScalarHeight;
     juce::HashMap<juce::Label*, std::shared_ptr<SuffixPositionListener>> suffixListeners;
     juce::HashMap<juce::Label*, juce::Component*> suffixComponents;
+    FixedSuffixLabel* m_suffix {nullptr};
 };
 
 
