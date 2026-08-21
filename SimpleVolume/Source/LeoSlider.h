@@ -4,7 +4,6 @@
 
 #pragma once
 
-//#include "SimpleSliderLookAndFeel.cpp"
 #include "LeoExceptions.h"
 #include "BinaryData.h"
 
@@ -12,6 +11,7 @@
 #include <utility>
 
 using namespace LeoExceptions;
+using std::cout, std::endl, std::lround;
 
 class FixedSuffixLabel final : public juce::Component
 {
@@ -24,7 +24,7 @@ public:
     {
         g.setColour(juce::Colour::fromRGB(33, 33, 29));
 
-        juce::Font suffixFont(typeface);
+        juce::Font suffixFont(juce::FontOptions{typeface});
         suffixFont.setHeight(getHeight() * 0.75f);   // scale as you like
 
         g.setFont(suffixFont);
@@ -77,7 +77,7 @@ public:
         createSliderTextBox(slider);
     }
 
-    juce::Font getLabelFont(juce::Label& label) override
+    juce::Font getLabelFont(juce::Label& /*label*/) override
     {
         return {juce::FontOptions{m_fontTypeface->getName(),m_fontTypeface->getStyle(), 70.0f * m_editorScalarHeight }};//.withTypeface(m_fontTypeface).withHeight(75.0f * m_editorScalarHeight).withStyle(m_fontTypeface->getStyle())}; // 65
     }
@@ -98,8 +98,14 @@ public:
         if (!m_backgroundImage.isNull())
         {
             g.drawImage(m_backgroundImage,
-                x + m_editorScalarWidth * 118, y, width, height,
-                0, 0, m_backgroundImage.getWidth(), m_backgroundImage.getHeight());
+                lround(x + m_editorScalarWidth * 118),
+                y,
+                width,
+                height,
+                0,
+                0,
+                m_backgroundImage.getWidth(),
+                m_backgroundImage.getHeight());
         }
         else
         {
@@ -114,22 +120,22 @@ public:
         const int width,
         const int height,
         const float sliderPos,
-        float minSliderPos,
-        float maxSliderPos,
-        const juce::Slider::SliderStyle style,
-        juce::Slider& slider) override
+        float /*minSliderPos*/,
+        float /*maxSliderPos*/,
+        const juce::Slider::SliderStyle /*style*/,
+        juce::Slider& /*slider*/) override
     {
         if (!m_thumbImage.isNull())
         {
-            const int thumbHeight = m_thumbImage.getHeight()*m_editorScalarHeight;
-            const int thumbWidth = m_thumbImage.getWidth()*m_editorScalarWidth;
+            const int thumbHeight = lround(m_thumbImage.getHeight() * m_editorScalarHeight);
+            const int thumbWidth = lround(m_thumbImage.getWidth() * m_editorScalarWidth);
             float drawY = 0.0f;
             const float drawX = x + (width - thumbWidth) / 2.0f;
             drawY = sliderPos - thumbHeight / 2.0f;
 
             g.drawImage(m_thumbImage,
-                static_cast<int>(drawX)+59*m_editorScalarWidth,
-                static_cast<int>(drawY),
+                lround(drawX + 59 * m_editorScalarWidth),
+                lround(drawY),
                 thumbWidth,
                 thumbHeight,
                 0,
@@ -148,10 +154,19 @@ public:
     juce::Slider::SliderLayout getSliderLayout(juce::Slider&) override
     {
         juce::Slider::SliderLayout layout;
-        layout.sliderBounds = juce::Rectangle<int>(0 * m_editorScalarWidth, 50 * m_editorScalarHeight,
-                                                   119 * m_editorScalarWidth, 544 * m_editorScalarHeight);
-        layout.textBoxBounds = juce::Rectangle<int>(-100 * m_editorScalarWidth, 640 * m_editorScalarHeight,
-                                                    350 * m_editorScalarWidth, 100 * m_editorScalarHeight);
+
+        const int sliderX = lround(0 * m_editorScalarWidth);
+        const int sliderY = lround(50 * m_editorScalarHeight);
+        const int sliderW = lround(119 * m_editorScalarWidth);
+        const int sliderH = lround(544 * m_editorScalarHeight);
+
+        const int textX = lround(-100 * m_editorScalarWidth);
+        const int textY = lround(640 * m_editorScalarHeight);
+        const int textW = lround(350 * m_editorScalarWidth);
+        const int textH = lround(100 * m_editorScalarHeight);
+
+        layout.sliderBounds = juce::Rectangle<int>(sliderX, sliderY, sliderW, sliderH);
+        layout.textBoxBounds = juce::Rectangle<int>(textX, textY, textW, textH);
 
         return layout;
     }
@@ -173,7 +188,8 @@ private:
     float m_editorScalarWidth, m_editorScalarHeight;
     juce::HashMap<juce::Label*, std::shared_ptr<SuffixPositionListener>> suffixListeners;
     juce::HashMap<juce::Label*, juce::Component*> suffixComponents;
-    FixedSuffixLabel* m_suffix {nullptr};
+
+    std::shared_ptr<FixedSuffixLabel> m_fixedSuffixLabel {nullptr};
 };
 
 
@@ -184,7 +200,6 @@ class LeoSlider : public juce::Slider
 public:
     LeoSlider() : LeoSlider{750, 750, 42, 419} {};
     LeoSlider(const int& widthOrHeight, const bool& widthTrue){widthTrue?LeoSlider(widthOrHeight,750, 42, 419):LeoSlider(750,widthOrHeight, 42, 419);};
-    //LeoSlider(const int& width, const int& height) : LeoSlider{width, height, 42, 419} {};
     LeoSlider(const bool& xPaddingTrue, const int& padding){ xPaddingTrue?LeoSlider(750, 750, padding, 419):LeoSlider(750, 750, 42, padding);};
     LeoSlider(const int& xPadding, const int& yPadding) :LeoSlider{750, 750, xPadding, yPadding} {};
     LeoSlider(const int& width, const int& height, const int& xPadding, const int& yPadding);
@@ -200,26 +215,31 @@ public:
         LeoSliderLNF* p_LeoSliderLNF = &m_leoSliderLNF;
         return p_LeoSliderLNF;
     };
+    LEO_RETURN resizeSlider (const float scalarWidth, const float scalarHeight)
+    {
+        const int w = lround(static_cast<float>(m_defaultWidth) * scalarWidth);
+        const int h = lround(static_cast<float>(m_defaultHeight) * scalarHeight);
+        const int x = lround(static_cast<float>(m_xDefaultPadding) * scalarWidth);
+        const int y = lround(static_cast<float>(m_yDefaultPadding) * scalarHeight);
+
+        this->setBounds(x, y, w, h);
+        return LEO_SUCCESS;
+    }
 private:
-    int m_width {750};
-    int m_height {750};
-    int m_xPadding {42};
-    int m_yPadding {419};
+    int m_width {750},  m_height {750},  m_xPadding {42},  m_yPadding {419};
+    int m_defaultWidth {0}, m_defaultHeight {0}, m_xDefaultPadding {0}, m_yDefaultPadding {0};
+
     LeoSliderLNF m_leoSliderLNF{};
 };
 
 //------------------------------------------------------------------------------------------------------------------
-
-
-
-
 
 class LeoGainSlider final : public LeoSlider
 {
     public:
     LeoGainSlider():LeoGainSlider(400, 50, 1){};
     LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals);
-    juce::String getTextFromValue(double value) override
+    juce::String getTextFromValue(const double value) override
     {
         return juce::String(value, m_numberOfDecimals);
     };

@@ -12,7 +12,7 @@ public:
     {
 
         customTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayLight_ttf, BinaryData::NeueHaasDisplayLight_ttfSize);
-        auto buttonFont = juce::Font(juce::FontOptions{customTypeface});//.withTypeface(customTypeface));
+        const auto buttonFont = juce::Font(juce::FontOptions{customTypeface});//.withTypeface(customTypeface));
         setButtonText("check other plugins");
         setURL(juce::URL("https://leo-brennauer.com/#minishop"));
         setFont(buttonFont, true, juce::Justification::centred);
