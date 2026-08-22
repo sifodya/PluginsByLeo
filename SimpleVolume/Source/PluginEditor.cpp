@@ -1,7 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-#include <base/source/fstring.h>
 using  std::cout, std::endl;
 
 #define PLUGIN_MINWIDTH 60
@@ -23,9 +22,11 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
-        screenArea = screen->totalArea;
-        screenWidth = screenArea.getWidth();
-        screenHeight = screenArea.getHeight();
+        //screenArea = screen->totalArea;
+        const auto screenBounds = screen->logicalBounds;
+        screenWidth = screenBounds.getWidth();//screenArea.getWidth();
+        screenHeight = screenBounds.getHeight();//screenArea.getHeight();
+        //cout<<"Screen Bounds: "<<screenBounds.getWidth()<<" "<<screenBounds.getHeight()<<"Screen Area: "<<screenWidth<<" "<<screenHeight<<endl;
     }
 
     getConstrainer()->setFixedAspectRatio(pluginRatio);
@@ -34,10 +35,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     int width = processorRef.getEditorWidth();
     int height = processorRef.getEditorHeight();
-    cout<<"Num of Decimals: "<<gainSlider.getNumDecimalPlacesToDisplay()<<endl;
     makeContentVisible();
     gainSlider.addMouseListener(this, false);
-    cout<<"Num of Decimals: "<<gainSlider.getNumDecimalPlacesToDisplay()<<endl;
 
     learnButtonImage.onClick = [this]
     {
@@ -46,7 +45,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     if (width <= 0 || height <= 0)
     {
-        float screenRatio = screenWidth/3840.0f;
+        const float screenRatio = screenWidth/3840.0f;
         width = PLUGIN_INITWIDTH * screenRatio;
         height = width/pluginRatio;
         setSize(width, height);

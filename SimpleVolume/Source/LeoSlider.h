@@ -25,7 +25,7 @@ public:
         g.setColour(juce::Colour::fromRGB(33, 33, 29));
 
         juce::Font suffixFont(juce::FontOptions{typeface});
-        suffixFont.setHeight(getHeight() * 0.75f);   // scale as you like
+        suffixFont.setHeight(static_cast<float>(getHeight()) * 0.75f);   // scale as you like
 
         g.setFont(suffixFont);
         g.drawFittedText(suffix, getLocalBounds(), juce::Justification::centredRight, 1);
@@ -98,7 +98,7 @@ public:
         if (!m_backgroundImage.isNull())
         {
             g.drawImage(m_backgroundImage,
-                lround(x + m_editorScalarWidth * 118),
+                lround(static_cast<float>(x) + m_editorScalarWidth * 118),
                 y,
                 width,
                 height,
@@ -127,11 +127,10 @@ public:
     {
         if (!m_thumbImage.isNull())
         {
-            const int thumbHeight = lround(m_thumbImage.getHeight() * m_editorScalarHeight);
-            const int thumbWidth = lround(m_thumbImage.getWidth() * m_editorScalarWidth);
-            float drawY = 0.0f;
-            const float drawX = x + (width - thumbWidth) / 2.0f;
-            drawY = sliderPos - thumbHeight / 2.0f;
+            const int thumbHeight = lround(static_cast<float>(m_thumbImage.getHeight()) * m_editorScalarHeight);
+            const int thumbWidth = lround(static_cast<float>(m_thumbImage.getWidth()) * m_editorScalarWidth);
+            const float drawX = static_cast<float>(x) + (static_cast<float>(width) - static_cast<float>(thumbWidth)) / 2.0f;
+            const float drawY = sliderPos - static_cast<float>(thumbHeight) / 2.0f;
 
             g.drawImage(m_thumbImage,
                 lround(drawX + 59 * m_editorScalarWidth),
@@ -184,12 +183,10 @@ private:
     juce::File m_pngThumb;
     juce::MemoryBlock m_fontData;
     juce::Typeface::Ptr m_fontTypeface;
-    juce::Label * m_sliderLabel;
-    float m_editorScalarWidth, m_editorScalarHeight;
+    juce::Label* m_sliderLabel {nullptr};
+    float m_editorScalarWidth {0}, m_editorScalarHeight {0};
     juce::HashMap<juce::Label*, std::shared_ptr<SuffixPositionListener>> suffixListeners;
     juce::HashMap<juce::Label*, juce::Component*> suffixComponents;
-
-    std::shared_ptr<FixedSuffixLabel> m_fixedSuffixLabel {nullptr};
 };
 
 
@@ -241,7 +238,7 @@ class LeoGainSlider final : public LeoSlider
     LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals);
     juce::String getTextFromValue(const double value) override
     {
-        return juce::String(value, m_numberOfDecimals);
+        return {value, m_numberOfDecimals};
     };
     LeoSliderLNF* getLNF() const {return mPtr_parentLNF;};
 private:
