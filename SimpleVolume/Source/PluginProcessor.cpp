@@ -139,12 +139,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::ignoreUnused (midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
-    const auto totalNumInputChannels  = getTotalNumInputChannels();
-    const auto totalNumOutputChannels = getTotalNumOutputChannels();
+    //const auto totalNumInputChannels  = getTotalNumInputChannels();
+    //const auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     if (auto* currentEditor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
     {
-        currentEditor->getGainSlider().DSP(buffer, totalNumInputChannels, totalNumOutputChannels, this);
+        currentEditor->getGainSlider().DSP(buffer, this);
     }
 
     /*for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)

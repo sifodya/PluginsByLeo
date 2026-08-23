@@ -246,8 +246,6 @@ class LeoGainSlider final : public LeoSlider
     void mouseDown(const juce::MouseEvent& event) override;
     void mouseDrag(const juce::MouseEvent& event) override;
     LEO_RETURN DSP (juce::AudioBuffer<float>& buffer,
-        const int& totalNumInputChannels,
-        const int& totalNumOutputChannels,
         AudioPluginAudioProcessor* processor);
     void setLearnState(const bool& state) {m_learnButtonState = state;};
 private:

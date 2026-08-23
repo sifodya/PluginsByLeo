@@ -182,8 +182,11 @@ void LeoGainSlider::mouseDrag(const juce::MouseEvent& event)
     this->setValue(m_lastSliderValue + valueDelta, juce::sendNotificationSync);
 }
 
-LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, const int& totalNumInputChannels, const int& totalNumOutputChannels, AudioPluginAudioProcessor* processor)
+LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, AudioPluginAudioProcessor* processor)
 {
+    const auto totalNumInputChannels = processor->getTotalNumInputChannels();
+    const auto totalNumOutputChannels = processor->getTotalNumOutputChannels();
+
     const auto& apvts = processor->getParameters();
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
