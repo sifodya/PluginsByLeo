@@ -12,14 +12,17 @@
 
 LeoSliderLNF::~LeoSliderLNF()
 {
-    /*for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
+    cout<<"LNF Deconstructor"<<endl;
+    for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
     {
         if (auto* label = it.getKey())
             if (auto* suffix = it.getValue())
             {
                 label->removeChildComponent(suffix);
             }
-    }*/
+
+    }
+    //delete m_sliderLabel;
 }
 
 juce::Label* LeoSliderLNF::createSliderTextBox(juce::Slider& slider)
@@ -126,4 +129,53 @@ LeoGainSlider::LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, 
     setColour(textBoxHighlightColourId, juce::Colours::black);
     setColour(textBoxBackgroundColourId, juce::Colours::transparentBlack);
     setDoubleClickReturnValue(true, 0.0f, juce::ModifierKeys::ctrlModifier);
+}
+
+void LeoGainSlider::mouseDown(const juce::MouseEvent& event)
+{
+    if (event.eventComponent == this)
+    {
+        m_lastSliderValue = this->getValue();
+        if (event.mods.isCtrlDown())
+            this->setValue(0.0f, juce::dontSendNotification);
+    }
+    m_captureOffset = event.position.y;
+}
+
+void LeoGainSlider::mouseDrag(const juce::MouseEvent& event)
+{
+    if (event.eventComponent != this)
+        return;
+    float fineFactor, pixelDelta;
+    if (event.mods.isShiftDown())
+    {
+        if (m_capture==false)
+        {
+            m_captureOffset = event.position.y;
+            if (event.eventComponent == this)
+                m_lastSliderValue = this->getValue();
+            m_capture = true;
+        }
+        fineFactor = 0.2f;
+        pixelDelta = (event.position.y-m_captureOffset) * -1.0f;//-(event.position.y - (event.mouseDownPosition.y - captureOffset));
+    }
+    else
+    {
+        if (m_capture==true)
+        {
+            m_captureOffset = event.position.y;
+            if (event.eventComponent == this)
+                m_lastSliderValue = this->getValue();
+            m_capture = false;
+        }
+        fineFactor = 1.0f;
+        pixelDelta = (event.position.y-m_captureOffset) * -1.0f;//-(event.position.y - event.mouseDownPosition.y);
+    }
+    // Slider height controls default sensitivity
+    const float sliderLength = this->getLookAndFeel().getSliderLayout(*this).sliderBounds.getHeight();
+
+    const float valueDelta = pixelDelta / sliderLength
+                       * (this->getMaximum() - this->getMinimum())
+                       * fineFactor;
+    this->setValue(m_lastSliderValue + valueDelta, juce::sendNotificationSync);
 }

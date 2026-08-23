@@ -100,7 +100,7 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(linkButton);
 }
 
-void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)
+/*void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)
 {
     if (event.eventComponent == &gainSlider)
         lastSliderValue = gainSlider.getValue();
@@ -143,17 +143,4 @@ void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
                        * (gainSlider.getMaximum() - gainSlider.getMinimum())
                        * fineFactor;
     gainSlider.setValue(lastSliderValue + valueDelta, juce::sendNotificationSync);
-}
-
-void AudioPluginAudioProcessorEditor::resizeComponent(Component& c) const
-{
-    const auto bounds = c.getBounds();
-    const auto position = c.getPosition();
-
-    const int w = std::lround(static_cast<float>(bounds.getY()) * scalarWidth);
-    const int h = std::lround(static_cast<float>(bounds.getHeight()) * scalarHeight);
-    const int x = std::lround(static_cast<float>(position.getX()) * scalarWidth);
-    const int y = std::lround(static_cast<float>(position.getY()) * scalarHeight);
-
-    c.setBounds(x, y, w, h);
-}
+}*/

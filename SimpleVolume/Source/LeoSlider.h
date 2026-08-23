@@ -241,11 +241,16 @@ class LeoGainSlider final : public LeoSlider
         return {value, m_numberOfDecimals};
     };
     LeoSliderLNF* getLNF() const {return mPtr_parentLNF;};
+    void mouseDown(const juce::MouseEvent& event) override;
+    void mouseDrag(const juce::MouseEvent& event) override;
 private:
     int m_numberOfDecimals {1};
     int m_textBoxWidth {400};
     int m_textBoxHeight {50};
     LeoSliderLNF* mPtr_parentLNF;
+    double m_lastSliderValue {0.0};
+    float m_captureOffset {0.0f};
+    bool m_capture {false};
 };
 
 
