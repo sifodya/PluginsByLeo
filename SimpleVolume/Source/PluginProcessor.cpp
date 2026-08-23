@@ -1,8 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include <cmath>
-#define dbToLin(lin) pow(10.0f, (lin/20.0f)
-#define linToDb(db) (20.0f * log10(db))
+#include "LeoMacros.h"
 using namespace std;
 
 //==============================================================================
@@ -143,6 +142,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     const auto totalNumInputChannels  = getTotalNumInputChannels();
     const auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    if (auto* currentEditor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
+    {
+        LeoGainSlider& slider = currentEditor->getGainSlider();
+        slider.DSP(buffer, totalNumInputChannels, totalNumOutputChannels, this);
+    }
+
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
@@ -274,19 +279,6 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
     return new AudioPluginAudioProcessorEditor (*this);
 }
 
-/*int AudioPluginAudioProcessor::getEditorWidth()
-{
-    cout<<"getEditorWidth"<<endl;
-    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    return editorSize.getProperty ("editorWidth", editorWidth);
-}
-int AudioPluginAudioProcessor::getEditorHeight()
-{
-    cout<<"getEditorHeight"<<endl;
-    editorSize.getOrCreateChildWithName ("lastSize", nullptr);
-    return editorSize.getProperty ("editorHeight", editorHeight);
-}*/
-
 void AudioPluginAudioProcessor::setEditorSize(int width, int height)
 {
 
@@ -296,7 +288,6 @@ void AudioPluginAudioProcessor::setEditorSize(int width, int height)
         editorHeight = height;
         cout<<"set Editor Size Height: "<<editorWidth<<" "<<editorHeight<<endl;
         // Update the editor size in the state
-        //auto state = parameters.copyState();
         editorSize.setProperty("editorWidth", editorWidth, nullptr);
         editorSize.setProperty("editorHeight", editorHeight, nullptr);
     }
@@ -310,9 +301,6 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
 
     state.setProperty("editorWidth", editorWidth, nullptr);
     state.setProperty("editorHeight", editorHeight, nullptr);
-    // Add editor size to the state
-    //state.appendChild(editorSize, nullptr);
-
     
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
@@ -325,15 +313,7 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     if (xmlState)
     {
         auto newState = juce::ValueTree::fromXml (*xmlState);
-        
-        /*// Load editor size from state if available
-        if (newState.hasProperty("editorWidth") && newState.hasProperty("editorHeight"))
-        {
-            editorWidth = newState.getProperty("editorWidth");
-            editorHeight = newState.getProperty("editorHeight");
-        }
 
-        newState.removeChild(editorSize, nullptr);*/
         parameters.replaceState(newState);
 
         editorWidth = newState.getProperty("editorWidth");

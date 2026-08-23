@@ -5,13 +5,15 @@
 #pragma once
 
 #include "LeoExceptions.h"
-#include "BinaryData.h"
+#include "PluginProcessor.h"
 
+#include <juce_dsp/juce_dsp.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <utility>
 
 using namespace LeoExceptions;
-using std::cout, std::endl, std::lround;
+using std::cout, std::endl, std::lround, std::vector;
+using fvector = std::vector<float>;
 
 class FixedSuffixLabel final : public juce::Component
 {
@@ -234,7 +236,7 @@ private:
 class LeoGainSlider final : public LeoSlider
 {
     public:
-    LeoGainSlider():LeoGainSlider(400, 50, 1){};
+    //LeoGainSlider():LeoGainSlider(400, 50, 1){};
     LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals);
     juce::String getTextFromValue(const double value) override
     {
@@ -243,14 +245,41 @@ class LeoGainSlider final : public LeoSlider
     LeoSliderLNF* getLNF() const {return mPtr_parentLNF;};
     void mouseDown(const juce::MouseEvent& event) override;
     void mouseDrag(const juce::MouseEvent& event) override;
+    LEO_RETURN DSP (juce::AudioBuffer<float>& buffer,
+        const int& totalNumInputChannels,
+        const int& totalNumOutputChannels,
+        AudioPluginAudioProcessor* processor);
+    void setLearnState(const bool& state) {m_learnButtonState = state;};
 private:
     int m_numberOfDecimals {1};
     int m_textBoxWidth {400};
     int m_textBoxHeight {50};
-    LeoSliderLNF* mPtr_parentLNF;
+    int m_targetMeasurements {5}; //in seconds
+    int m_measuredBlocks {1};
+    int m_measuredBlocksRe {1};
+
     double m_lastSliderValue {0.0};
+    double m_targetLoudness {-18.0f};
     float m_captureOffset {0.0f};
+    float m_learnThreshold {0.5f};
+    float m_rmsMedian {0.0f};
+    float m_previousGain {0};
+
     bool m_capture {false};
+    bool m_learnButtonState {false};
+
+    enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
+    LearnState m_learnState {IDLE};
+
+    fvector m_rmsValues;
+
+    LeoSliderLNF* mPtr_parentLNF;
+    //AudioPluginAudioProcessor* m_processorRef;
+};
+
+struct LeoSliderInfo
+{
+
 };
 
 

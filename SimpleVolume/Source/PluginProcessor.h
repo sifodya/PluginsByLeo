@@ -57,6 +57,8 @@ public:
     int getEditorHeight() const {return editorHeight;};
     void setEditorSize(int width, int height);
 
+    std::atomic<float>* getGainParameter() const {return gainParameter;};
+
 private:
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
@@ -68,7 +70,7 @@ private:
     int targetMeasurements = 5; //in seconds
     int measuredBlocks = 1;
     int measuredBlocksRe = 1;
-    float targetLoudnessLin {pow(10.0f, -18.0f/20.0f)}, targetLoudness {-18.0f};
+    double targetLoudnessLin {pow(10.0f, -18.0f/20.0f)}, targetLoudness {-18.0f};
     enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
     LearnState learnState = IDLE;
     float learnThreshold = 0.5f;

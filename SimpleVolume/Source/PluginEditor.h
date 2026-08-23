@@ -22,14 +22,13 @@ public:
     //=============================================================================
     juce::ImageButton& getLearnButton() {return learnButtonImage;}
     void setLearnButtonValue(const bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
-    //void mouseDown(const juce::MouseEvent& event) override;
-    //void mouseDrag(const juce::MouseEvent& event) override;
+    LeoGainSlider& getGainSlider() {return gainSlider;}
 
     SimpleImageButton learnButtonImage;
 private:
 
-    LeoGainSlider gainSlider {};
     AudioPluginAudioProcessor& processorRef;
+    LeoGainSlider gainSlider {400, 50, 1};
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
     LeoBackground fullPluginTemplate;
     LeoPluginTitle pluginTitle;
@@ -40,10 +39,6 @@ private:
     double pluginRatio {368.0f/1281.0f};
 
     const juce::Displays::Display* screen {nullptr};
-    //juce::Rectangle<int> screenArea {};
     int screenWidth {0}, screenHeight {0}, screenScaleHeight {1}, screenScaleWidth {1};
-    /*double lastSliderValue {0.0};
-    bool capture {false};
-    float captureOffset {0.0f};*/
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

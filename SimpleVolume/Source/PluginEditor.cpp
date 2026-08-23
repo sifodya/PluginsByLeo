@@ -22,11 +22,9 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
-        //screenArea = screen->totalArea;
         const auto screenBounds = screen->logicalBounds;
-        screenWidth = screenBounds.getWidth();//screenArea.getWidth();
-        screenHeight = screenBounds.getHeight();//screenArea.getHeight();
-        //cout<<"Screen Bounds: "<<screenBounds.getWidth()<<" "<<screenBounds.getHeight()<<"Screen Area: "<<screenWidth<<" "<<screenHeight<<endl;
+        screenWidth = screenBounds.getWidth();
+        screenHeight = screenBounds.getHeight();
     }
 
     getConstrainer()->setFixedAspectRatio(pluginRatio);
@@ -41,6 +39,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     learnButtonImage.onClick = [this]
     {
         processorRef.setLearnButtonState(learnButtonImage.getToggleState());
+        gainSlider.setLearnState(learnButtonImage.getToggleState());
     };
 
     if (width <= 0 || height <= 0)
@@ -83,7 +82,6 @@ void AudioPluginAudioProcessorEditor::resized()
     gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
     gainSlider.sendLookAndFeelChange();
 
-
     pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
     pluginTitle.resizeFromEditor(pluginTitle.getBounds());
     gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
@@ -99,48 +97,3 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
 }
-
-/*void AudioPluginAudioProcessorEditor::mouseDown(const juce::MouseEvent& event)
-{
-    if (event.eventComponent == &gainSlider)
-        lastSliderValue = gainSlider.getValue();
-    captureOffset = event.position.y;
-}
-
-void AudioPluginAudioProcessorEditor::mouseDrag(const juce::MouseEvent& event)
-{
-    if (event.eventComponent != &gainSlider)
-        return;
-    float fineFactor, pixelDelta;
-    if (event.mods.isShiftDown())
-    {
-        if (capture==false)
-        {
-            captureOffset = event.position.y;
-            if (event.eventComponent == &gainSlider)
-                lastSliderValue = gainSlider.getValue();
-            capture = true;
-        }
-        fineFactor = 0.2f;
-        pixelDelta = (event.position.y-captureOffset) * -1.0f;//-(event.position.y - (event.mouseDownPosition.y - captureOffset));
-    }
-    else
-    {
-        if (capture==true)
-        {
-            captureOffset = event.position.y;
-            if (event.eventComponent == &gainSlider)
-                lastSliderValue = gainSlider.getValue();
-            capture = false;
-        }
-        fineFactor = 1.0f;
-        pixelDelta = (event.position.y-captureOffset) * -1.0f;//-(event.position.y - event.mouseDownPosition.y);
-    }
-    // Slider height controls default sensitivity
-    const float sliderLength = gainSlider.getLookAndFeel().getSliderLayout(gainSlider).sliderBounds.getHeight();
-
-    const float valueDelta = pixelDelta / sliderLength
-                       * (gainSlider.getMaximum() - gainSlider.getMinimum())
-                       * fineFactor;
-    gainSlider.setValue(lastSliderValue + valueDelta, juce::sendNotificationSync);
-}*/
