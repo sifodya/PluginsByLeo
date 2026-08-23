@@ -144,11 +144,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     if (auto* currentEditor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
     {
-        LeoGainSlider& slider = currentEditor->getGainSlider();
-        slider.DSP(buffer, totalNumInputChannels, totalNumOutputChannels, this);
+        currentEditor->getGainSlider().DSP(buffer, totalNumInputChannels, totalNumOutputChannels, this);
     }
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    /*for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -265,7 +264,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             buffer.applyGainRamp (channel, 0, buffer.getNumSamples(), previousGain, currentGain);
             previousGain = currentGain;
         }
-    }
+    }*/
 }
 
 //==============================================================================

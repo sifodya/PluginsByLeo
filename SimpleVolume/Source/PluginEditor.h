@@ -2,7 +2,7 @@
 
 #include "PluginProcessor.h"
 #include "LeoBackground.cpp"
-//#include "SimpleSliderLookAndFeel.cpp"
+#include "LeoSlider.h"
 #include "LeoPluginTitle.cpp"
 #include "SimpleImageButton.cpp"
 #include "SimpleHyperlinkButton.cpp"
