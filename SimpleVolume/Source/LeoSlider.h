@@ -10,10 +10,26 @@
 #include <juce_dsp/juce_dsp.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <utility>
+#include <cmath>
 
 using namespace LeoExceptions;
 using std::cout, std::endl, std::lround, std::vector;
 using fvector = std::vector<float>;
+
+struct LeoSliderInfo
+{
+    const int width {0}, height {0};
+    const int xPadding {0}, yPadding {0};
+    const size_t fontSize {0}, backImgSize {0}, thumbImgSize {0};
+    const void* fontName {nullptr};
+    const void* backImgName {nullptr};
+    const void* thumbImgName {nullptr};
+};
+
+struct LeoGainSliderInfo : LeoSliderInfo
+{
+
+};
 
 class FixedSuffixLabel final : public juce::Component
 {
@@ -61,6 +77,33 @@ class LeoSliderLNF : public juce::LookAndFeel_V4
 {
 public:
     LeoSliderLNF(){Ini(false);};
+    LeoSliderLNF(const LeoSliderInfo& info);
+    //copy constr
+    LeoSliderLNF(const LeoSliderLNF& other)
+    {
+
+    };
+    //move const
+    LeoSliderLNF(const LeoSliderLNF&& other)
+    {
+
+    };
+    //assigment
+    LeoSliderLNF& operator=(const LeoSliderLNF& other)
+    {
+        if (&other != this)
+        {
+            LeoSliderLNF tmp(other);
+            std::swap(*this, tmp);
+        }
+        return *this;
+    }
+    //move
+    LeoSliderLNF& operator=(const LeoSliderLNF&& other) noexcept
+    {
+        //std::swap(this.var, other.var);
+        return *this;
+    };
     ~LeoSliderLNF() override;
 
     void drawLinearSlider(juce::Graphics& g,
@@ -177,6 +220,11 @@ public:
     LEO_RETURN setLNFimages(const void* bgImageData, const size_t& bgImageSize, const void* thumbImageData, const size_t& thumbImageSize);
 
     LEO_RETURN Ini(const bool& useBinaryData);
+
+    /*LeoSliderLNF operator = (this*, LeoSliderLNF& other)
+    {
+
+    };*/
 private:
     juce::Image m_backgroundImage;
     juce::Image m_thumbImage;
@@ -202,6 +250,7 @@ public:
     LeoSlider(const bool& xPaddingTrue, const int& padding){ xPaddingTrue?LeoSlider(750, 750, padding, 419):LeoSlider(750, 750, 42, padding);};
     LeoSlider(const int& xPadding, const int& yPadding) :LeoSlider{750, 750, xPadding, yPadding} {};
     LeoSlider(const int& width, const int& height, const int& xPadding, const int& yPadding);
+    explicit LeoSlider(const LeoSliderInfo& info);
     ~LeoSlider() override {setLookAndFeel(nullptr);};
     std::array<int, 2> getPadding() const {return std::array<int, 2>{m_xPadding,m_yPadding};};
     int getXPadding() const {return m_xPadding;};
@@ -227,8 +276,9 @@ public:
 private:
     int m_width {750},  m_height {750},  m_xPadding {42},  m_yPadding {419};
     int m_defaultWidth {0}, m_defaultHeight {0}, m_xDefaultPadding {0}, m_yDefaultPadding {0};
+    static unsigned int m_numInstances;
 
-    LeoSliderLNF m_leoSliderLNF{};
+    LeoSliderLNF m_leoSliderLNF {};
 };
 
 //------------------------------------------------------------------------------------------------------------------
@@ -274,10 +324,3 @@ private:
     LeoSliderLNF* mPtr_parentLNF;
     //AudioPluginAudioProcessor* m_processorRef;
 };
-
-struct LeoSliderInfo
-{
-
-};
-
-

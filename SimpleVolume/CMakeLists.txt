@@ -54,7 +54,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     juce_add_plugin(${PROJECT_NAME}
             COMPANY_NAME LeoPlugins
             IS_SYNTH FALSE
-            NEEDS_MIDI_INPUT FALSE
+            NEEDS_MIDI_INPUT TRUE
             NEEDS_MIDI_OUTPUT FALSE
             IS_MIDI_EFFECT FALSE
             EDITOR_WANTS_KEYBOARD_FOCUS TRUE

@@ -7,10 +7,13 @@
 #include "BinaryData.h"
 #include "PluginEditor.h"
 
-/*LeoSliderLNF::LeoSliderLNF(const bool& isDefault)
+LeoSliderLNF::LeoSliderLNF(const LeoSliderInfo& info)
 {
-    Ini();
-}*/
+    m_fontTypeface = juce::Typeface::createSystemTypefaceFor(info.fontName, info.fontSize);
+    m_backgroundImage = juce::ImageFileFormat::loadFrom(info.backImgName, info.fontSize);
+    m_thumbImage = juce::ImageFileFormat::loadFrom(info.thumbImgName, info.fontSize);
+    this->setColour(juce::Label::textColourId, juce::Colours::black);
+}
 
 LeoSliderLNF::~LeoSliderLNF()
 {
@@ -87,6 +90,7 @@ LEO_RETURN LeoSliderLNF::setLNFfont(const void* fontData, const size_t& fontSize
     setColour(juce::Label::textColourId, juce::Colours::black);
     return LEO_SUCCESS;
 }
+
 LEO_RETURN LeoSliderLNF::setLNFimages(const void* bgImageData, const size_t& bgImageSize, const void* thumbImageData, const size_t& thumbImageSize)
 {
     m_backgroundImage = juce::ImageFileFormat::loadFrom(bgImageData, bgImageSize);
@@ -94,6 +98,7 @@ LEO_RETURN LeoSliderLNF::setLNFimages(const void* bgImageData, const size_t& bgI
     return LEO_SUCCESS;
 }
 
+//======================================================================================================
 LeoSlider::LeoSlider(const int& width, const int& height, const int& xPadding, const int& yPadding)
 {
     m_width = width;
@@ -106,10 +111,29 @@ LeoSlider::LeoSlider(const int& width, const int& height, const int& xPadding, c
     m_xDefaultPadding = xPadding;
     m_yDefaultPadding = yPadding;
 
+    m_leoSliderLNF = std::move(LeoSliderLNF());
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
 }
 
+LeoSlider::LeoSlider(const LeoSliderInfo& info)
+{
+    m_defaultWidth = info.width;
+    m_defaultHeight = info.height;
+    m_xPadding = info.xPadding;
+    m_yPadding = info.yPadding;
+
+    m_defaultWidth = info.width;
+    m_defaultHeight = info.height;
+    m_xDefaultPadding = info.xPadding;
+    m_yDefaultPadding = info.yPadding;
+
+    m_leoSliderLNF = LeoSliderLNF(info);
+    setLookAndFeel(&m_leoSliderLNF);
+    setBounds(m_xPadding, m_yPadding, m_width, m_height);
+}
+
+//======================================================================================================
 LeoGainSlider::LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals)
 {
     mPtr_parentLNF = getLeoLNF();
@@ -186,8 +210,9 @@ LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, AudioPluginAudio
 {
     const auto totalNumInputChannels = processor->getTotalNumInputChannels();
     const auto totalNumOutputChannels = processor->getTotalNumOutputChannels();
-
     const auto& apvts = processor->getParameters();
+
+    //Discard Input Channels that cannot get maped to a Output Channel
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
@@ -198,25 +223,30 @@ LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, AudioPluginAudio
 
         if (!m_learnButtonState)
         {
+            cout<<"Init State to Idle"<<endl;
             m_learnState=IDLE;
             m_rmsValues.clear();
+            m_rmsValues.shrink_to_fit();
             m_measuredBlocks = 1;
             m_measuredBlocksRe = 1;
         }
 
         switch (m_learnState)
         {
-            case IDLE:
-                {
-                    if(m_learnButtonState)
-                        m_learnState = LEARNING;
-                    break;
-                }
+        case IDLE:
+            {
+                cout<<"IDLE"<<endl;
+                if(m_learnButtonState)
+                    m_learnState = LEARNING;
+                break;
+            }
         case MEASURING:
             {
-                 float rmsSum {0};
+                cout <<"MEASURING"<<endl;
+                 float rmsSum {0}; //refactor with lambda
                     for (auto i {0}; i < m_rmsValues.size(); i++)
                         rmsSum = rmsSum + m_rmsValues[i];
+
                     float rmsAverage = rmsSum/m_rmsValues.size();
                     sort(m_rmsValues.begin(), m_rmsValues.end());
                     if (m_rmsValues.size() % 2 != 0)
@@ -247,11 +277,14 @@ LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, AudioPluginAudio
             }
             case LEARNING:
             {
+                cout<<"Learning"<<endl;
 
-                    cout<<"Learning"<<endl;
-                    if (!processor->getPlayHead()->getPosition()->getIsPlaying())
-                        return LEO_PLAYHEAD_STOP;
-                    cout<<"Measure Start"<<endl;
+
+                if (!processor->getPlayHead()->getPosition()->getIsPlaying())
+                    return LEO_PLAYHEAD_STOP;
+                cout<<"Measure Start"<<endl;
+
+
                 if (m_measuredBlocks <= m_targetMeasurements * processor->getSampleRate()/buffer.getNumSamples())
                 {
                     auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
@@ -270,6 +303,7 @@ LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, AudioPluginAudio
             }
             case END:
             {
+                cout<<"END"<<endl;
                 if (const auto editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getParentComponent()))
                 {
                     editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);
@@ -281,6 +315,7 @@ LEO_RETURN LeoGainSlider::DSP(juce::AudioBuffer<float>& buffer, AudioPluginAudio
             }
             case RELEARNING:
             {
+                cout<<"Relearning"<<endl;
                     if (m_measuredBlocksRe <= m_targetMeasurements * processor->getSampleRate() / buffer.getNumSamples()/5)
                     {
                         float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());

@@ -136,7 +136,12 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                               juce::MidiBuffer& midiMessages)
 {
-    juce::ignoreUnused (midiMessages);
+    //juce::ignoreUnused (midiMessages);
+    if (!midiMessages.isEmpty())
+    {
+        cout<<"Num of MidiEvents: "<<midiMessages.getNumEvents()<<endl;
+        //auto midiIt = midiMessages.findNextSamplePosition(midiMessages.getFirstEventTime());
+    }
 
     juce::ScopedNoDenormals noDenormals;
     //const auto totalNumInputChannels  = getTotalNumInputChannels();
