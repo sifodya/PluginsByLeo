@@ -34,6 +34,20 @@ private:
     LeoPluginTitle pluginTitle;
     SimpleHyperlinkButton linkButton;
 
+    LeoSliderInfo gainSliderInfo
+    {
+        750,
+        750,
+        42,
+        419,
+        BinaryData::NeueHaasDisplayMediu_ttfSize,
+        BinaryData::fader_bg_pngSize,
+        BinaryData::fader_pngSize,
+        BinaryData::NeueHaasDisplayMediu_ttf,
+        BinaryData::fader_bg_png,
+        BinaryData::fader_png
+    };
+
     float scalarWidth, scalarHeight {1.0f};
     float aspectRatioHeight {80.0f}, aspectRationWidth {23.0f};
     double pluginRatio {368.0f/1281.0f};

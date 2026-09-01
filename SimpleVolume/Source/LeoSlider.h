@@ -18,12 +18,12 @@ using fvector = std::vector<float>;
 
 struct LeoSliderInfo
 {
-    const int width {0}, height {0};
-    const int xPadding {0}, yPadding {0};
-    const size_t fontSize {0}, backImgSize {0}, thumbImgSize {0};
-    const void* fontName {nullptr};
-    const void* backImgName {nullptr};
-    const void* thumbImgName {nullptr};
+    const int width, height;
+    const int xPadding, yPadding;
+    const size_t fontSize, backImgSize, thumbImgSize;
+    const void* fontName;
+    const void* backImgName;
+    const void* thumbImgName;
 };
 
 struct LeoGainSliderInfo : LeoSliderInfo
@@ -76,27 +76,44 @@ private:
 class LeoSliderLNF : public juce::LookAndFeel_V4
 {
 public:
-    LeoSliderLNF(){Ini(false);};
+    LeoSliderLNF(){Ini();};
     LeoSliderLNF(const LeoSliderInfo& info);
     //copy constr
     LeoSliderLNF(const LeoSliderLNF& other):
-        m_backgroundImage{other.m_backgroundImage},
-        m_thumbImage{other.m_thumbImage},
+        m_backgroundImage{other.m_backgroundImage.createCopy()},
+        m_thumbImage{other.m_thumbImage.createCopy()},
         m_fontFile{other.m_fontFile},
         m_pngBackground{other.m_pngBackground},
         m_pngThumb {other.m_pngThumb},
         m_fontData{other.m_fontData},
         m_fontTypeface{other.m_fontTypeface},
-        m_sliderLabel{other.m_sliderLabel},
+        //m_sliderLabel{other.m_sliderLabel},
         m_editorScalarWidth{other.m_editorScalarWidth},
-        m_editorScalarHeight{other.m_editorScalarHeight},
-        suffixListeners{other.suffixListeners},
-        suffixComponents {other.suffixComponents}
+        m_editorScalarHeight{other.m_editorScalarHeight}
     {};
     //move const
-    LeoSliderLNF(LeoSliderLNF&& other)
+    LeoSliderLNF(LeoSliderLNF&& other) noexcept:
+        m_backgroundImage{std::move(other.m_backgroundImage)},
+        m_thumbImage{std::move(other.m_thumbImage)},
+        m_fontFile{std::move(other.m_fontFile)},
+        m_pngBackground{std::move(other.m_pngBackground)},
+        m_pngThumb {std::move(other.m_pngThumb)},
+        m_fontData{std::move(other.m_fontData)},
+        m_fontTypeface{std::move(other.m_fontTypeface)},
+        //m_sliderLabel{other.m_sliderLabel},
+        m_editorScalarWidth{other.m_editorScalarWidth},
+        m_editorScalarHeight{other.m_editorScalarHeight}
     {
+        suffixListeners.clear();
+        for (auto i = other.suffixListeners.begin(); i != other.suffixListeners.end(); ++i)
+            suffixListeners.set(i.getKey(), i.getValue());
 
+        suffixComponents.clear();
+        for (auto i = other.suffixComponents.begin(); i != other.suffixComponents.end(); ++i)
+            suffixComponents.set(i.getKey(), i.getValue());
+
+        other.m_editorScalarWidth = 0.0f;
+        other.m_editorScalarHeight = 0.0f;
     };
     //assigment
     LeoSliderLNF& operator=(const LeoSliderLNF& other)
@@ -109,9 +126,23 @@ public:
         return *this;
     }
     //move
-    LeoSliderLNF& operator=(const LeoSliderLNF&& other) noexcept
+    LeoSliderLNF& operator=(LeoSliderLNF&& other) noexcept
     {
-        //std::swap(this.var, other.var);
+        if (this != &other)
+        {
+            std::swap(m_backgroundImage, other.m_backgroundImage);
+            std::swap(m_thumbImage, other.m_thumbImage);
+            std::swap(m_fontFile, other.m_fontFile);
+            std::swap(m_pngBackground, other.m_pngBackground);
+            std::swap(m_pngThumb, other.m_pngThumb);
+            std::swap(m_fontData, other.m_fontData);
+            std::swap(m_fontTypeface, other.m_fontTypeface);
+            std::swap(m_editorScalarWidth, other.m_editorScalarWidth);
+            std::swap(m_editorScalarHeight, other.m_editorScalarHeight);
+            suffixListeners.swapWith(other.suffixListeners);
+            suffixComponents.swapWith(other.suffixComponents);
+        }
+        std::swap(this->m_backgroundImage, other.m_backgroundImage);
         return *this;
     };
     ~LeoSliderLNF() override;
@@ -229,7 +260,7 @@ public:
     LEO_RETURN setLNFfont(const void* fontData, const size_t& fontSize);
     LEO_RETURN setLNFimages(const void* bgImageData, const size_t& bgImageSize, const void* thumbImageData, const size_t& thumbImageSize);
 
-    LEO_RETURN Ini(const bool& useBinaryData);
+    LEO_RETURN Ini();
 
     /*LeoSliderLNF operator = (this*, LeoSliderLNF& other)
     {
@@ -243,7 +274,7 @@ private:
     juce::File m_pngThumb;
     juce::MemoryBlock m_fontData;
     juce::Typeface::Ptr m_fontTypeface;
-    juce::Label* m_sliderLabel {nullptr};
+    //juce::Label* m_sliderLabel {nullptr};
     float m_editorScalarWidth {0}, m_editorScalarHeight {0};
     juce::HashMap<juce::Label*, std::shared_ptr<SuffixPositionListener>> suffixListeners;
     juce::HashMap<juce::Label*, juce::Component*> suffixComponents;

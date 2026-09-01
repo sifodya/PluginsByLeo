@@ -68,19 +68,12 @@ juce::Label* LeoSliderLNF::createSliderTextBox(juce::Slider& slider)
     return label;
 }
 
-LEO_RETURN LeoSliderLNF::Ini(const bool& useBinaryData)
+LEO_RETURN LeoSliderLNF::Ini()
 {
-    if (useBinaryData)
-    {
-        m_fontTypeface = juce::Typeface::createSystemTypefaceFor(BinaryData::NeueHaasDisplayMediu_ttf, BinaryData::NeueHaasDisplayMediu_ttfSize);
-        m_backgroundImage = juce::ImageFileFormat::loadFrom(BinaryData::fader_bg_png, BinaryData::fader_bg_pngSize);
-        m_thumbImage = juce::ImageFileFormat::loadFrom(BinaryData::fader_png, BinaryData::fader_pngSize);
-        this->setColour(juce::Label::textColourId, juce::Colours::black);
-    }
-    {
-        m_fontTypeface = juce::Typeface::findSystemTypeface();
-        this->setColour(juce::Label::textColourId, juce::Colours::black);
-    }
+    m_fontTypeface = juce::Typeface::findSystemTypeface();
+    m_backgroundImage.clear(juce::Rectangle{0,0,m_backgroundImage.getWidth(), m_backgroundImage.getHeight()}, juce::Colours::pink);
+    m_thumbImage.clear(juce::Rectangle{0,0,m_thumbImage.getWidth(), m_thumbImage.getHeight()}, juce::Colours::pink);
+    this->setColour(juce::Label::textColourId, juce::Colours::black);
     return LEO_SUCCESS;
 }
 
@@ -128,7 +121,7 @@ LeoSlider::LeoSlider(const LeoSliderInfo& info)
     m_xDefaultPadding = info.xPadding;
     m_yDefaultPadding = info.yPadding;
 
-    m_leoSliderLNF = LeoSliderLNF(info);
+    m_leoSliderLNF = std::move(LeoSliderLNF(info));
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
 }
