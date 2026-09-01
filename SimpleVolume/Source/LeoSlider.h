@@ -79,12 +79,22 @@ public:
     LeoSliderLNF(){Ini(false);};
     LeoSliderLNF(const LeoSliderInfo& info);
     //copy constr
-    LeoSliderLNF(const LeoSliderLNF& other)
-    {
-
-    };
+    LeoSliderLNF(const LeoSliderLNF& other):
+        m_backgroundImage{other.m_backgroundImage},
+        m_thumbImage{other.m_thumbImage},
+        m_fontFile{other.m_fontFile},
+        m_pngBackground{other.m_pngBackground},
+        m_pngThumb {other.m_pngThumb},
+        m_fontData{other.m_fontData},
+        m_fontTypeface{other.m_fontTypeface},
+        m_sliderLabel{other.m_sliderLabel},
+        m_editorScalarWidth{other.m_editorScalarWidth},
+        m_editorScalarHeight{other.m_editorScalarHeight},
+        suffixListeners{other.suffixListeners},
+        suffixComponents {other.suffixComponents}
+    {};
     //move const
-    LeoSliderLNF(const LeoSliderLNF&& other)
+    LeoSliderLNF(LeoSliderLNF&& other)
     {
 
     };
