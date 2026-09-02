@@ -60,6 +60,8 @@ public:
     std::atomic<float>* getGainParameter() const {return gainParameter;};
 
 private:
+    juce::AudioProcessorEditor* m_editor {nullptr};
+
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();

@@ -96,6 +96,8 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 
     const float gainAmplitude = gainParameter->load();
     previousGain = dbToLin(gainAmplitude));
+
+    m_editor = getActiveEditor();
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -147,7 +149,9 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     //const auto totalNumInputChannels  = getTotalNumInputChannels();
     //const auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    if (auto* currentEditor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
+    if (m_editor == nullptr)
+        return;
+    if (auto* currentEditor = dynamic_cast<AudioPluginAudioProcessorEditor*>(m_editor))
     {
         currentEditor->getGainSlider().DSP(buffer, this);
     }
@@ -280,6 +284,7 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
+
     return new AudioPluginAudioProcessorEditor (*this);
 }
 
