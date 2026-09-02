@@ -83,8 +83,8 @@ public:
     explicit LeoSliderLNF (const LeoGainSliderInfo& LNFGainInfo);
     //copy constr
     LeoSliderLNF(const LeoSliderLNF& other):
-        m_backgroundImage{other.m_backgroundImage.createCopy()},
-        m_thumbImage{other.m_thumbImage.createCopy()},
+        m_backgroundImage{other.m_backgroundImage},
+        m_thumbImage{other.m_thumbImage},
         m_fontFile{other.m_fontFile},
         m_pngBackground{other.m_pngBackground},
         m_pngThumb {other.m_pngThumb},
@@ -145,7 +145,6 @@ public:
             suffixListeners.swapWith(other.suffixListeners);
             suffixComponents.swapWith(other.suffixComponents);
         }
-        std::swap(this->m_backgroundImage, other.m_backgroundImage);
         return *this;
     };
     ~LeoSliderLNF() override;

@@ -11,8 +11,8 @@ LeoSliderLNF::LeoSliderLNF(const LeoSliderInfo& info)
 {
     cout<<"LNF with Slider Info"<<endl;
     m_fontTypeface = juce::Typeface::createSystemTypefaceFor(info.fontName, info.fontSize);
-    m_backgroundImage = juce::ImageFileFormat::loadFrom(info.backImgName, info.fontSize);
-    m_thumbImage = juce::ImageFileFormat::loadFrom(info.thumbImgName, info.fontSize);
+    m_backgroundImage = juce::ImageFileFormat::loadFrom(info.backImgName, info.backImgSize);
+    m_thumbImage = juce::ImageFileFormat::loadFrom(info.thumbImgName, info.thumbImgSize);
     this->setColour(juce::Label::textColourId, juce::Colours::black);
 }
 
@@ -20,8 +20,8 @@ LeoSliderLNF::LeoSliderLNF(const LeoGainSliderInfo& LNFGainInfo)
 {
     cout<<"LNF with Gain Slider Info"<<endl;
     m_fontTypeface = juce::Typeface::createSystemTypefaceFor(LNFGainInfo.fontName, LNFGainInfo.fontSize);
-    m_backgroundImage = juce::ImageFileFormat::loadFrom(LNFGainInfo.backImgName, LNFGainInfo.fontSize);
-    m_thumbImage = juce::ImageFileFormat::loadFrom(LNFGainInfo.thumbImgName, LNFGainInfo.fontSize);
+    m_backgroundImage = juce::ImageFileFormat::loadFrom(LNFGainInfo.backImgName, LNFGainInfo.backImgSize);
+    m_thumbImage = juce::ImageFileFormat::loadFrom(LNFGainInfo.thumbImgName, LNFGainInfo.thumbImgSize);
     this->setColour(juce::Label::textColourId, juce::Colours::black);
 }
 
@@ -151,7 +151,7 @@ LeoSlider::LeoSlider(const LeoGainSliderInfo& leoGainInfo)
     m_xDefaultPadding = leoGainInfo.xPadding;
     m_yDefaultPadding = leoGainInfo.yPadding;
 
-    //m_leoSliderLNF = std::move(LeoSliderLNF(info));
+    m_leoSliderLNF = std::move(LeoSliderLNF(leoGainInfo));
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
 }
@@ -176,9 +176,8 @@ LeoGainSlider::LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, 
 }
 
 LeoGainSlider::LeoGainSlider(const LeoGainSliderInfo& lGSinfo)
+    :LeoSlider(lGSinfo)
 {
-    LeoSlider(info);
-
     m_numberOfDecimals = lGSinfo.numberOfDecimals;
     m_textBoxHeight = lGSinfo.textBoxHeight;
     m_textBoxWidth = lGSinfo.textBoxWidth;

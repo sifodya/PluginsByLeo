@@ -154,124 +154,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         currentEditor->getGainSlider().DSP(buffer, this);
     }
 
-    /*for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        const float gainAmplitude = gainParameter->load();
-        const float currentGain = dbToLin(gainAmplitude));
-
-        if (!learnButtonState)
-        {
-            learnState=IDLE;
-            rmsValues.clear();
-            measuredBlocks = 1;
-            measuredBlocksRe = 1;
-        }
-
-        switch (learnState)
-        {
-            case IDLE:
-                {
-                    if(learnButtonState)
-                        learnState = LEARNING;
-                    break;
-                }
-        case MEASURING:
-            {
-                 float rmsSum {0};
-                    for (auto i {0}; i < rmsValues.size(); i++)
-                        rmsSum = rmsSum + rmsValues[i];
-                    float rmsAverage = rmsSum/rmsValues.size();
-                    sort(rmsValues.begin(), rmsValues.end());
-                    if (rmsValues.size() % 2 != 0)
-                        rmsMedian = rmsValues[rmsValues.size()/2];
-                    else
-                        rmsMedian = (rmsValues[(rmsValues.size()-1)/2] + rmsValues[rmsValues.size()/2])/2;
-                    if (abs(rmsAverage-rmsMedian)<learnThreshold)
-                    {
-                        float valueToSet = 0;
-                        if (rmsMedian != 0)
-                        {
-                            //const auto rmsMedianDb = 20.0f * log10(rmsMedian/0.707f);
-                            auto target = targetLoudness - rmsMedian;
-                            //target = target + 3.0f;
-                            valueToSet = target;
-                            cout<<"Value to set DB: "<<target<<" rms Median db :"<<rmsMedian<<" Sum: "<<rmsSum<<endl;
-                        }
-                        else
-                            valueToSet = targetLoudness;
-
-                        cout<<"Value to Set: "<<valueToSet<<" Target: "<<targetLoudnessLin<<" Median: "<<rmsMedian<<" Avg: "<<rmsAverage<<endl;
-                        parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
-                        learnState = END;
-                        break;
-                    }
-                learnState = RELEARNING;
-                break;
-            }
-            case LEARNING:
-            {
-                    cout<<"Learning"<<endl;
-                    if (!getPlayHead()->getPosition()->getIsPlaying())
-                        return;
-                    cout<<"Measure Start"<<endl;
-                if (measuredBlocks <= targetMeasurements*getSampleRate()/buffer.getNumSamples())
-                {
-                    auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
-                    rms = 20.0f * log10(rms/0.707f);
-                    rms = round(rms * 100.0f) / 100.0f;
-                    rmsValues.push_back(rms);
-                    measuredBlocks++;
-                    //cout<<"RMS: "<<rms<<endl;
-                }
-                else
-                    {
-                        learnState = MEASURING;
-                    }
-                    //cout<<"Measured Blocks: "<<measuredBlocks<<endl;
-                break;
-            }
-            case END:
-            {
-                if (auto* editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
-                {
-                    editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);
-                    learnButtonState = false;
-                    measuredBlocks = 1;
-                    learnState = IDLE;
-                }
-                break;
-            }
-            case RELEARNING:
-            {
-                    if (measuredBlocksRe <= targetMeasurements*getSampleRate()/buffer.getNumSamples()/5)
-                    {
-                        float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
-                        rms = 20.0f * log10(rms/0.707f);
-                        rms = round(rms * 100.0f) / 100.0f;
-                        rmsValues.push_back(rms);
-                        measuredBlocksRe++;
-                    }
-                    else
-                    {
-                        learnState = MEASURING;
-                        measuredBlocksRe = 1;
-                    }
-                break;
-            }
-        }
-        if (juce::approximatelyEqual (currentGain, previousGain))
-        {
-            buffer.applyGain (channel, 0, buffer.getNumSamples(), currentGain);
-        }
-        else
-        {
-            buffer.applyGainRamp (channel, 0, buffer.getNumSamples(), previousGain, currentGain);
-            previousGain = currentGain;
-        }
-    }*/
 }
 
 //==============================================================================
@@ -282,7 +165,7 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-
+    cout<<"Editor created"<<endl;
     return new AudioPluginAudioProcessorEditor (*this);
 }
 

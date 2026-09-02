@@ -26,14 +26,6 @@ public:
 
     SimpleImageButton learnButtonImage;
 private:
-
-    AudioPluginAudioProcessor& processorRef;
-    LeoGainSlider gainSlider {gainSliderInfo};//{400, 50, 1};
-    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
-    LeoBackground fullPluginTemplate;
-    LeoPluginTitle pluginTitle;
-    SimpleHyperlinkButton linkButton;
-
     LeoGainSliderInfo gainSliderInfo
     {
         750,
@@ -50,6 +42,15 @@ private:
         400,
         50
     };
+
+    AudioPluginAudioProcessor& processorRef;
+    LeoGainSlider gainSlider {gainSliderInfo};//{400, 50, 1};
+    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
+    LeoBackground fullPluginTemplate;
+    LeoPluginTitle pluginTitle;
+    SimpleHyperlinkButton linkButton;
+
+
 
     float scalarWidth, scalarHeight {1.0f};
     float aspectRatioHeight {80.0f}, aspectRationWidth {23.0f};
