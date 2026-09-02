@@ -28,13 +28,13 @@ public:
 private:
 
     AudioPluginAudioProcessor& processorRef;
-    LeoGainSlider gainSlider {400, 50, 1};
+    LeoGainSlider gainSlider {gainSliderInfo};//{400, 50, 1};
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
     LeoBackground fullPluginTemplate;
     LeoPluginTitle pluginTitle;
     SimpleHyperlinkButton linkButton;
 
-    LeoSliderInfo gainSliderInfo
+    LeoGainSliderInfo gainSliderInfo
     {
         750,
         750,
@@ -45,7 +45,10 @@ private:
         BinaryData::fader_pngSize,
         BinaryData::NeueHaasDisplayMediu_ttf,
         BinaryData::fader_bg_png,
-        BinaryData::fader_png
+        BinaryData::fader_png,
+        1,
+        400,
+        50
     };
 
     float scalarWidth, scalarHeight {1.0f};

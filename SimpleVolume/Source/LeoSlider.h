@@ -28,7 +28,9 @@ struct LeoSliderInfo
 
 struct LeoGainSliderInfo : LeoSliderInfo
 {
-
+    int numberOfDecimals;
+    int textBoxWidth;
+    int textBoxHeight;
 };
 
 class FixedSuffixLabel final : public juce::Component
@@ -76,8 +78,9 @@ private:
 class LeoSliderLNF : public juce::LookAndFeel_V4
 {
 public:
-    LeoSliderLNF(){Ini();};
+    LeoSliderLNF(){Ini();cout<<"Empty LNF const"<<endl;};
     LeoSliderLNF(const LeoSliderInfo& info);
+    explicit LeoSliderLNF (const LeoGainSliderInfo& LNFGainInfo);
     //copy constr
     LeoSliderLNF(const LeoSliderLNF& other):
         m_backgroundImage{other.m_backgroundImage.createCopy()},
@@ -291,7 +294,8 @@ public:
     LeoSlider(const bool& xPaddingTrue, const int& padding){ xPaddingTrue?LeoSlider(750, 750, padding, 419):LeoSlider(750, 750, 42, padding);};
     LeoSlider(const int& xPadding, const int& yPadding) :LeoSlider{750, 750, xPadding, yPadding} {};
     LeoSlider(const int& width, const int& height, const int& xPadding, const int& yPadding);
-    explicit LeoSlider(const LeoSliderInfo& info);
+    explicit LeoSlider(const LeoSliderInfo& leoInfo);
+    explicit LeoSlider(const LeoGainSliderInfo& leoGainInfo);
     ~LeoSlider() override {setLookAndFeel(nullptr);};
     std::array<int, 2> getPadding() const {return std::array<int, 2>{m_xPadding,m_yPadding};};
     int getXPadding() const {return m_xPadding;};
@@ -328,7 +332,9 @@ class LeoGainSlider final : public LeoSlider
 {
     public:
     //LeoGainSlider():LeoGainSlider(400, 50, 1){};
+    LeoGainSlider() = delete;
     LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals);
+    explicit LeoGainSlider(const LeoGainSliderInfo& lGSinfo);
     juce::String getTextFromValue(const double value) override
     {
         return {value, m_numberOfDecimals};

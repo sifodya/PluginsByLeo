@@ -9,16 +9,26 @@
 
 LeoSliderLNF::LeoSliderLNF(const LeoSliderInfo& info)
 {
+    cout<<"LNF with Slider Info"<<endl;
     m_fontTypeface = juce::Typeface::createSystemTypefaceFor(info.fontName, info.fontSize);
     m_backgroundImage = juce::ImageFileFormat::loadFrom(info.backImgName, info.fontSize);
     m_thumbImage = juce::ImageFileFormat::loadFrom(info.thumbImgName, info.fontSize);
     this->setColour(juce::Label::textColourId, juce::Colours::black);
 }
 
+LeoSliderLNF::LeoSliderLNF(const LeoGainSliderInfo& LNFGainInfo)
+{
+    cout<<"LNF with Gain Slider Info"<<endl;
+    m_fontTypeface = juce::Typeface::createSystemTypefaceFor(LNFGainInfo.fontName, LNFGainInfo.fontSize);
+    m_backgroundImage = juce::ImageFileFormat::loadFrom(LNFGainInfo.backImgName, LNFGainInfo.fontSize);
+    m_thumbImage = juce::ImageFileFormat::loadFrom(LNFGainInfo.thumbImgName, LNFGainInfo.fontSize);
+    this->setColour(juce::Label::textColourId, juce::Colours::black);
+}
+
 LeoSliderLNF::~LeoSliderLNF()
 {
     cout<<"LNF Deconstructor"<<endl;
-    for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
+    /*for (auto it = suffixComponents.begin(); it != suffixComponents.end(); ++it)
     {
         if (auto* label = it.getKey())
             if (auto* suffix = it.getValue())
@@ -26,7 +36,7 @@ LeoSliderLNF::~LeoSliderLNF()
                 label->removeChildComponent(suffix);
             }
 
-    }
+    }*/
     //delete m_sliderLabel;
 }
 
@@ -70,9 +80,10 @@ juce::Label* LeoSliderLNF::createSliderTextBox(juce::Slider& slider)
 
 LEO_RETURN LeoSliderLNF::Ini()
 {
+    cout<<"Ini"<<endl;
     m_fontTypeface = juce::Typeface::findSystemTypeface();
     m_backgroundImage.clear(juce::Rectangle{0,0,m_backgroundImage.getWidth(), m_backgroundImage.getHeight()}, juce::Colours::pink);
-    m_thumbImage.clear(juce::Rectangle{0,0,m_thumbImage.getWidth(), m_thumbImage.getHeight()}, juce::Colours::pink);
+    m_thumbImage.clear(juce::Rectangle{0,0,m_thumbImage.getWidth(), m_thumbImage.getHeight()}, juce::Colours::black);
     this->setColour(juce::Label::textColourId, juce::Colours::black);
     return LEO_SUCCESS;
 }
@@ -109,19 +120,38 @@ LeoSlider::LeoSlider(const int& width, const int& height, const int& xPadding, c
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
 }
 
-LeoSlider::LeoSlider(const LeoSliderInfo& info)
+LeoSlider::LeoSlider(const LeoSliderInfo& leoInfo)
 {
-    m_defaultWidth = info.width;
-    m_defaultHeight = info.height;
-    m_xPadding = info.xPadding;
-    m_yPadding = info.yPadding;
+    cout<<"LeoSlider, LeoSliderInfo"<<endl;
+    m_defaultWidth = leoInfo.width;
+    m_defaultHeight = leoInfo.height;
+    m_xPadding = leoInfo.xPadding;
+    m_yPadding = leoInfo.yPadding;
 
-    m_defaultWidth = info.width;
-    m_defaultHeight = info.height;
-    m_xDefaultPadding = info.xPadding;
-    m_yDefaultPadding = info.yPadding;
+    m_defaultWidth = leoInfo.width;
+    m_defaultHeight = leoInfo.height;
+    m_xDefaultPadding = leoInfo.xPadding;
+    m_yDefaultPadding = leoInfo.yPadding;
 
-    m_leoSliderLNF = std::move(LeoSliderLNF(info));
+    m_leoSliderLNF = std::move(LeoSliderLNF(leoInfo));
+    setLookAndFeel(&m_leoSliderLNF);
+    setBounds(m_xPadding, m_yPadding, m_width, m_height);
+}
+
+LeoSlider::LeoSlider(const LeoGainSliderInfo& leoGainInfo)
+{
+    cout<<"LeoSlider, LeoGainSliderInfo"<<endl;
+    m_defaultWidth = leoGainInfo.width;
+    m_defaultHeight = leoGainInfo.height;
+    m_xPadding = leoGainInfo.xPadding;
+    m_yPadding = leoGainInfo.yPadding;
+
+    m_defaultWidth = leoGainInfo.width;
+    m_defaultHeight = leoGainInfo.height;
+    m_xDefaultPadding = leoGainInfo.xPadding;
+    m_yDefaultPadding = leoGainInfo.yPadding;
+
+    //m_leoSliderLNF = std::move(LeoSliderLNF(info));
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
 }
@@ -129,13 +159,33 @@ LeoSlider::LeoSlider(const LeoSliderInfo& info)
 //======================================================================================================
 LeoGainSlider::LeoGainSlider(const int& textBoxWidth, const int& textBoxHeight, const int& numOfDecimals)
 {
+    m_numberOfDecimals = numOfDecimals;
+    m_textBoxHeight = textBoxHeight;
+    m_textBoxWidth = textBoxWidth;
     mPtr_parentLNF = getLeoLNF();
     mPtr_parentLNF->setLNFfont(BinaryData::NeueHaasDisplayMediu_ttf, BinaryData::NeueHaasDisplayMediu_ttfSize);
     mPtr_parentLNF->setLNFimages(BinaryData::fader_bg_png, BinaryData::fader_bg_pngSize, BinaryData::fader_png, BinaryData::fader_pngSize);
 
-    m_numberOfDecimals = numOfDecimals;
+    setTextBoxStyle(TextBoxBelow, false, m_textBoxWidth, m_textBoxHeight);
+    setTextBoxIsEditable(true);
+    setSliderStyle(LinearVertical);
+    setColour(textBoxOutlineColourId, juce::Colours::transparentBlack);
+    setColour(textBoxHighlightColourId, juce::Colours::black);
+    setColour(textBoxBackgroundColourId, juce::Colours::transparentBlack);
+    setDoubleClickReturnValue(true, 0.0f, juce::ModifierKeys::ctrlModifier);
+}
 
-    setTextBoxStyle(TextBoxBelow, false, textBoxWidth, textBoxHeight);
+LeoGainSlider::LeoGainSlider(const LeoGainSliderInfo& lGSinfo)
+{
+    LeoSlider(info);
+
+    m_numberOfDecimals = lGSinfo.numberOfDecimals;
+    m_textBoxHeight = lGSinfo.textBoxHeight;
+    m_textBoxWidth = lGSinfo.textBoxWidth;
+
+    mPtr_parentLNF = getLeoLNF();
+
+    setTextBoxStyle(TextBoxBelow, false, m_textBoxWidth, m_textBoxHeight);
     setTextBoxIsEditable(true);
     setSliderStyle(LinearVertical);
     setColour(textBoxOutlineColourId, juce::Colours::transparentBlack);
@@ -150,7 +200,7 @@ void LeoGainSlider::mouseDown(const juce::MouseEvent& event)
     {
         m_lastSliderValue = this->getValue();
         if (event.mods.isCtrlDown())
-            this->setValue(0.0f, juce::dontSendNotification);
+            this->setValue(0.0f, juce::sendNotification);
     }
     m_captureOffset = event.position.y;
 }
