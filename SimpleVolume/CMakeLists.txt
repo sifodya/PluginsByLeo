@@ -48,6 +48,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/LeoSlider.h
             Source/LeoExceptions.h
             Source/LeoMacros.h
+            Source/LeoEvents.h
     )
 
     #Plugin Details

@@ -19,6 +19,9 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      gainSlider)
 {
     juce::ignoreUnused(processorRef);
+
+
+
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
@@ -96,4 +99,9 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
+}
+
+void AudioPluginAudioProcessorEditor::onProc::onEvent()
+{
+
 }

@@ -16,6 +16,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        ),
     parameters (*this, nullptr, "Parameters", createParameters())
 {
+    cout<<"Constructor"<<endl;
     previousGain = 0;
 }
 
@@ -89,6 +90,7 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    cout<<"Prepare to play"<<endl;
     // Use this method as the place to do any pre-playback
     // initialisation that you need.
     juce::ignoreUnused (sampleRate, samplesPerBlock);
@@ -101,12 +103,14 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 
 void AudioPluginAudioProcessor::releaseResources()
 {
+    cout<<"Release"<<endl;
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
+    cout<<"Bus Layout"<<endl;
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
     return true;
@@ -137,21 +141,152 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                               juce::MidiBuffer& midiMessages)
 {
+    cout<<"Process Block"<<endl;
+
     //juce::ignoreUnused (midiMessages);
     if (!midiMessages.isEmpty())
     {
-        cout<<"Num of MidiEvents: "<<midiMessages.getNumEvents()<<endl;
-        //auto midiIt = midiMessages.findNextSamplePosition(midiMessages.getFirstEventTime());
+        for (const auto metadata : midiMessages)
+        {
+            const auto message = metadata.getMessage();
+            if (message.isNoteOnOrOff())
+                cout<<"NoteOnOrOff"<<endl;
+        }
     }
 
     juce::ScopedNoDenormals noDenormals;
-    //const auto totalNumInputChannels  = getTotalNumInputChannels();
-    //const auto totalNumOutputChannels = getTotalNumOutputChannels();
+    const auto totalNumInputChannels  = getTotalNumInputChannels();
+    const auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    return;
-    if (auto* currentEditor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
+        //Discard Input Channels that cannot get maped to a Output Channel
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+
+    for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        currentEditor->getGainSlider().DSP(buffer, this);
+        const double gainAmplitude = gainParameter->load();
+        const double currentGain = dbToLin(gainAmplitude));
+
+        if (!learnButtonState)
+        {
+            cout<<"Init State to Idle"<<endl;
+            learnState=IDLE;
+            rmsValues.clear();
+            rmsValues.shrink_to_fit();
+            measuredBlocks = 1;
+            measuredBlocksRe = 1;
+        }
+
+        switch (learnState)
+        {
+        case IDLE:
+            {
+                cout<<"IDLE"<<endl;
+                if(learnButtonState)
+                    learnState = LEARNING;
+                break;
+            }
+        case MEASURING:
+            {
+                cout <<"MEASURING"<<endl;
+                 float rmsSum {0};
+                    for (auto i {0}; i < rmsValues.size(); i++)
+                        rmsSum = rmsSum + rmsValues[i];
+
+                const float rmsAverage = rmsSum/static_cast<float>(rmsValues.size());
+                ranges::sort(rmsValues);
+                if (rmsValues.size() % 2 != 0)
+                    rmsMedian = rmsValues[rmsValues.size()/2];
+                else
+                    rmsMedian = (rmsValues[(rmsValues.size()-1)/2] + rmsValues[rmsValues.size()/2])/2;
+                if (abs(rmsAverage-rmsMedian)<learnThreshold)
+                {
+                    float valueToSet = 0;
+                    if (rmsMedian != 0)
+                    {
+                        //const auto rmsMedianDb = 20.0f * log10(rmsMedian/0.707f);
+                        const auto target = targetLoudness - rmsMedian;
+                        //target = target + 3.0f;
+                        valueToSet = static_cast<float>(target);
+                        cout<<"Value to set DB: "<<target<<" rms Median db :"<<rmsMedian<<" Sum: "<<rmsSum<<endl;
+                    }
+                    else
+                        valueToSet = static_cast<float>(targetLoudness);
+
+                    //cout<<"Value to Set: "<<valueToSet<<" Target: "<<targetLoudnessLin<<" Median: "<<m_rmsMedian<<" Avg: "<<rmsAverage<<endl;
+                    parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
+                    learnState = END;
+                    break;
+                }
+                learnState = RELEARNING;
+                break;
+            }
+            case LEARNING:
+            {
+                cout<<"Learning"<<endl;
+
+
+                if (!getPlayHead()->getPosition()->getIsPlaying())
+                    return;
+                cout<<"Measure Start"<<endl;
+
+
+                if (measuredBlocks <= targetMeasurements * getSampleRate()/buffer.getNumSamples())
+                {
+                    auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                    rms = 20.0f * log10(rms/0.707f);
+                    rms = round(rms * 100.0f) / 100.0f;
+                    rmsValues.push_back(rms);
+                    measuredBlocks++;
+                    //cout<<"RMS: "<<rms<<endl;
+                }
+                else
+                    {
+                        learnState = MEASURING;
+                    }
+                    //cout<<"Measured Blocks: "<<measuredBlocks<<endl;
+                break;
+            }
+            case END:
+            {
+                cout<<"END"<<endl;
+                if (const auto editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
+                {
+                    editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);
+                    learnButtonState = false;
+                    measuredBlocks = 1;
+                    learnState = IDLE;
+                }
+                break;
+            }
+            case RELEARNING:
+            {
+                cout<<"Relearning"<<endl;
+                    if (measuredBlocksRe <= targetMeasurements * getSampleRate() / buffer.getNumSamples()/5)
+                    {
+                        float rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                        rms = 20.0f * log10(rms/0.707f);
+                        rms = round(rms * 100.0f) / 100.0f;
+                        rmsValues.push_back(rms);
+                        measuredBlocksRe++;
+                    }
+                    else
+                    {
+                        learnState = MEASURING;
+                        measuredBlocksRe = 1;
+                    }
+                break;
+            }
+        }
+        if (juce::approximatelyEqual (static_cast<float>(currentGain), previousGain))
+        {
+            buffer.applyGain (channel, 0, buffer.getNumSamples(), currentGain);
+        }
+        else
+        {
+            buffer.applyGainRamp (channel, 0, buffer.getNumSamples(), previousGain, currentGain);
+            previousGain = currentGain;
+        }
     }
 
 
@@ -160,6 +295,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 //==============================================================================
 bool AudioPluginAudioProcessor::hasEditor() const
 {
+    cout<<"Has Editor"<<endl;
     return true;
 }
 
@@ -198,6 +334,7 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    cout<<"Set State"<<endl;
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState)
@@ -215,11 +352,13 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 // This creates new instances of the plugin.
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
+    cout<<"Create Plugin"<<endl;
     return new AudioPluginAudioProcessor();
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameters()
 {
+    cout<<"Create Parameters"<<endl;
     return{
     make_unique<juce::AudioParameterFloat>("gain",
         "Gain",

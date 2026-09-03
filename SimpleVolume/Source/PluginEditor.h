@@ -7,6 +7,10 @@
 #include "SimpleImageButton.cpp"
 #include "SimpleHyperlinkButton.cpp"
 
+class onProcessor : public LeoListener
+{
+    void onEvent() override;
+};
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -50,6 +54,10 @@ private:
     LeoPluginTitle pluginTitle;
     SimpleHyperlinkButton linkButton;
 
+    class onProc : public LeoListener
+    {
+        void onEvent() override;
+    };
 
 
     float scalarWidth, scalarHeight {1.0f};
