@@ -5,13 +5,19 @@
 #include "LeoEvents.h"
 //#include "LeoSlider.h"
 
-class notifyEditor : public LeoEvent
+class NotifyEditor : public LeoEvent
 {
     public:
-    void triggerManager(LeoEventManager& manager) override
+    NotifyEditor::NotifyEditor(LeoEventManager& eventManager)
     {
-        manager.notifyListeners();
+        m_eventManager = eventManager;
     }
+    void trigger() override
+    {
+        m_eventManager.notifyListeners();
+    }
+    private:
+    LeoEventManager m_eventManager;
 };
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -67,9 +73,11 @@ public:
 
     std::atomic<float>* getGainParameter() const {return gainParameter;};
 
+    LeoActionEvent<void> onTrigger;
 
 private:
     LeoEventManager eventManager;
+    NotifyEditor notifyEditor {eventManager};
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();

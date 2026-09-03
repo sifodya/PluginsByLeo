@@ -11,7 +11,6 @@ class LeoEvent
 {
     public:
     virtual void trigger() = 0;
-    virtual void triggerManager(LeoEventManager& manager) = 0;
 };
 class LeoListener
 {
@@ -32,5 +31,29 @@ class LeoEventManager
     {
         for (const auto listener : listeners)
             listener->onEvent();
+    }
+};
+
+template <typename T>
+class LeoActionEvent
+{
+    LeoActionEvent::LeoActionEvent() = default;
+    //TODO convert vector to map
+    std::vector<std::function<void(T)>> subscribers;
+    public:
+    void invoke(T input)
+    {
+        for (const auto sub : subscribers)
+            sub(input);
+    }
+
+    void operator += (std::function<void(T)> rhs)
+    {
+        subscribers.push_back(rhs);
+    }
+
+    void operator -= (std::function<void(T)> rhs)
+    {
+        subscribers.erase(subscribers.begin(), subscribers.end());
     }
 };

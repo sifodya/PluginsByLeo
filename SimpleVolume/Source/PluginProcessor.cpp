@@ -250,6 +250,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             case END:
             {
                 cout<<"END"<<endl;
+                notifyEditor.trigger();
                 if (const auto editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
                 {
                     editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);

@@ -20,7 +20,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 {
     juce::ignoreUnused(processorRef);
 
-
+    p.onTrigger += resized();
 
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
