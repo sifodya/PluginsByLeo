@@ -141,6 +141,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                               juce::MidiBuffer& midiMessages)
 {
+    //onTrigger.invoke();
     cout<<"Process Block"<<endl;
 
     //juce::ignoreUnused (midiMessages);
@@ -251,13 +252,16 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             {
                 cout<<"END"<<endl;
                 notifyEditor.trigger();
-                if (const auto editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
+                /*if (const auto editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
                 {
                     editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);
                     learnButtonState = false;
                     measuredBlocks = 1;
                     learnState = IDLE;
-                }
+                }*/
+                learnButtonState = false;
+                measuredBlocks = 1;
+                learnState = IDLE;
                 break;
             }
             case RELEARNING:

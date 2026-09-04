@@ -8,7 +8,7 @@
 class NotifyEditor : public LeoEvent
 {
     public:
-    NotifyEditor::NotifyEditor(LeoEventManager& eventManager)
+    NotifyEditor(LeoEventManager& eventManager)
     {
         m_eventManager = eventManager;
     }
@@ -73,10 +73,10 @@ public:
 
     std::atomic<float>* getGainParameter() const {return gainParameter;};
 
-    LeoActionEvent<void> onTrigger;
+    //LeoVoidActionEvent onTrigger;
+    LeoEventManager eventManager;
 
 private:
-    LeoEventManager eventManager;
     NotifyEditor notifyEditor {eventManager};
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;

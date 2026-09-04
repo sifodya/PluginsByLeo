@@ -4,6 +4,7 @@
 
 #pragma once
 #include <vector>
+#include <type_traits>
 
 class LeoEventManager;
 
@@ -15,6 +16,7 @@ class LeoEvent
 class LeoListener
 {
     public:
+    virtual ~LeoListener() = default;
     virtual void onEvent() = 0;
     //virtual void onEvent(LeoEvent& e) = 0;
 };
@@ -34,26 +36,68 @@ class LeoEventManager
     }
 };
 
-template <typename T>
+template <typename T1>
 class LeoActionEvent
 {
-    LeoActionEvent::LeoActionEvent() = default;
+    //LeoActionEvent::LeoActionEvent() = default;
     //TODO convert vector to map
-    std::vector<std::function<void(T)>> subscribers;
+    //std::map<std::hash,std::function> map;
+    std::vector<std::function<void(T1)>> subscriptions;
     public:
-    void invoke(T input)
+    void invoke(T1 input)
     {
-        for (const auto sub : subscribers)
+        for (const auto sub : subscriptions)
             sub(input);
     }
+    void operator += (std::function<void(T1)> rhs)
+    {
+        subscriptions.push_back(rhs);
+    }
 
-    void operator += (std::function<void(T)> rhs)
+    void operator -= (std::function<void(T1)> rhs)
+    {
+        subscriptions.erase(subscriptions.begin(), subscriptions.end());
+    }
+};
+
+class LeoVoidActionEvent
+{
+    std::vector<std::function<void()>> subscribers;
+    std::unordered_map<std::string, std::function<void()>> subscriptions;
+    //std::hash<Key> hash;
+public:
+    void invoke()
+    {
+        for (const auto sub : subscribers)
+            sub();
+    }
+
+    void operator += (std::function<void()> rhs)
     {
         subscribers.push_back(rhs);
     }
 
-    void operator -= (std::function<void(T)> rhs)
+    void operator -= (std::function<void()> rhs)
     {
         subscribers.erase(subscribers.begin(), subscribers.end());
+    }
+};
+
+template <typename T>
+class LeoActionEventTest
+{
+public:
+    LeoActionEventTest()
+    {
+        if (std::is_void_v<T>)
+        {
+            static_cast<LeoVoidActionEvent>(*this);
+            //static_cast<LeoVoidActionEvent>(*this);
+        }
+        else
+        {
+            reinterpret_cast<LeoActionEvent<T>>(*this);
+            //static_cast<LeoActionEvent<T>>(*this);
+        }
     }
 };

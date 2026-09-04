@@ -7,14 +7,20 @@
 #include "SimpleImageButton.cpp"
 #include "SimpleHyperlinkButton.cpp"
 
-class onProcessor : public LeoListener
-{
-    void onEvent() override;
-};
+
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
+    class onProcessor : public LeoListener
+    {
+    public:
+        explicit onProcessor( juce::ImageButton& conButton){button = &conButton;};
+        ~onProcessor() override{button = nullptr;};
+        void onEvent() override;
+    private:
+        juce::ImageButton* button {nullptr};
+    };
 public:
     explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p);
     ~AudioPluginAudioProcessorEditor() override;
@@ -54,11 +60,7 @@ private:
     LeoPluginTitle pluginTitle;
     SimpleHyperlinkButton linkButton;
 
-    class onProc : public LeoListener
-    {
-        void onEvent() override;
-    };
-
+    onProcessor m_listener{learnButtonImage};
 
     float scalarWidth, scalarHeight {1.0f};
     float aspectRatioHeight {80.0f}, aspectRationWidth {23.0f};

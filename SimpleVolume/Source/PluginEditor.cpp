@@ -1,3 +1,5 @@
+#include "PluginEditor.h"
+
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -20,8 +22,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 {
     juce::ignoreUnused(processorRef);
 
-    p.onTrigger += resized();
-
+    //p.onTrigger += AudioPluginAudioProcessorEditor::resized();
+    p.eventManager.addListener(&m_listener);
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
@@ -101,7 +103,7 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(linkButton);
 }
 
-void AudioPluginAudioProcessorEditor::onProc::onEvent()
+void AudioPluginAudioProcessorEditor::onProcessor::onEvent()
 {
-
+    button->setToggleState(false, juce::dontSendNotification);
 }
