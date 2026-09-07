@@ -8,16 +8,17 @@
 class NotifyEditor : public LeoEvent
 {
     public:
-    NotifyEditor(LeoEventManager& eventManager)
+    NotifyEditor(LeoEventManager* eventManager)
     {
         m_eventManager = eventManager;
     }
     void trigger() override
     {
-        m_eventManager.notifyListeners();
+        std::cout<<"trigger"<<std::endl;
+        m_eventManager->notifyListeners();
     }
     private:
-    LeoEventManager m_eventManager;
+    LeoEventManager* m_eventManager {nullptr};
 };
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -70,6 +71,7 @@ public:
     int getEditorWidth() const {return editorWidth;};
     int getEditorHeight() const {return editorHeight;};
     void setEditorSize(int width, int height);
+    bool getButtonStateToSet () const {return learnButtonToSet;}
 
     std::atomic<float>* getGainParameter() const {return gainParameter;};
 
@@ -77,12 +79,13 @@ public:
     LeoEventManager eventManager;
 
 private:
-    NotifyEditor notifyEditor {eventManager};
+    NotifyEditor notifyEditor {&eventManager};
     std::atomic<float>* gainParameter = nullptr;
     float previousGain;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     juce::AudioProcessorValueTreeState parameters;
     bool learnButtonState = false;
+    bool learnButtonToSet {true};
 
     std::vector <float> rmsValues;
     int targetMeasurements = 5; //in seconds

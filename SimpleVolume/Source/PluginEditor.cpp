@@ -21,7 +21,6 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      gainSlider)
 {
     juce::ignoreUnused(processorRef);
-
     //p.onTrigger += AudioPluginAudioProcessorEditor::resized();
     p.eventManager.addListener(&m_listener);
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
@@ -41,8 +40,19 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     makeContentVisible();
     gainSlider.addMouseListener(this, false);
 
+    gainSlider.onValueChange = [this]
+    {
+        std::cout<<"gainSlider changed"<<std::endl;
+        if(!processorRef.getButtonStateToSet())
+        {
+            std::cout<<"gainSlider changed state"<<std::endl;
+            learnButtonImage.setToggleState(false, juce::dontSendNotification);
+        }
+    };
+
     learnButtonImage.onClick = [this]
     {
+        std::cout<<"Clicked"<<std::endl;
         processorRef.setLearnButtonState(learnButtonImage.getToggleState());
         gainSlider.setLearnState(learnButtonImage.getToggleState());
     };
@@ -76,6 +86,11 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
+    if (!processorRef.getButtonStateToSet())
+    {
+        learnButtonImage.setToggleState(false, juce::dontSendNotification);
+        DBG("Value ImageButton set");
+    }
     getConstrainer()->checkComponentBounds(this);
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
@@ -103,7 +118,7 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(linkButton);
 }
 
-void AudioPluginAudioProcessorEditor::onProcessor::onEvent()
+void onProcessor::onEvent()
 {
     button->setToggleState(false, juce::dontSendNotification);
 }

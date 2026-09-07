@@ -184,7 +184,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             {
                 cout<<"IDLE"<<endl;
                 if(learnButtonState)
+                {
                     learnState = LEARNING;
+                    learnButtonToSet = true;
+                }
                 break;
             }
         case MEASURING:
@@ -215,6 +218,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                         valueToSet = static_cast<float>(targetLoudness);
 
                     //cout<<"Value to Set: "<<valueToSet<<" Target: "<<targetLoudnessLin<<" Median: "<<m_rmsMedian<<" Avg: "<<rmsAverage<<endl;
+                    learnButtonToSet = false;
                     parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
                     learnState = END;
                     break;
@@ -251,7 +255,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             case END:
             {
                 cout<<"END"<<endl;
-                notifyEditor.trigger();
+                //notifyEditor.trigger();
                 /*if (const auto editor = dynamic_cast<AudioPluginAudioProcessorEditor*>(getActiveEditor()))
                 {
                     editor->learnButtonImage.setToggleState(false, juce::dontSendNotification);

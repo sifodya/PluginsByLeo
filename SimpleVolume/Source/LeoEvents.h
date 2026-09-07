@@ -18,7 +18,6 @@ class LeoListener
     public:
     virtual ~LeoListener() = default;
     virtual void onEvent() = 0;
-    //virtual void onEvent(LeoEvent& e) = 0;
 };
 class LeoEventManager
 {
@@ -27,12 +26,14 @@ class LeoEventManager
     void addListener(LeoListener* listener)
     {
         listeners.push_back(listener);
+        DBG("Pushed Back Listener");
     }
 
     void notifyListeners()
     {
         for (const auto listener : listeners)
             listener->onEvent();
+        DBG("notifyListeners");
     }
 };
 

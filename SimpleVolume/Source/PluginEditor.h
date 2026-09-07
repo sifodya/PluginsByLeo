@@ -8,19 +8,19 @@
 #include "SimpleHyperlinkButton.cpp"
 
 
-
+class onProcessor : public LeoListener
+{
+public:
+    explicit onProcessor( juce::ImageButton& conButton){button = &conButton;};
+    ~onProcessor() override{button = nullptr;};
+    void onEvent() override;
+private:
+    juce::ImageButton* button {nullptr};
+};
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
-    class onProcessor : public LeoListener
-    {
-    public:
-        explicit onProcessor( juce::ImageButton& conButton){button = &conButton;};
-        ~onProcessor() override{button = nullptr;};
-        void onEvent() override;
-    private:
-        juce::ImageButton* button {nullptr};
-    };
+
 public:
     explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p);
     ~AudioPluginAudioProcessorEditor() override;
