@@ -1,30 +1,24 @@
 #pragma once
 
-#include <string>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "LeoEvents.h"
-//#include "LeoSlider.h"
 
-class NotifyEditor : public LeoEvent
-{
-    public:
-    NotifyEditor(LeoEventManager* eventManager)
-    {
-        m_eventManager = eventManager;
-    }
-    void trigger() override
-    {
-        std::cout<<"trigger"<<std::endl;
-        m_eventManager->notifyListeners();
-    }
-    private:
-    LeoEventManager* m_eventManager {nullptr};
-};
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
 {
+    enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
+    juce::ValueTree editorSize {"EditorSize", {},
+    {
+                {"Group", {{"name", "lastSize"}},
+                    {
+                    {"Property", {{"id", "editorWidth"}, {"value", 0}}},
+                        {"Property", {{"id", "editorHeight"}, {"value", 0}}}
+                    }
+                }
+    }
+    };
+    //------------------------------------------------------------------------------
 public:
-    //==============================================================================
     AudioPluginAudioProcessor();
     ~AudioPluginAudioProcessor() override;
 
@@ -32,20 +26,16 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
+protected:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
+public:
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
 
     //==============================================================================
-    juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
-    void getEditorSize(const int width, const int height)
-    {
-        editorWidth = width;
-        editorHeight = height;
-    }
     //==============================================================================
     const juce::String getName() const override;
 
@@ -66,48 +56,47 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::AudioProcessorValueTreeState& getParameters() {return parameters;}
-    void setLearnButtonState(const bool newState) {learnButtonState = newState;}
 
+    //Utility
+    //==============================================================================
+    void setLearnButtonState(const bool newState) {learnButtonState = newState;}
     int getEditorWidth() const {return editorWidth;};
     int getEditorHeight() const {return editorHeight;};
     void setEditorSize(int width, int height);
     bool getButtonStateToSet () const {return learnButtonToSet;}
-
     std::atomic<float>* getGainParameter() const {return gainParameter;};
+    void getEditorSize(const int width, const int height)
+    {
+        editorWidth = width;
+        editorHeight = height;
+    }
 
-    //LeoVoidActionEvent onTrigger;
-    LeoEventManager eventManager;
+    //==============================================================================
+    void learnGain(int channel, const juce::AudioBuffer<float>& buffer, const juce::MidiBuffer& midiMessages);
 
+    //------------------------------------------------------------------------------
 private:
-    NotifyEditor notifyEditor {&eventManager};
     std::atomic<float>* gainParameter = nullptr;
-    float previousGain;
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
-    juce::AudioProcessorValueTreeState parameters;
-    bool learnButtonState = false;
-    bool learnButtonToSet {true};
-
-    std::vector <float> rmsValues;
-    int targetMeasurements = 5; //in seconds
-    int measuredBlocks = 1;
-    int measuredBlocksRe = 1;
+    float previousGain {0};
     double targetLoudnessLin {pow(10.0f, -18.0f/20.0f)}, targetLoudness {-18.0f};
-    enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
-    LearnState learnState = IDLE;
     float learnThreshold = 0.5f;
     float rmsMedian {0.0f};
-    int editorWidth = 0;
-    int editorHeight = 0;
-    juce::ValueTree editorSize {"EditorSize", {},
-        {
-            {"Group", {{"name", "lastSize"}},
-                {
-                {"Property", {{"id", "editorWidth"}, {"value", 0}}},
-                    {"Property", {{"id", "editorHeight"}, {"value", 0}}}
-                }
-            }
-        }
-    };
+
+    bool learnButtonState {false};
+    bool learnButtonToSet {true};
+
+    int targetMeasurements {5}; //in seconds
+    int measuredBlocks {1}, measuredBlocksRe {1};
+    int editorWidth {0}, editorHeight {0};
+
+    std::vector <float> rmsValues;
+
+    LearnState m_learnState {IDLE};
+
+    juce::AudioProcessorValueTreeState parameters;
     //==============================================================================
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+    juce::AudioProcessorEditor* createEditor() override;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

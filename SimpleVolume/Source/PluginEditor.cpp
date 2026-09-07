@@ -1,7 +1,5 @@
 #include "PluginEditor.h"
-
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
 
 using  std::cout, std::endl;
 
@@ -20,15 +18,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      "gain",
                      gainSlider)
 {
-    juce::ignoreUnused(processorRef);
-    //p.onTrigger += AudioPluginAudioProcessorEditor::resized();
-    p.eventManager.addListener(&m_listener);
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
         const auto screenBounds = screen->logicalBounds;
-        screenWidth = screenBounds.getWidth();
-        screenHeight = screenBounds.getHeight();
+        screenWidth = static_cast<int>(screenBounds.getWidth());
+        screenHeight = static_cast<int>(screenBounds.getHeight());
     }
 
     getConstrainer()->setFixedAspectRatio(pluginRatio);
@@ -59,8 +54,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     if (width <= 0 || height <= 0)
     {
-        const float screenRatio = screenWidth/3840.0f;
-        width = PLUGIN_INITWIDTH * screenRatio;
+        const float screenRatio = static_cast<float>(screenWidth) / 3840.0f;
+        width = static_cast<int>(PLUGIN_INITWIDTH * screenRatio);
         height = width/pluginRatio;
         setSize(width, height);
     }
@@ -116,9 +111,4 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
-}
-
-void onProcessor::onEvent()
-{
-    button->setToggleState(false, juce::dontSendNotification);
 }
