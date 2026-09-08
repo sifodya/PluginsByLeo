@@ -20,15 +20,19 @@ class LeoHyperLinkbutton final : public juce::HyperlinkButton
         setColour(textColourId, juce::Colours::black);
         setBounds(m_xDefaultPadding, m_yDefaultPadding, m_defaultWidth, m_defaultHeight);
     }
-    LeoHyperLinkbutton(const void* fontData, const size_t& fontDataSize, const std::string& buttonText, const juce::URL& buttonURL)
+    LeoHyperLinkbutton(const void* fontData, const size_t& fontDataSize, const std::string& buttonText, const juce::URL& buttonURL, const int width, const int height, const int xPadding, const int yPadding)
     {
+        m_defaultHeight = height;
+        m_defaultWidth = width;
+        m_xDefaultPadding = xPadding;
+        m_yDefaultPadding = yPadding;
         m_typeface = juce::Typeface::createSystemTypefaceFor(fontData, fontDataSize);
         const auto buttonFont = juce::Font(juce::FontOptions{m_typeface});
         setButtonText(buttonText);
         setURL(buttonURL);
         setColour(textColourId, juce::Colours::black);
     }
-    LeoHyperLinkbutton(const void* fontData, const size_t& fontDataSize, const std::string& buttonText, const std::string& buttonURL):LeoHyperLinkbutton(fontData, fontDataSize, buttonText, juce::URL(buttonURL)){}
+    LeoHyperLinkbutton(const void* fontData, const size_t& fontDataSize, const std::string& buttonText, const std::string& buttonURL):LeoHyperLinkbutton(fontData, fontDataSize, buttonText, juce::URL(buttonURL), 300, 40, 34, 1201){}
     void resizeButton(const float scalarWidth, const float scalarHeight)
     {
         const int w = static_cast<int>(lround(static_cast<float>(m_defaultWidth) * scalarWidth));
@@ -47,6 +51,8 @@ class LeoHyperLinkbutton final : public juce::HyperlinkButton
 class LeoImageButton final : public juce::ImageButton
 {
     juce::Image m_normalImage, m_overImage, m_downImage;
+    int m_defaultWidth{110}, m_defaultHeight{365}, m_xDefaultPadding{104}, m_yDefaultPadding{41};
+
 public:
     LeoImageButton()
     {
@@ -69,12 +75,19 @@ public:
             juce::Colour());
         setToggleable(true);
         setClickingTogglesState(true);
+        setBounds(m_xDefaultPadding, m_yDefaultPadding, m_defaultWidth, m_defaultHeight);
     }
-    LeoImageButton(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize)
+    LeoImageButton(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize):LeoImageButton(normalData, normalSize, overData, overSize, downData, downSize, 110, 365, 104, 41){}
+    LeoImageButton(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize, const int width, const int height, const int xPadding, const int yPadding)
     {
         m_normalImage = juce::ImageFileFormat::loadFrom(normalData, normalSize);
         m_overImage = juce::ImageFileFormat::loadFrom(overData, overSize);
         m_downImage = juce::ImageFileFormat::loadFrom(downData, downSize);
+        m_defaultHeight = height;
+        m_defaultWidth = width;
+        m_xDefaultPadding = xPadding;
+        m_yDefaultPadding = yPadding;
+
 
         setImages(
             true,
@@ -91,6 +104,7 @@ public:
             juce::Colour());
         setToggleable(true);
         setClickingTogglesState(true);
+        setBounds(m_xDefaultPadding, m_yDefaultPadding, m_defaultWidth, m_defaultHeight);
     }
     void setImagesByData(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize)
     {
@@ -129,5 +143,13 @@ public:
             1.0f,
             juce::Colour());
         repaint();
+    }
+    void resizeButton(const float scalarWidth, const float scalarHeight)
+    {
+        const int w = static_cast<int>(lround(static_cast<float>(m_defaultWidth) * scalarWidth));
+        const int h = static_cast<int>(lround(static_cast<float>(m_defaultHeight) * scalarHeight));
+        const int x = static_cast<int>(lround(static_cast<float>(m_xDefaultPadding) * scalarWidth));
+        const int y = static_cast<int>(lround(static_cast<float>(m_yDefaultPadding) * scalarHeight));
+        this->setBounds(x, y, w, h);
     }
 };

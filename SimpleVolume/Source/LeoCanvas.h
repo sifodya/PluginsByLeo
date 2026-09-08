@@ -9,6 +9,7 @@ class LeoCanvas : public juce::Component
 {
     juce::Image m_image;
     juce::Rectangle<float> m_bounds;
+    int m_xDefaultPadding, m_yDefaultPadding, m_defaultWidth, m_defaultHeight;
 
     public:
     LeoCanvas() = delete;
@@ -21,6 +22,15 @@ class LeoCanvas : public juce::Component
     void resizeFromEditor(juce::Rectangle<int> const size)
     {
         m_bounds.setSize(static_cast<float>(size.getWidth()), static_cast<float>(size.getHeight()));
+    }
+
+    void resizeButton(const float scalarWidth, const float scalarHeight)
+    {
+        const int w = static_cast<int>(lround(static_cast<float>(m_defaultWidth) * scalarWidth));
+        const int h = static_cast<int>(lround(static_cast<float>(m_defaultHeight) * scalarHeight));
+        const int x = static_cast<int>(lround(static_cast<float>(m_xDefaultPadding) * scalarWidth));
+        const int y = static_cast<int>(lround(static_cast<float>(m_yDefaultPadding) * scalarHeight));
+        this->setBounds(x, y, w, h);
     }
 
     void paint(juce::Graphics& g) override

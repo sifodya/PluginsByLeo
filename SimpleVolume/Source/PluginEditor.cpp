@@ -96,12 +96,14 @@ void AudioPluginAudioProcessorEditor::resized()
     //gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
     //gainSlider.sendLookAndFeelChange();
     gainSlider.resizeSlider(scalarWidth, scalarHeight);
+    linkButton.resizeButton(scalarWidth, scalarHeight);
+    learnButtonImage.resizeButton(scalarWidth, scalarHeight);
 
     m_pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
     m_pluginTitle.resizeFromEditor(m_pluginTitle.getBounds());
     //gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
-    learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
-    linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
+    //learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
+    //linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
 }
 
 void AudioPluginAudioProcessorEditor::makeContentVisible()
