@@ -9,6 +9,7 @@
 class LeoHyperLinkbutton final : public juce::HyperlinkButton
 {
     juce::Typeface::Ptr m_typeface;
+    int m_defaultWidth{300}, m_defaultHeight{40}, m_xDefaultPadding{34}, m_yDefaultPadding{1201};
     public:
     LeoHyperLinkbutton()
     {
@@ -17,6 +18,7 @@ class LeoHyperLinkbutton final : public juce::HyperlinkButton
         setButtonText("Text missing");
         setURL(juce::URL("www.google.com"));
         setColour(textColourId, juce::Colours::black);
+        setBounds(m_xDefaultPadding, m_yDefaultPadding, m_defaultWidth, m_defaultHeight);
     }
     LeoHyperLinkbutton(const void* fontData, const size_t& fontDataSize, const std::string& buttonText, const juce::URL& buttonURL)
     {
@@ -27,10 +29,18 @@ class LeoHyperLinkbutton final : public juce::HyperlinkButton
         setColour(textColourId, juce::Colours::black);
     }
     LeoHyperLinkbutton(const void* fontData, const size_t& fontDataSize, const std::string& buttonText, const std::string& buttonURL):LeoHyperLinkbutton(fontData, fontDataSize, buttonText, juce::URL(buttonURL)){}
+    void resizeButton(const float scalarWidth, const float scalarHeight)
+    {
+        const int w = static_cast<int>(lround(static_cast<float>(m_defaultWidth) * scalarWidth));
+        const int h = static_cast<int>(lround(static_cast<float>(m_defaultHeight) * scalarHeight));
+        const int x = static_cast<int>(lround(static_cast<float>(m_xDefaultPadding) * scalarWidth));
+        const int y = static_cast<int>(lround(static_cast<float>(m_yDefaultPadding) * scalarHeight));
+        this->setBounds(x, y, w, h);
+    }
     void setTypeface(const juce::Typeface::Ptr& typeface){m_typeface = typeface; repaint();}
     void setTypefaceByData(const void* fontData, const size_t& fontSize){m_typeface = juce::Typeface::createSystemTypefaceFor(fontData, fontSize); repaint();}
-    void setButtonText(const std::string& buttonText){setButtonText(buttonText); repaint();}
-    void setButtonURL(const std::string& buttonURL){setButtonURL(buttonURL);}
+    void setText(const std::string& buttonText){setButtonText(buttonText); repaint();}
+    void setButtonURL(const std::string& buttonURL){setURL(juce::URL(buttonURL));}
     void setTextColour(const juce::Colour colour){setColour(textColourId, colour); repaint();}
 };
 

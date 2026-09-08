@@ -312,8 +312,10 @@ public:
         const int h = static_cast<int>(lround(static_cast<float>(m_defaultHeight) * scalarHeight));
         const int x = static_cast<int>(lround(static_cast<float>(m_xDefaultPadding) * scalarWidth));
         const int y = static_cast<int>(lround(static_cast<float>(m_yDefaultPadding) * scalarHeight));
-
         this->setBounds(x, y, w, h);
+
+        m_leoSliderLNF.setScalar(scalarWidth, scalarHeight);
+        sendLookAndFeelChange();
     }
 private:
     int m_width {750},  m_height {750},  m_xPadding {42},  m_yPadding {419};

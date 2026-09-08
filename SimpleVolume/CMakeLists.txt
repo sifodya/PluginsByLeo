@@ -43,18 +43,25 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/LeoPluginTitle.cpp
             Source/SimpleImageButton.cpp
             Source/SimpleHyperlinkButton.cpp
+            Source/LeoCanvas.h
+            Source/LeoButtons.h
+            Source/LeoEvents.h
+            Source/LeoExceptions.h
+            Source/LeoMacros.h
+            Source/LeoSlider.h
+            Source/LeoSlider.cpp
 
     )
 
-    set(IncludeFiles
-            ../include/LeoCanvas.h
-            ../include/LeoButtons.h
-            ../include/LeoEvents.h
-            ../include/LeoExceptions.h
-            ../include/LeoMacros.h
-            ../include/LeoSlider.h
-            ../include/LeoSlider.cpp
-    )
+    #set(IncludeFiles
+            #../include/LeoCanvas.h
+            #../include/LeoButtons.h
+            #../include/LeoEvents.h
+            #../include/LeoExceptions.h
+            #../include/LeoMacros.h
+            #../include/LeoSlider.h
+            #        ../include/LeoSlider.cpp
+    #)
 
     #Plugin Details
     juce_add_plugin(${PROJECT_NAME}
@@ -87,16 +94,16 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     #cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH PARENT_DIR)
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
 
-    source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/../include" FILES ${IncludeFiles})
-    message("${CMAKE_CURRENT_SOURCE_DIR}/../")
+    #source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/../include" FILES ${IncludeFiles})
+    #message("${CMAKE_CURRENT_SOURCE_DIR}/../")
 
     #Make SourceFiles buildable
     target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles})
 
-    target_include_directories(${PROJECT_NAME}
-            PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/../include
-    )
+    #target_include_directories(${PROJECT_NAME}
+    #        PRIVATE
+    #         ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    #)
 
     #toggleable options from JUCE Cmake API
     target_compile_definitions(${PROJECT_NAME}

@@ -93,8 +93,8 @@ void AudioPluginAudioProcessorEditor::resized()
     m_pluginBackground.setBounds(0, 0, getWidth(), getHeight());
     m_pluginBackground.resizeFromEditor(pluginArea);
 
-    gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
-    gainSlider.sendLookAndFeelChange();
+    //gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
+    //gainSlider.sendLookAndFeelChange();
     gainSlider.resizeSlider(scalarWidth, scalarHeight);
 
     m_pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
