@@ -51,7 +51,7 @@ class LeoHyperLinkbutton final : public juce::HyperlinkButton
 class LeoImageButton final : public juce::ImageButton
 {
     juce::Image m_normalImage, m_overImage, m_downImage;
-    int m_defaultWidth{110}, m_defaultHeight{365}, m_xDefaultPadding{104}, m_yDefaultPadding{41};
+    int m_defaultWidth{104}, m_defaultHeight{41}, m_xDefaultPadding{110}, m_yDefaultPadding{365};
 
 public:
     LeoImageButton()
@@ -77,7 +77,7 @@ public:
         setClickingTogglesState(true);
         setBounds(m_xDefaultPadding, m_yDefaultPadding, m_defaultWidth, m_defaultHeight);
     }
-    LeoImageButton(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize):LeoImageButton(normalData, normalSize, overData, overSize, downData, downSize, 110, 365, 104, 41){}
+    LeoImageButton(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize):LeoImageButton(normalData, normalSize, overData, overSize, downData, downSize, 104, 41, 110, 365){}
     LeoImageButton(const void* normalData, const size_t& normalSize, const void* overData, const size_t& overSize, const void* downData, const size_t& downSize, const int width, const int height, const int xPadding, const int yPadding)
     {
         m_normalImage = juce::ImageFileFormat::loadFrom(normalData, normalSize);

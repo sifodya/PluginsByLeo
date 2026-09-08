@@ -89,12 +89,6 @@ void AudioPluginAudioProcessorEditor::resized()
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
 
-    //const auto pluginArea = getLocalBounds();
-    //m_pluginBackground.setBounds(0, 0, getWidth(), getHeight());
-    //m_pluginBackground.resizeFromEditor(pluginArea);
-
-    //gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
-    //gainSlider.sendLookAndFeelChange();
     gainSlider.resizeSlider(scalarWidth, scalarHeight);
     linkButton.resizeButton(scalarWidth, scalarHeight);
     learnButtonImage.resizeButton(scalarWidth, scalarHeight);
