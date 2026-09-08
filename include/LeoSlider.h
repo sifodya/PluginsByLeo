@@ -5,7 +5,6 @@
 #pragma once
 
 #include "LeoExceptions.h"
-#include "PluginProcessor.h"
 
 #include <juce_dsp/juce_dsp.h>
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -307,15 +306,14 @@ public:
         LeoSliderLNF* p_LeoSliderLNF = &m_leoSliderLNF;
         return p_LeoSliderLNF;
     };
-    LEO_RETURN resizeSlider (const float scalarWidth, const float scalarHeight)
+    void resizeSlider (const float scalarWidth, const float scalarHeight)
     {
-        const int w = lround(static_cast<float>(m_defaultWidth) * scalarWidth);
-        const int h = lround(static_cast<float>(m_defaultHeight) * scalarHeight);
-        const int x = lround(static_cast<float>(m_xDefaultPadding) * scalarWidth);
-        const int y = lround(static_cast<float>(m_yDefaultPadding) * scalarHeight);
+        const int w = static_cast<int>(lround(static_cast<float>(m_defaultWidth) * scalarWidth));
+        const int h = static_cast<int>(lround(static_cast<float>(m_defaultHeight) * scalarHeight));
+        const int x = static_cast<int>(lround(static_cast<float>(m_xDefaultPadding) * scalarWidth));
+        const int y = static_cast<int>(lround(static_cast<float>(m_yDefaultPadding) * scalarHeight));
 
         this->setBounds(x, y, w, h);
-        return LEO_SUCCESS;
     }
 private:
     int m_width {750},  m_height {750},  m_xPadding {42},  m_yPadding {419};
