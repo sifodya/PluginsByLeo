@@ -341,8 +341,6 @@ class LeoGainSlider final : public LeoSlider
     LeoSliderLNF* getLNF() const {return mPtr_parentLNF;};
     void mouseDown(const juce::MouseEvent& event) override;
     void mouseDrag(const juce::MouseEvent& event) override;
-    LEO_RETURN DSP (juce::AudioBuffer<float>& buffer,
-        AudioPluginAudioProcessor* processor);
     void setLearnState(const bool& state) {m_learnButtonState = state;};
 private:
     int m_numberOfDecimals {1};

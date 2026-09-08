@@ -40,7 +40,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/PluginEditor.h
             Source/PluginProcessor.h
             Source/LeoBackground.cpp
-            Source/SimpleSliderLookAndFeel.cpp
             Source/LeoPluginTitle.cpp
             Source/SimpleImageButton.cpp
             Source/SimpleHyperlinkButton.cpp
@@ -49,6 +48,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/LeoExceptions.h
             Source/LeoMacros.h
             Source/LeoEvents.h
+            Source/LeoButtons.h
+            Source/LeoCanvas.h
     )
 
     #Plugin Details
@@ -139,8 +140,7 @@ set(SourceFiles
     Source/PluginEditor.h
     Source/PluginProcessor.h
     Source/LeoBackground.cpp
-    Source/SimpleSliderLookAndFeel.cpp
-    Source/LeoPluginTitle.cpp
+        Source/LeoPluginTitle.cpp
     Source/SimpleImageButton.cpp
     Source/SimpleHyperlinkButton.cpp
 )

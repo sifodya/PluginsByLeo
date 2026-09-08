@@ -84,21 +84,20 @@ void AudioPluginAudioProcessorEditor::resized()
     if (!processorRef.getButtonStateToSet())
     {
         learnButtonImage.setToggleState(false, juce::dontSendNotification);
-        DBG("Value ImageButton set");
     }
     getConstrainer()->checkComponentBounds(this);
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
 
     const auto pluginArea = getLocalBounds();
-    fullPluginTemplate.setBounds(0, 0, getWidth(), getHeight());
-    fullPluginTemplate.resizeFromEditor(pluginArea);
+    m_pluginBackground.setBounds(0, 0, getWidth(), getHeight());
+    m_pluginBackground.resizeFromEditor(pluginArea);
 
     gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
     gainSlider.sendLookAndFeelChange();
 
-    pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
-    pluginTitle.resizeFromEditor(pluginTitle.getBounds());
+    m_pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
+    m_pluginTitle.resizeFromEditor(m_pluginTitle.getBounds());
     gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
     learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
     linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
@@ -106,8 +105,8 @@ void AudioPluginAudioProcessorEditor::resized()
 
 void AudioPluginAudioProcessorEditor::makeContentVisible()
 {
-    addAndMakeVisible(fullPluginTemplate);
-    addAndMakeVisible(pluginTitle);
+    addAndMakeVisible(m_pluginBackground);
+    addAndMakeVisible(m_pluginTitle);
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);

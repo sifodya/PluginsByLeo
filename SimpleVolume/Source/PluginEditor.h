@@ -1,32 +1,14 @@
 #pragma once
 
 #include "PluginProcessor.h"
-#include "LeoBackground.cpp"
 #include "LeoSlider.h"
-#include "LeoPluginTitle.cpp"
-#include "SimpleImageButton.cpp"
-#include "SimpleHyperlinkButton.cpp"
-
+#include "LeoButtons.h"
+#include "LeoCanvas.h"
+#include "BinaryData.h"
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
-
-public:
-    explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p);
-    ~AudioPluginAudioProcessorEditor() override;
-
-    //==============================================================================
-    void paint (juce::Graphics&) override;
-    void resized() override;
-    void makeContentVisible();
-    //=============================================================================
-    juce::ImageButton& getLearnButton() {return learnButtonImage;}
-    void setLearnButtonValue(const bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
-    LeoGainSlider& getGainSlider() {return gainSlider;}
-
-    SimpleImageButton learnButtonImage;
-private:
     LeoGainSliderInfo gainSliderInfo
     {
         750,
@@ -43,13 +25,42 @@ private:
         400,
         50
     };
+public:
+    explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p);
+    ~AudioPluginAudioProcessorEditor() override;
 
+    //==============================================================================
+    void paint (juce::Graphics&) override;
+    void resized() override;
+    void makeContentVisible();
+    //=============================================================================
+    juce::ImageButton& getLearnButton() {return learnButtonImage;}
+    void setLearnButtonValue(const bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
+    LeoGainSlider& getGainSlider() {return gainSlider;}
+
+private:
+    LeoImageButton learnButtonImage
+    {
+        BinaryData::learn_normal_png,
+        BinaryData::learn_normal_pngSize,
+        BinaryData::learn_yellow_png,
+        BinaryData::learn_yellow_pngSize,
+        BinaryData::learn_red_png,
+        BinaryData::learn_red_pngSize,
+    };
+    LeoHyperLinkbutton linkButton
+    {
+        BinaryData::NeueHaasDisplayLight_ttf,
+        BinaryData::NeueHaasDisplayLight_ttfSize,
+        "check other plugins",
+        "https://leo-brennauer.com/#minishop"
+    };
     AudioPluginAudioProcessor& processorRef;
     LeoGainSlider gainSlider {gainSliderInfo};//{400, 50, 1};
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
-    LeoBackground fullPluginTemplate;
-    LeoPluginTitle pluginTitle;
-    SimpleHyperlinkButton linkButton;
+    LeoCanvas m_pluginBackground {BinaryData::bg_png, BinaryData::bg_pngSize};
+    LeoCanvas m_pluginTitle {BinaryData::ueberschrift_png, BinaryData::ueberschrift_pngSize};
+
 
     float scalarWidth {1.0f}, scalarHeight {1.0f};
     float aspectRatioHeight {80.0f}, aspectRationWidth {23.0f};
