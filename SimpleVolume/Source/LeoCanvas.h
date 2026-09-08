@@ -13,8 +13,12 @@ class LeoCanvas : public juce::Component
 
     public:
     LeoCanvas() = delete;
-    LeoCanvas(const void* imageData, const size_t& imageSize)
+    LeoCanvas(const void* imageData, const size_t& imageSize,const int xPadding, const int yPadding, const int width, const int height)
     {
+        m_defaultHeight = height;
+        m_defaultWidth = width;
+        m_xDefaultPadding = xPadding;
+        m_yDefaultPadding = yPadding;
         m_image = juce::ImageFileFormat::loadFrom(imageData, imageSize);
         m_bounds.setSize(static_cast<float>(m_image.getWidth()), static_cast<float>(m_image.getHeight()));
     }
@@ -24,13 +28,15 @@ class LeoCanvas : public juce::Component
         m_bounds.setSize(static_cast<float>(size.getWidth()), static_cast<float>(size.getHeight()));
     }
 
-    void resizeButton(const float scalarWidth, const float scalarHeight)
+    void resizeCanvas(const float scalarWidth, const float scalarHeight)
     {
         const int w = static_cast<int>(lround(static_cast<float>(m_defaultWidth) * scalarWidth));
         const int h = static_cast<int>(lround(static_cast<float>(m_defaultHeight) * scalarHeight));
         const int x = static_cast<int>(lround(static_cast<float>(m_xDefaultPadding) * scalarWidth));
         const int y = static_cast<int>(lround(static_cast<float>(m_yDefaultPadding) * scalarHeight));
         this->setBounds(x, y, w, h);
+        m_bounds.setSize(static_cast<float>(getWidth()), static_cast<float>(getHeight()));
+        repaint();
     }
 
     void paint(juce::Graphics& g) override

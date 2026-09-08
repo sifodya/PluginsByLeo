@@ -118,6 +118,8 @@ LeoSlider::LeoSlider(const int& width, const int& height, const int& xPadding, c
     m_leoSliderLNF = std::move(LeoSliderLNF());
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
+
+    ++m_numberOfInstances;
 }
 
 LeoSlider::LeoSlider(const LeoSliderInfo& leoInfo)
@@ -136,6 +138,7 @@ LeoSlider::LeoSlider(const LeoSliderInfo& leoInfo)
     m_leoSliderLNF = std::move(LeoSliderLNF(leoInfo));
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
+    ++m_numberOfInstances;
 }
 
 LeoSlider::LeoSlider(const LeoGainSliderInfo& leoGainInfo)
@@ -154,6 +157,7 @@ LeoSlider::LeoSlider(const LeoGainSliderInfo& leoGainInfo)
     m_leoSliderLNF = std::move(LeoSliderLNF(leoGainInfo));
     setLookAndFeel(&m_leoSliderLNF);
     setBounds(m_xPadding, m_yPadding, m_width, m_height);
+    ++m_numberOfInstances;
 }
 
 //======================================================================================================

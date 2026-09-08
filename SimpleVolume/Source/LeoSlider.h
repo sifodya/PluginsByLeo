@@ -294,7 +294,7 @@ public:
     LeoSlider(const int& width, const int& height, const int& xPadding, const int& yPadding);
     explicit LeoSlider(const LeoSliderInfo& leoInfo);
     explicit LeoSlider(const LeoGainSliderInfo& leoGainInfo);
-    ~LeoSlider() override {setLookAndFeel(nullptr);};
+    ~LeoSlider() override {setLookAndFeel(nullptr); --m_numberOfInstances;};
     std::array<int, 2> getPadding() const {return std::array<int, 2>{m_xPadding,m_yPadding};};
     int getXPadding() const {return m_xPadding;};
     int getYPadding() const {return m_yPadding;};
@@ -321,6 +321,7 @@ private:
     int m_width {750},  m_height {750},  m_xPadding {42},  m_yPadding {419};
     int m_defaultWidth {0}, m_defaultHeight {0}, m_xDefaultPadding {0}, m_yDefaultPadding {0};
     static unsigned int m_numInstances;
+    static inline unsigned int m_numberOfInstances;
 
     LeoSliderLNF m_leoSliderLNF {};
 };

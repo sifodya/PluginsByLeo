@@ -58,8 +58,8 @@ private:
     AudioPluginAudioProcessor& processorRef;
     LeoGainSlider gainSlider {gainSliderInfo};//{400, 50, 1};
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment;
-    LeoCanvas m_pluginBackground {BinaryData::bg_png, BinaryData::bg_pngSize};
-    LeoCanvas m_pluginTitle {BinaryData::ueberschrift_png, BinaryData::ueberschrift_pngSize};
+    LeoCanvas m_pluginBackground {BinaryData::bg_png, BinaryData::bg_pngSize, 0, 0, 368, 1281}; //TODO Check correct Size
+    LeoCanvas m_pluginTitle {BinaryData::ueberschrift_png, BinaryData::ueberschrift_pngSize, 46, 102, 280, 158};
 
 
     float scalarWidth {1.0f}, scalarHeight {1.0f};

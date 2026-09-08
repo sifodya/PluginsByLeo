@@ -89,18 +89,20 @@ void AudioPluginAudioProcessorEditor::resized()
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
 
-    const auto pluginArea = getLocalBounds();
-    m_pluginBackground.setBounds(0, 0, getWidth(), getHeight());
-    m_pluginBackground.resizeFromEditor(pluginArea);
+    //const auto pluginArea = getLocalBounds();
+    //m_pluginBackground.setBounds(0, 0, getWidth(), getHeight());
+    //m_pluginBackground.resizeFromEditor(pluginArea);
 
     //gainSlider.getLNF()->setScalar(scalarWidth, scalarHeight);
     //gainSlider.sendLookAndFeelChange();
     gainSlider.resizeSlider(scalarWidth, scalarHeight);
     linkButton.resizeButton(scalarWidth, scalarHeight);
     learnButtonImage.resizeButton(scalarWidth, scalarHeight);
+    m_pluginBackground.resizeCanvas(scalarWidth, scalarHeight);
+    m_pluginTitle.resizeCanvas(scalarWidth, scalarHeight);
 
-    m_pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
-    m_pluginTitle.resizeFromEditor(m_pluginTitle.getBounds());
+    //m_pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
+    //m_pluginTitle.resizeFromEditor(m_pluginTitle.getBounds());
     //gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
     //learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
     //linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
