@@ -8,14 +8,14 @@ class AudioPluginAudioProcessor final : public juce::AudioProcessor
 {
     enum LearnState {IDLE, MEASURING, LEARNING, END, RELEARNING};
     juce::ValueTree editorSize {"EditorSize", {},
-    {
-                {"Group", {{"name", "lastSize"}},
-                    {
-                    {"Property", {{"id", "editorWidth"}, {"value", 0}}},
-                        {"Property", {{"id", "editorHeight"}, {"value", 0}}}
-                    }
+        {
+            {"Group", {{"name", "lastSize"}},
+                {
+                {"Property", {{"id", "editorWidth"}, {"value", 0}}},
+                    {"Property", {{"id", "editorHeight"}, {"value", 0}}}
                 }
-    }
+            }
+        }
     };
     //------------------------------------------------------------------------------
 public:
@@ -70,9 +70,11 @@ public:
         editorWidth = width;
         editorHeight = height;
     }
+    bool getLearnStateIdle() const {if (m_learnState == IDLE || m_learnState == END) return true;  return false;};
+    bool getLearnStateMeasuring() const {if (m_learnState == MEASURING) return true;  return false;};
 
     //==============================================================================
-    void learnGain(int channel, const juce::AudioBuffer<float>& buffer, const juce::MidiBuffer& midiMessages);
+    void learnGain(int channel, const juce::AudioBuffer<float>& buffer);
 
     //------------------------------------------------------------------------------
 private:

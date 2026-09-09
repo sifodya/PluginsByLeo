@@ -18,6 +18,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      "gain",
                      gainSlider)
 {
+    processorRef.getParameters().addParameterListener("gain", this);
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
@@ -35,19 +36,15 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     makeContentVisible();
     gainSlider.addMouseListener(this, false);
 
-    gainSlider.onValueChange = [this]
+    /*gainSlider.onValueChange = [this]
     {
-        std::cout<<"gainSlider changed"<<std::endl;
         if(!processorRef.getButtonStateToSet())
-        {
-            std::cout<<"gainSlider changed state"<<std::endl;
             learnButtonImage.setToggleState(false, juce::dontSendNotification);
-        }
-    };
+    };*/
+
 
     learnButtonImage.onClick = [this]
     {
-        std::cout<<"Clicked"<<std::endl;
         processorRef.setLearnButtonState(learnButtonImage.getToggleState());
         gainSlider.setLearnState(learnButtonImage.getToggleState());
     };
@@ -67,6 +64,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
     processorRef.setEditorSize(getWidth(), getHeight());
+    processorRef.getParameters().removeParameterListener("gain", this);
 }
 
 
@@ -81,10 +79,6 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    if (!processorRef.getButtonStateToSet())
-    {
-        learnButtonImage.setToggleState(false, juce::dontSendNotification);
-    }
     getConstrainer()->checkComponentBounds(this);
     scalarWidth = static_cast<float>(getWidth())/PLUGIN_WIDTH;
     scalarHeight = static_cast<float>(getHeight())/PLUGIN_HEIGHT;
@@ -94,12 +88,6 @@ void AudioPluginAudioProcessorEditor::resized()
     learnButtonImage.resizeButton(scalarWidth, scalarHeight);
     m_pluginBackground.resizeCanvas(scalarWidth, scalarHeight);
     m_pluginTitle.resizeCanvas(scalarWidth, scalarHeight);
-
-    //m_pluginTitle.setBounds(scalarWidth * 46, scalarHeight * 102, scalarWidth * 280, scalarHeight * 158);
-    //m_pluginTitle.resizeFromEditor(m_pluginTitle.getBounds());
-    //gainSlider.setBounds(scalarWidth * 42, scalarHeight * 419, scalarWidth * 750, scalarHeight * 750);
-    //learnButtonImage.setBounds(scalarWidth * 110, scalarHeight * 365, scalarWidth * 104, scalarHeight * 41);
-    //linkButton.setBounds(scalarWidth * 34, scalarHeight * 1201, scalarWidth * 300, scalarHeight * 40);
 }
 
 void AudioPluginAudioProcessorEditor::makeContentVisible()
@@ -109,4 +97,13 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(gainSlider);
     addAndMakeVisible(learnButtonImage);
     addAndMakeVisible(linkButton);
+}
+
+void AudioPluginAudioProcessorEditor::parameterChanged(const juce::String& parameterID, float newValue)
+{
+    if (parameterID == "gain")
+    {
+        cout<<"Change"<<endl;
+        //learnButtonImage.setToggleState(false, juce::dontSendNotification);
+    }
 }

@@ -139,6 +139,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                               juce::MidiBuffer& midiMessages)
 {
+    juce::ignoreUnused(midiMessages);
     juce::ScopedNoDenormals noDenormals;
     const auto totalNumInputChannels  = getTotalNumInputChannels();
     const auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -154,7 +155,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
         if (!learnButtonState)
         {
-            cout<<"Init State to Idle"<<endl;
+            //cout<<"Init State to Idle"<<endl;
             m_learnState=IDLE;
             rmsValues.clear();
             rmsValues.shrink_to_fit();
@@ -162,7 +163,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             measuredBlocksRe = 1;
         }
 
-        learnGain(channel, buffer, midiMessages);
+        learnGain(channel, buffer);
 
         //Standard Handling of Gain by Fader
         if (juce::approximatelyEqual (static_cast<float>(currentGain), previousGain))
@@ -202,13 +203,13 @@ void AudioPluginAudioProcessor::setEditorSize(int width, int height)
     }
 }
 
-void AudioPluginAudioProcessor::learnGain(const int channel, const juce::AudioBuffer<float>& buffer, const juce::MidiBuffer& midiMessages)
+void AudioPluginAudioProcessor::learnGain(const int channel, const juce::AudioBuffer<float>& buffer)
 {
     switch (m_learnState)
         {
         case IDLE:
             {
-                cout<<"IDLE"<<endl;
+                //cout<<"IDLE"<<endl;
                 if(learnButtonState)
                 {
                     m_learnState = LEARNING;
@@ -218,7 +219,7 @@ void AudioPluginAudioProcessor::learnGain(const int channel, const juce::AudioBu
             }
         case MEASURING:
             {
-                cout <<"MEASURING"<<endl;
+                //cout <<"MEASURING"<<endl;
                  float rmsSum {0};
                  for (auto i {0}; i < rmsValues.size(); i++)
                      rmsSum = rmsSum + rmsValues[i];
@@ -239,7 +240,11 @@ void AudioPluginAudioProcessor::learnGain(const int channel, const juce::AudioBu
                         cout<<"Value to set DB: "<<target<<" rms Median db :"<<rmsMedian<<" Sum: "<<rmsSum<<endl;
                     }
                     else
+                    {
                         valueToSet = static_cast<float>(targetLoudness);
+                        cout<<"Value to set DB is target Loudness: "<<targetLoudness<<" rms Median db :"<<rmsMedian<<" Sum: "<<rmsSum<<endl;
+
+                    }
 
                     learnButtonToSet = false;
                     parameters.getParameter("gain")->setValueNotifyingHost(parameters.getParameter("gain")->convertTo0to1(valueToSet));
@@ -251,33 +256,23 @@ void AudioPluginAudioProcessor::learnGain(const int channel, const juce::AudioBu
             }
             case LEARNING:
             {
-                bool midiNotes {false};
-                if (!midiMessages.isEmpty())
+                //cout<<"Learning Start"<<endl;
+
+                if (getPlayHead()->getPosition()->getIsPlaying() || buffer.getRMSLevel(channel, 0, buffer.getNumSamples()) != 0.0f)
                 {
-                    for (const auto metadata : midiMessages)
+                    //cout<<"RMS Level: "<<buffer.getRMSLevel(channel, 0, buffer.getNumSamples())<<endl;
+
+                    if (measuredBlocks <= targetMeasurements * getSampleRate()/buffer.getNumSamples())
                     {
-                        if (const auto message = metadata.getMessage(); message.isNoteOnOrOff())
-                        {
-                            midiNotes = true;
-                            break;
-                        }
+                        auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
+                        rms = 20.0f * log10(rms/0.707f);
+                        rms = round(rms * 100.0f) / 100.0f;
+                        rmsValues.push_back(rms);
+                        measuredBlocks++;
                     }
+                    else
+                        m_learnState = MEASURING;
                 }
-                if (getPlayHead()->getPosition()->getIsPlaying() || buffer.getRMSLevel(channel, 0, buffer.getNumSamples()) != 0.0f || midiNotes)
-
-                cout<<"Measure Start"<<endl;
-
-                if (measuredBlocks <= targetMeasurements * getSampleRate()/buffer.getNumSamples())
-                {
-                    auto rms = buffer.getRMSLevel(channel, 0, buffer.getNumSamples());
-                    rms = 20.0f * log10(rms/0.707f);
-                    rms = round(rms * 100.0f) / 100.0f;
-                    rmsValues.push_back(rms);
-                    measuredBlocks++;
-                }
-                else
-                    m_learnState = MEASURING;
-
                 break;
             }
             case END:

@@ -7,7 +7,8 @@
 #include "BinaryData.h"
 
 //==============================================================================
-class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
+class AudioPluginAudioProcessorEditor : public juce::AudioProcessorEditor,
+public juce::AudioProcessorValueTreeState::Listener
 {
     LeoGainSliderInfo gainSliderInfo
     {
@@ -37,6 +38,7 @@ public:
     juce::ImageButton& getLearnButton() {return learnButtonImage;}
     void setLearnButtonValue(const bool v) { learnButtonImage.setToggleState(v, juce::dontSendNotification); }
     LeoGainSlider& getGainSlider() {return gainSlider;}
+    void parameterChanged(const juce::String& parameterID, float newValue) override;
 
 private:
     LeoImageButton learnButtonImage

@@ -28,6 +28,7 @@ class LeoHyperLinkbutton final : public juce::HyperlinkButton
         m_yDefaultPadding = yPadding;
         m_typeface = juce::Typeface::createSystemTypefaceFor(fontData, fontDataSize);
         const auto buttonFont = juce::Font(juce::FontOptions{m_typeface});
+        setFont(buttonFont, true, juce::Justification::centred);
         setButtonText(buttonText);
         setURL(buttonURL);
         setColour(textColourId, juce::Colours::black);
