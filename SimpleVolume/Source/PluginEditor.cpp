@@ -18,7 +18,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      "gain",
                      gainSlider)
 {
-    processorRef.getParameters().addParameterListener("gain", this);
+    startTimer(500);
     screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (screen!=nullptr)
     {
@@ -64,7 +64,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
     processorRef.setEditorSize(getWidth(), getHeight());
-    processorRef.getParameters().removeParameterListener("gain", this);
+    stopTimer();
 }
 
 
@@ -99,11 +99,8 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
     addAndMakeVisible(linkButton);
 }
 
-void AudioPluginAudioProcessorEditor::parameterChanged(const juce::String& parameterID, float newValue)
+void AudioPluginAudioProcessorEditor::timerCallback()
 {
-    if (parameterID == "gain")
-    {
-        cout<<"Change"<<endl;
-        //learnButtonImage.setToggleState(false, juce::dontSendNotification);
-    }
+    if (!processorRef.getButtonStateToSet())
+        learnButtonImage.setToggleState(false, juce::dontSendNotification);
 }
