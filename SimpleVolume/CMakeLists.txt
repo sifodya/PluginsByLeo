@@ -42,10 +42,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/PluginProcessor.cpp
             Source/PluginEditor.h
             Source/PluginProcessor.h
-            Source/LeoBackground.cpp
-            Source/LeoPluginTitle.cpp
-            Source/SimpleImageButton.cpp
-            Source/SimpleHyperlinkButton.cpp
     )
 
     set(IncludeFiles
@@ -144,18 +140,24 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     )
 
     juce_generate_juce_header(${PROJECT_NAME})
+    #==================================================================================================================
 else()
 
     message(STATUS "Release build")
+    cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH PARENT_DIR)
+    set(INCLUDE_DIR "${PARENT_DIR}/include")
 set(SourceFiles
-    Source/PluginEditor.cpp
-    Source/PluginProcessor.cpp
-    Source/PluginEditor.h
-    Source/PluginProcessor.h
-    Source/LeoBackground.cpp
-        Source/LeoPluginTitle.cpp
-    Source/SimpleImageButton.cpp
-    Source/SimpleHyperlinkButton.cpp
+        Source/PluginEditor.cpp
+        Source/PluginProcessor.cpp
+        Source/PluginEditor.h
+        Source/PluginProcessor.h
+        ${INCLUDE_DIR}/LeoButtons.h
+        ${INCLUDE_DIR}/LeoCanvas.h
+        ${INCLUDE_DIR}/LeoEvents.h
+        ${INCLUDE_DIR}/LeoExceptions.h
+        ${INCLUDE_DIR}/LeoMacros.h
+        ${INCLUDE_DIR}/LeoSlider.cpp
+        ${INCLUDE_DIR}/LeoSlider.h
 )
 
 juce_add_plugin(${PLUGIN_NAME}
