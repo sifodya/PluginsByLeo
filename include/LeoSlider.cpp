@@ -5,7 +5,7 @@
 #include "LeoSlider.h"
 #include "LeoMacros.h"
 #include "BinaryData.h"
-#include "PluginEditor.h"
+#include "../SimpleVolume/Source/PluginEditor.h"
 
 LeoSliderLNF::LeoSliderLNF(const LeoSliderInfo& info)
 {

@@ -92,7 +92,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     source_group(TREE ${INCLUDE_DIR} FILES ${IncludeFiles})
 
     #Make SourceFiles buildable
-    target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles})
+    target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles} ${IncludeFiles})
 
     #toggleable options from JUCE Cmake API
     target_compile_definitions(${PROJECT_NAME}
