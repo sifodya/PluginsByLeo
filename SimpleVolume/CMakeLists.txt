@@ -33,6 +33,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             GIT_TAG origin/master
     )
 
+    cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH PARENT_DIR)
+    set(INCLUDE_DIR "${PARENT_DIR}/include")
+
     #Source files to include
     set(SourceFiles
             Source/PluginEditor.cpp
@@ -43,14 +46,23 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/LeoPluginTitle.cpp
             Source/SimpleImageButton.cpp
             Source/SimpleHyperlinkButton.cpp
-            Source/LeoCanvas.h
-            Source/LeoButtons.h
-            Source/LeoEvents.h
-            Source/LeoExceptions.h
-            Source/LeoMacros.h
-            Source/LeoSlider.h
-            Source/LeoSlider.cpp
+            #Source/LeoCanvas.h
+            #Source/LeoButtons.h
+            #Source/LeoEvents.h
+            #Source/LeoExceptions.h
+            #Source/LeoMacros.h
+            #Source/LeoSlider.h
+            #Source/LeoSlider.cpp
+    )
 
+    set(IncludeFiles
+            ${INCLUDE_DIR}/LeoButtons.h
+            ${INCLUDE_DIR}/LeoCanvas.h
+            ${INCLUDE_DIR}/LeoEvents.h
+            ${INCLUDE_DIR}/LeoExceptions.h
+            ${INCLUDE_DIR}/LeoMacros.h
+            ${INCLUDE_DIR}/LeoSlider.cpp
+            ${INCLUDE_DIR}/LeoSlider.h
     )
 
     #set(IncludeFiles
@@ -82,6 +94,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             VST3_CATEGORIES Dynamics
     )
 
+    target_include_directories(${PROJECT_NAME}
+            PRIVATE
+            ${INCLUDE_DIR}
+    )
+
     # Set macOS-specific settings for the plugin (only for macOS build)
     if(APPLE)
         set_target_properties(MyPlugin PROPERTIES
@@ -91,19 +108,15 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     endif()
 
     #How the SourceFiles appear in IDE
-    #cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH PARENT_DIR)
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
 
-    #source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/../include" FILES ${IncludeFiles})
-    #message("${CMAKE_CURRENT_SOURCE_DIR}/../")
+    source_group(TREE ${INCLUDE_DIR} FILES ${IncludeFiles})
+
 
     #Make SourceFiles buildable
     target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles})
 
-    #target_include_directories(${PROJECT_NAME}
-    #        PRIVATE
-    #         ${CMAKE_CURRENT_SOURCE_DIR}/../include
-    #)
+
 
     #toggleable options from JUCE Cmake API
     target_compile_definitions(${PROJECT_NAME}
