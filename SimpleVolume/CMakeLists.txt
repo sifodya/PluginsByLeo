@@ -46,13 +46,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             Source/LeoPluginTitle.cpp
             Source/SimpleImageButton.cpp
             Source/SimpleHyperlinkButton.cpp
-            #Source/LeoCanvas.h
-            #Source/LeoButtons.h
-            #Source/LeoEvents.h
-            #Source/LeoExceptions.h
-            #Source/LeoMacros.h
-            #Source/LeoSlider.h
-            #Source/LeoSlider.cpp
     )
 
     set(IncludeFiles
@@ -64,16 +57,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             ${INCLUDE_DIR}/LeoSlider.cpp
             ${INCLUDE_DIR}/LeoSlider.h
     )
-
-    #set(IncludeFiles
-            #../include/LeoCanvas.h
-            #../include/LeoButtons.h
-            #../include/LeoEvents.h
-            #../include/LeoExceptions.h
-            #../include/LeoMacros.h
-            #../include/LeoSlider.h
-            #        ../include/LeoSlider.cpp
-    #)
 
     #Plugin Details
     juce_add_plugin(${PROJECT_NAME}
@@ -112,11 +95,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
     source_group(TREE ${INCLUDE_DIR} FILES ${IncludeFiles})
 
-
     #Make SourceFiles buildable
     target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles})
-
-
 
     #toggleable options from JUCE Cmake API
     target_compile_definitions(${PROJECT_NAME}
