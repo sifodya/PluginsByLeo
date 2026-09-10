@@ -101,6 +101,8 @@ void AudioPluginAudioProcessorEditor::makeContentVisible()
 
 void AudioPluginAudioProcessorEditor::timerCallback()
 {
-    if (!processorRef.getButtonStateToSet())
+    if (!processorRef.getButtonStateToSet() && learnButtonImage.getToggleState())
+    {
         learnButtonImage.setToggleState(false, juce::dontSendNotification);
+    }
 }

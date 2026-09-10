@@ -8,7 +8,7 @@
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor : public juce::AudioProcessorEditor,
-juce::Timer
+public juce::Timer
 {
     LeoGainSliderInfo gainSliderInfo
     {
