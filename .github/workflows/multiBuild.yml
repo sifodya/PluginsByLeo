@@ -133,6 +133,11 @@ jobs:
         with:
           cmake-version: '3.24'
 
+      - name: Install Visual Studio Build Tools
+        run: |
+              choco install visualstudio2022buildtools -y
+              choco install visualstudio2022-workload-nativedesktop -y
+              
       - name: Install NSIS (for CPack NSIS generator)
         run: choco install nsis -y
 
