@@ -146,7 +146,7 @@ else()
     message(STATUS "Release build")
     cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH PARENT_DIR)
     message("${PARENT_DIR}")
-    set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+    set(INCLUDE_DIR "${PARENT_DIR}/include")
     message("${INCLUDE_DIR}")
     set(SourceFiles
             Source/PluginEditor.cpp
