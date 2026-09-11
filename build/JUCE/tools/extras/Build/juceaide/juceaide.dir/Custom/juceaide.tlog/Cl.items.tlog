@@ -1,0 +1,10 @@
+H:\Musik\PluginsByLeo\JUCE\extras\Build\juceaide\Main.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\Main.obj
+H:\Musik\PluginsByLeo\JUCE\extras\Build\juce_build_tools\juce_build_tools.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_build_tools.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_gui_basics\juce_gui_basics.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_gui_basics.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_graphics\juce_graphics.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_graphics.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_graphics\juce_graphics_Harfbuzz.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_graphics_Harfbuzz.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_graphics\juce_graphics_Sheenbidi.c;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_graphics_Sheenbidi.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_events\juce_events.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_events.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_core\juce_core.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_core.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_core\juce_core_CompilationTime.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_core_CompilationTime.obj
+H:\Musik\PluginsByLeo\JUCE\modules\juce_data_structures\juce_data_structures.cpp;H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide.dir\Custom\juce_data_structures.obj

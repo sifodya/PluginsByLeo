@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="H:\Musik\PluginsByLeo\build\CMakeFiles\ff2936e111fb9e6062d3b1c694b3db23\PACKAGE_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{BB9DDD24-696E-396F-AA90-B7D9A786A972}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

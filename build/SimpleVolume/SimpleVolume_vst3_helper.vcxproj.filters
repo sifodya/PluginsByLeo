@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\VST3\juce_VST3ManifestHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="H:\Musik\PluginsByLeo\SimpleVolume\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2E38F585-E2FF-392A-96AA-8C41F6D82262}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

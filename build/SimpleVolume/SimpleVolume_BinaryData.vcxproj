@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DC039A3D-E78B-3433-AE4D-E8DBEA5F708A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>SimpleVolume_BinaryData</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SimpleVolume_BinaryData.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SimpleVolume_BinaryData</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SimpleVolume_BinaryData.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SimpleVolume_BinaryData</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">SimpleVolume_BinaryData.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">SimpleVolume_BinaryData</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">SimpleVolume_BinaryData.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">SimpleVolume_BinaryData</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="H:\Musik\PluginsByLeo\build\CMakeFiles\494188dab991045170b0c4910306c60e\BinaryData1.cpp.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData4.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData5.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData6.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData7.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData8.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData9.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData10.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData11.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData12.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData13.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData.h</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+cd H:\Musik\PluginsByLeo\SimpleVolume
+if %errorlevel% neq 0 goto :cmEnd
+H:
+if %errorlevel% neq 0 goto :cmEnd
+H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide_artefacts\Custom\juceaide.exe binarydata BinaryData BinaryData.h H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/input_file_list
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\input_file_list;H:\Musik\PluginsByLeo\SimpleVolume\resources\bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader_bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\full.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_normal.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\ueberschrift.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayLight.ttf;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayMediu.ttf;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData1.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData2.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData3.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData4.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData5.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData6.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData7.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData8.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData9.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData10.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData11.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData12.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData13.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData4.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData5.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData6.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData7.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData8.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData9.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData10.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData11.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData12.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData13.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData.h</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+cd H:\Musik\PluginsByLeo\SimpleVolume
+if %errorlevel% neq 0 goto :cmEnd
+H:
+if %errorlevel% neq 0 goto :cmEnd
+H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide_artefacts\Custom\juceaide.exe binarydata BinaryData BinaryData.h H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/input_file_list
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\input_file_list;H:\Musik\PluginsByLeo\SimpleVolume\resources\bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader_bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\full.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_normal.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\ueberschrift.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayLight.ttf;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayMediu.ttf;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData1.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData2.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData3.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData4.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData5.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData6.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData7.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData8.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData9.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData10.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData11.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData12.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData13.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData4.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData5.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData6.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData7.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData8.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData9.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData10.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData11.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData12.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData13.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData.h</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd H:\Musik\PluginsByLeo\SimpleVolume
+if %errorlevel% neq 0 goto :cmEnd
+H:
+if %errorlevel% neq 0 goto :cmEnd
+H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide_artefacts\Custom\juceaide.exe binarydata BinaryData BinaryData.h H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/input_file_list
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\input_file_list;H:\Musik\PluginsByLeo\SimpleVolume\resources\bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader_bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\full.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_normal.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\ueberschrift.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayLight.ttf;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayMediu.ttf;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData1.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData2.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData3.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData4.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData5.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData6.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData7.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData8.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData9.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData10.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData11.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData12.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData13.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData4.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData5.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData6.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData7.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData8.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData9.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData10.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData11.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData12.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData13.cpp, juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/BinaryData.h</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd H:\Musik\PluginsByLeo\SimpleVolume
+if %errorlevel% neq 0 goto :cmEnd
+H:
+if %errorlevel% neq 0 goto :cmEnd
+H:\Musik\PluginsByLeo\build\JUCE\tools\extras\Build\juceaide\juceaide_artefacts\Custom\juceaide.exe binarydata BinaryData BinaryData.h H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode H:/Musik/PluginsByLeo/build/SimpleVolume/juce_binarydata_SimpleVolume_BinaryData/JuceLibraryCode/input_file_list
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\input_file_list;H:\Musik\PluginsByLeo\SimpleVolume\resources\bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\fader_bg.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\full.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_normal.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_red.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_yellow.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\learn_plain.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\ueberschrift.png;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayLight.ttf;H:\Musik\PluginsByLeo\SimpleVolume\resources\NeueHaasDisplayMediu.ttf;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData1.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData2.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData3.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData4.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData5.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData6.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData7.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData8.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData9.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData10.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData11.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData12.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData13.cpp;H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="H:\Musik\PluginsByLeo\SimpleVolume\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule H:/Musik/PluginsByLeo/SimpleVolume/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SH:/Musik/PluginsByLeo -BH:/Musik/PluginsByLeo/build --check-stamp-file H:/Musik/PluginsByLeo/build/SimpleVolume/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">H:\Musik\PluginsByLeo\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule H:/Musik/PluginsByLeo/SimpleVolume/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SH:/Musik/PluginsByLeo -BH:/Musik/PluginsByLeo/build --check-stamp-file H:/Musik/PluginsByLeo/build/SimpleVolume/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">H:\Musik\PluginsByLeo\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule H:/Musik/PluginsByLeo/SimpleVolume/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SH:/Musik/PluginsByLeo -BH:/Musik/PluginsByLeo/build --check-stamp-file H:/Musik/PluginsByLeo/build/SimpleVolume/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">H:\Musik\PluginsByLeo\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule H:/Musik/PluginsByLeo/SimpleVolume/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SH:/Musik/PluginsByLeo -BH:/Musik/PluginsByLeo/build --check-stamp-file H:/Musik/PluginsByLeo/build/SimpleVolume/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">H:\Musik\PluginsByLeo\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">H:\Musik\PluginsByLeo\build\SimpleVolume\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData1.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData2.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData3.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData4.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData5.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData6.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData7.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData8.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData9.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData10.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData11.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData12.cpp" />
+    <ClCompile Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData13.cpp" />
+    <ClInclude Include="H:\Musik\PluginsByLeo\build\SimpleVolume\juce_binarydata_SimpleVolume_BinaryData\JuceLibraryCode\BinaryData.h" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="H:\Musik\PluginsByLeo\build\ZERO_CHECK.vcxproj">
+      <Project>{7D9514C2-8213-35BE-A3D4-4C327D8A0E83}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

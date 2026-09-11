@@ -1,0 +1,12 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-4.1/Modules/BasicConfigVersion-ExactVersion.cmake.in
+C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-4.1/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-4.1/Modules/WriteBasicConfigVersionFile.cmake
+H:/Musik/PluginsByLeo/JUCE/CMakeLists.txt
+H:/Musik/PluginsByLeo/JUCE/extras/Build/CMake/JUCECheckAtomic.cmake
+H:/Musik/PluginsByLeo/JUCE/extras/Build/CMake/JUCEConfig.cmake.in
+H:/Musik/PluginsByLeo/JUCE/extras/Build/CMake/JUCEHelperTargets.cmake
+H:/Musik/PluginsByLeo/JUCE/extras/Build/CMake/JUCEModuleSupport.cmake
+H:/Musik/PluginsByLeo/JUCE/extras/Build/CMake/JUCEUtils.cmake
+H:/Musik/PluginsByLeo/build/CMakeFiles/cmake.verify_globs

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="H:\Musik\PluginsByLeo\build\JUCE\tools\CMakeFiles\742b29f95b87abacc26cb7a77941dc8d\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{D0C728C4-FD5B-30B2-B1C7-CF94240CE110}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

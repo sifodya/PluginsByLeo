@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_analytics\juce_analytics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_gui_basics\juce_gui_basics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_graphics\juce_graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_graphics\juce_graphics_Harfbuzz.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_graphics\juce_graphics_Sheenbidi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_events\juce_events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_core\juce_core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_core\juce_core_CompilationTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_data_structures\juce_data_structures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_basics\juce_audio_basics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_devices\juce_audio_devices.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_gui_extra\juce_gui_extra.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_utils\juce_audio_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_processors\juce_audio_processors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_processors_headless\juce_audio_processors_headless.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_processors_headless\juce_audio_processors_headless_ara.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_processors_headless\juce_audio_processors_headless_lv2_libs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_formats\juce_audio_formats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_dsp\juce_dsp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_AAX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_AAX_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_ARA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_LV2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_Standalone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_Unity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_VST2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Musik\PluginsByLeo\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client_VST3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="H:\Musik\PluginsByLeo\SimpleVolume\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="H:\Musik\PluginsByLeo\build\SimpleVolume\SimpleVolume_rc_lib.dir\$(Configuration)\SimpleVolume_resources.res">
+      <Filter>Object Libraries</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object Libraries">
+      <UniqueIdentifier>{82AE8FCC-0960-34E4-9A66-826571E63F3C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2E38F585-E2FF-392A-96AA-8C41F6D82262}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

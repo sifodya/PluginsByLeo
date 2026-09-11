@@ -145,97 +145,108 @@ else()
 
     message(STATUS "Release build")
     cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH PARENT_DIR)
-    set(INCLUDE_DIR "${PARENT_DIR}/include")
-set(SourceFiles
-        Source/PluginEditor.cpp
-        Source/PluginProcessor.cpp
-        Source/PluginEditor.h
-        Source/PluginProcessor.h
-        ${INCLUDE_DIR}/LeoButtons.h
-        ${INCLUDE_DIR}/LeoCanvas.h
-        ${INCLUDE_DIR}/LeoEvents.h
-        ${INCLUDE_DIR}/LeoExceptions.h
-        ${INCLUDE_DIR}/LeoMacros.h
-        ${INCLUDE_DIR}/LeoSlider.cpp
-        ${INCLUDE_DIR}/LeoSlider.h
-)
+    message("${PARENT_DIR}")
+    set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+    message("${INCLUDE_DIR}")
+    set(SourceFiles
+            Source/PluginEditor.cpp
+            Source/PluginProcessor.cpp
+            Source/PluginEditor.h
+            Source/PluginProcessor.h
+    )
 
-juce_add_plugin(${PLUGIN_NAME}
-    COMPANY_NAME "LeoPlugins"
-    IS_SYNTH FALSE
-    NEEDS_MIDI_INPUT FALSE
-    NEEDS_MIDI_OUTPUT FALSE
-    IS_MIDI_EFFECT FALSE
-    EDITOR_WANTS_KEYBOARD_FOCUS TRUE
-    JUCE_VST3_CAN_REPLACE_VST2 FALSE
+    set(IncludeFiles
+            ${INCLUDE_DIR}/LeoButtons.h
+            ${INCLUDE_DIR}/LeoCanvas.h
+            ${INCLUDE_DIR}/LeoEvents.h
+            ${INCLUDE_DIR}/LeoExceptions.h
+            ${INCLUDE_DIR}/LeoMacros.h
+            ${INCLUDE_DIR}/LeoSlider.cpp
+            ${INCLUDE_DIR}/LeoSlider.h
+    )
 
-    # In CI lieber AUS (Actions hat keinen sinnvollen "Copy after build" Ort)
-    COPY_PLUGIN_AFTER_BUILD FALSE
+    juce_add_plugin(${PLUGIN_NAME}
+        COMPANY_NAME "LeoPlugins"
+        IS_SYNTH FALSE
+        NEEDS_MIDI_INPUT FALSE
+        NEEDS_MIDI_OUTPUT FALSE
+        IS_MIDI_EFFECT FALSE
+        EDITOR_WANTS_KEYBOARD_FOCUS TRUE
+        JUCE_VST3_CAN_REPLACE_VST2 FALSE
 
-    PLUGIN_MANUFACTURER_CODE Leop
-    PLUGIN_CODE Sivo
-    FORMATS VST3 Standalone
-    PRODUCT_NAME "Simple Volume"
-    VERSION "${PLUGIN_VERSION}"
-    VST3_CATEGORIES Dynamics
-)
+        # In CI lieber AUS (Actions hat keinen sinnvollen "Copy after build" Ort)
+        COPY_PLUGIN_AFTER_BUILD FALSE
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
-target_sources(${PLUGIN_NAME} PRIVATE ${SourceFiles})
+        PLUGIN_MANUFACTURER_CODE Leop
+        PLUGIN_CODE Sivo
+        FORMATS VST3 Standalone
+        PRODUCT_NAME "Simple Volume"
+        VERSION "${PLUGIN_VERSION}"
+        VST3_CATEGORIES Dynamics
+    )
 
-target_compile_definitions(${PLUGIN_NAME}
-    PUBLIC
-        JUCE_WEB_BROWSER=0
-        JUCE_USE_CURL=0
-        JUCE_VST3_CAN_REPLACE_VST2=0
-)
+    #target_include_directories(${PROJECT_NAME}
+    #        PRIVATE
+    #        ${INCLUDE_DIR}
+    #)
 
-juce_add_binary_data(SimpleVolume_BinaryData SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/bg.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader_bg.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/full.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_normal.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_red.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_yellow.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_red.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_yellow.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/ueberschrift.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayLight.ttf
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayMediu.ttf
-)
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
+    source_group(TREE ${INCLUDE_DIR} FILES ${IncludeFiles})
+    target_sources(${PLUGIN_NAME} PRIVATE ${SourceFiles} ${IncludeFiles})
 
-target_link_libraries(${PLUGIN_NAME}
-    PUBLIC
-        juce::juce_analytics
-        juce::juce_audio_basics
-        juce::juce_audio_devices
-        juce::juce_core
-        juce::juce_data_structures
-        juce::juce_graphics
-        juce::juce_gui_basics
-        juce::juce_gui_extra
-        juce::juce_audio_utils
-        juce::juce_dsp
-        juce::juce_recommended_config_flags
-        juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags
-    PRIVATE
-        SimpleVolume_BinaryData
-)
+    target_compile_definitions(${PLUGIN_NAME}
+        PUBLIC
+            JUCE_WEB_BROWSER=0
+            JUCE_USE_CURL=0
+            JUCE_VST3_CAN_REPLACE_VST2=0
+    )
 
-juce_generate_juce_header(${PLUGIN_NAME})
+    juce_add_binary_data(SimpleVolume_BinaryData SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/bg.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/fader_bg.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/full.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_normal.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_red.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain_yellow.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_red.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_yellow.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/learn_plain.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/ueberschrift.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayLight.ttf
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/NeueHaasDisplayMediu.ttf
+    )
 
-# Optional: Install-Regeln (damit CPack im Root was "einsammeln" kann)
-# WICHTIG: JUCE erstellt pro Format Targets wie SimpleVolume_VST3 und SimpleVolume_Standalone
-if(TARGET ${PLUGIN_NAME}_VST3)
-    if(WIN32)
-        install(TARGETS ${PLUGIN_NAME}_VST3 DESTINATION "." COMPONENT "VST3")
-    elseif(APPLE)
-        install(TARGETS ${PLUGIN_NAME}_VST3 DESTINATION ".")
-    else()
-        install(TARGETS ${PLUGIN_NAME}_VST3 DESTINATION ".")
+    target_link_libraries(${PLUGIN_NAME}
+        PUBLIC
+            juce::juce_analytics
+            juce::juce_audio_basics
+            juce::juce_audio_devices
+            juce::juce_core
+            juce::juce_data_structures
+            juce::juce_graphics
+            juce::juce_gui_basics
+            juce::juce_gui_extra
+            juce::juce_audio_utils
+            juce::juce_dsp
+            juce::juce_recommended_config_flags
+            juce::juce_recommended_lto_flags
+            juce::juce_recommended_warning_flags
+        PRIVATE
+            SimpleVolume_BinaryData
+    )
+
+    juce_generate_juce_header(${PLUGIN_NAME})
+
+    # Optional: Install-Regeln (damit CPack im Root was "einsammeln" kann)
+    # WICHTIG: JUCE erstellt pro Format Targets wie SimpleVolume_VST3 und SimpleVolume_Standalone
+    if(TARGET ${PLUGIN_NAME}_VST3)
+        if(WIN32)
+            install(TARGETS ${PLUGIN_NAME}_VST3 DESTINATION "." COMPONENT "VST3")
+        elseif(APPLE)
+            install(TARGETS ${PLUGIN_NAME}_VST3 DESTINATION ".")
+        else()
+            install(TARGETS ${PLUGIN_NAME}_VST3 DESTINATION ".")
+        endif()
     endif()
-endif()
 endif()
