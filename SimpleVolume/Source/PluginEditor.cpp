@@ -19,10 +19,9 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
                      gainSlider)
 {
     startTimer(500);
-    screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay();
-    if (screen!=nullptr)
+    if (const juce::Displays::Display* screen = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay(); screen!=nullptr)
     {
-        const auto screenBounds = screen->logicalBounds;
+        const juce::Rectangle<float> screenBounds = screen->logicalBounds;
         screenWidth = static_cast<int>(screenBounds.getWidth());
         screenHeight = static_cast<int>(screenBounds.getHeight());
     }

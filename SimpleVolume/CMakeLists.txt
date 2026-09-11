@@ -55,7 +55,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     )
 
     #Plugin Details
-    juce_add_plugin(${PROJECT_NAME}
+    juce_add_plugin(${PLUGIN_NAME}
             COMPANY_NAME LeoPlugins
             IS_SYNTH FALSE
             NEEDS_MIDI_INPUT TRUE
@@ -73,7 +73,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             VST3_CATEGORIES Dynamics
     )
 
-    target_include_directories(${PROJECT_NAME}
+    target_include_directories(${PLUGIN_NAME}
             PRIVATE
             ${INCLUDE_DIR}
     )
@@ -92,10 +92,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     source_group(TREE ${INCLUDE_DIR} FILES ${IncludeFiles})
 
     #Make SourceFiles buildable
-    target_sources(${PROJECT_NAME} PRIVATE ${SourceFiles} ${IncludeFiles})
+    target_sources(${PLUGIN_NAME} PRIVATE ${SourceFiles} ${IncludeFiles})
 
     #toggleable options from JUCE Cmake API
-    target_compile_definitions(${PROJECT_NAME}
+    target_compile_definitions(${PLUGIN_NAME}
             PUBLIC
             JUCE_WEB_BROWSER=0
             JUCE_USE_CURL=0
@@ -103,7 +103,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     )
 
     #JUCE libraries to bringt into project
-    target_link_libraries(${PROJECT_NAME}
+    target_link_libraries(${PLUGIN_NAME}
             PUBLIC
             juce::juce_analytics
             juce::juce_audio_basics
@@ -139,7 +139,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             resources/NeueHaasDisplayMediu.ttf
     )
 
-    juce_generate_juce_header(${PROJECT_NAME})
+    juce_generate_juce_header(${PLUGIN_NAME})
     #==================================================================================================================
 else()
 
@@ -185,10 +185,10 @@ else()
         VST3_CATEGORIES Dynamics
     )
 
-    #target_include_directories(${PROJECT_NAME}
-    #        PRIVATE
-    #        ${INCLUDE_DIR}
-    #)
+    target_include_directories(${PLUGIN_NAME}
+            PRIVATE
+            ${INCLUDE_DIR}
+    )
 
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SourceFiles})
     source_group(TREE ${INCLUDE_DIR} FILES ${IncludeFiles})

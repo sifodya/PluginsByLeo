@@ -68,7 +68,7 @@ private:
     float aspectRatioHeight {80.0f}, aspectRationWidth {23.0f};
     double pluginRatio {368.0f/1281.0f};
 
-    const juce::Displays::Display* screen {nullptr};
+    //const juce::Displays::Display* screen {nullptr};
     int screenWidth {0}, screenHeight {0}, screenScaleHeight {1}, screenScaleWidth {1};
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

@@ -1,14 +1,38 @@
 cmake_minimum_required(VERSION 3.24)
-project(PluginsByLeo VERSION 00.02.01)
+project(PluginsByLeo VERSION 00.03.01)
 
 # 1. JUCE nichts installieren lassen
-set(JUCE_INSTALL_TARGETS OFF CACHE BOOL "Don't install JUCE targets" FORCE)
+#set(JUCE_INSTALL_TARGETS OFF CACHE BOOL "Don't install JUCE targets" FORCE)
 # optional:
-set(JUCE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(JUCE_BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
+#set(JUCE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+#set(JUCE_BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
 
 # add JUCE directory if pushed to repo
-add_subdirectory(JUCE)
+#add_subdirectory(JUCE)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_XCODE_GENERATE_SCHEME OFF)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+#CPM check if installed, if not install it
+set(CPM_DOWNLOAD_VERSION 0.34.0)
+set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
+
+if (NOT EXISTS $[{CPM_DOWNLOAD_LOCATION})
+  message(STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}")
+  file(DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake ${CPM_DOWNLOAD_LOCATION})
+endif()
+
+include(${CPM_DOWNLOAD_LOCATION})
+
+#Bring in JUCE locally
+CPMAddPackage(
+        NAME juce
+        GITHUB_REPOSITORY juce-framework/JUCE
+        GIT_TAG origin/master
+)
 
 # --- Packaging info (common) ---
 set(CPACK_PACKAGE_NAME "PluginsByLeo")
