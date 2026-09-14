@@ -64,16 +64,23 @@ if(WIN32)
   set(CPACK_GENERATOR "NSIS")
   set(CPACK_NSIS_MODIFY_PATH OFF)
   #set(CPACK_NSIS_CREATE_ICONS OFF)
-  set(CPACK_NSIS_MENU_LINKS "")
-  set(CPACK_NSIS_START_MENU_LINKS "")
-  set(CPACK_NSIS_CREATE_ICONS_EXTRA "")
+  #set(CPACK_NSIS_MENU_LINKS "")
+  #set(CPACK_NSIS_START_MENU_LINKS "")
+  #set(CPACK_NSIS_CREATE_ICONS_EXTRA "")
   set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
   set(CPACK_NSIS_INSTALL_ROOT "$COMMONFILES64")
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3\\LeoPlugins")
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "VST3\\\\LeoPlugins")
+  #set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "VST3/LeoPlugins")
   set(CPACK_COMPONENTS_ALL VST3) # Cpack only installs things marked with VST3 component
   # set(CPACK_NSIS_COMPONENT_INSTALL OFF) #Hide Component selection Page
   set(CPACK_NSIS_UNINSTALL_NAME "Leo Plugins Uninstall")
   set(CPACK_NSIS_PACKAGE_NAME "Leo Plugins")
+  #set(CPACK_NSIS_EXTRA_DEFINES "
+  # Function SkipStartMenuPage
+  #  Abort
+  # FunctionEnd
+  #  ;define MUI_PAGE_CUSTOMFUNCTION_PRE SkipStartMenuPage
+  #")
   
   # NSIS specific settings
   #  (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/path/to/icon.ico") set
